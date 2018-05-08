@@ -1,11 +1,6 @@
 # kartRacingGame
 *** WORK IN PROGRESS ***
 
-  ______
- /|_||_\`.__
-(   _    _ _\
-=`-(_)--(_)-'
-
 This is our libGDX based Kart Racing Game...
 
 ---ECLIPSE INSTRUCTIONS---
