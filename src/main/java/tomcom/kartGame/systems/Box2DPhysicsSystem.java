@@ -1,6 +1,9 @@
 package tomcom.kartGame.systems;
 
 import tomcom.kartGame.components.PivotComponent;
+import tomcom.kartGame.components.collision.CircleColliderComponent;
+import tomcom.kartGame.components.collision.ColliderComponent;
+import tomcom.kartGame.components.collision.RectangleColliderComponent;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.game.GameConfig;
 
@@ -12,6 +15,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Box2DPhysicsSystem extends EntitySystem {
@@ -81,20 +88,42 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 				body.setBody(world.createBody(bodyDef));
 
-				// TODO: Collider Component suchen!
+				ColliderComponent collider = entity
+						.getComponent(ColliderComponent.class);
 
-//				FixtureDef fixtureDef = new FixtureDef();
-//				fixtureDef.
-				
-//				body.getBody().createFixture(def)
+				if (collider != null) {
+					FixtureDef fixtureDef = new FixtureDef();
+
+					fixtureDef.density = collider.getDensity();
+					fixtureDef.friction = collider.getFriction();
+					fixtureDef.restitution = collider.getRestitution();
+
+					Shape shape = null;
+
+					if (collider instanceof RectangleColliderComponent) {
+						RectangleColliderComponent rect = (RectangleColliderComponent) collider;
+						PolygonShape rectangle = new PolygonShape();
+						rectangle.setAsBox(rect.getWidth(), rect.getHeight());
+						shape = rectangle;
+						rectangle.dispose();
+					} else if (collider instanceof CircleColliderComponent) {
+						CircleColliderComponent circ = (CircleColliderComponent) collider;
+						CircleShape circle = new CircleShape();
+						// TODO: is his necessary?
+						circle.setPosition(pivot.getPos());
+						circle.setRadius(circ.getRadius());
+						shape = circle;
+						circle.dispose();
+					}
+
+					fixtureDef.shape = shape;
+
+					body.getBody().createFixture(fixtureDef);
+
+					shape.dispose();
+				}
+
 			}
 		});
 	}
-	// public BodyComponent createBody(BodyDef bodyDef, FixtureDef fixtureDef) {
-	// Body body = world.createBody(bodyDef);
-	// body.createFixture(fixtureDef);
-	// // TODO: Is that good?
-	// fixtureDef.shape.dispose();
-	// return new BodyComponent(body);
-	// }
 }
