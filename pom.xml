@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>kartRacingGame</groupId>
+	<artifactId>kartRacingGame</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>awesomeTut</name>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<libgdx.version>1.9.8</libgdx.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-platform -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<!-- had to add this to solve gdx64.dll error -->
+			<classifier>natives-desktop</classifier>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.ashley/ashley -->
+		<dependency>
+			<groupId>com.badlogicgames.ashley</groupId>
+			<artifactId>ashley</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-backend-lwjgl -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-lwjgl</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-box2d -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-box2d</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-box2d-platform -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-box2d-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<!-- had to add this to solve gdx-box2d64.dll error -->
+			<classifier>natives-desktop</classifier>
+		</dependency>
+
+
+
+	</dependencies>
+
+
+</project>
