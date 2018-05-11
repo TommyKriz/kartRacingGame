@@ -42,7 +42,7 @@ public class MouseInputSystem extends EntitySystem {
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		worldCamera = engine.getSystem(CameraSystem.class).getCamera();
+		worldCamera = engine.getSystem(CameraSystem.class).getWorldCamera();
 	}
 
 }

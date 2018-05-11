@@ -15,6 +15,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class TestLevel implements Screen {
 
@@ -22,12 +23,18 @@ public class TestLevel implements Screen {
 
 	private Engine engine;
 
+	private StretchViewport viewport;
+
 	public TestLevel(GameMain game) {
 		this.game = game;
 
 		engine = new Engine();
 
 		initSystems();
+
+		viewport = new StretchViewport(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), engine.getSystem(CameraSystem.class)
+						.getWorldCamera());
 
 		initEntities();
 	}
@@ -67,7 +74,7 @@ public class TestLevel implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+		viewport.update(width, height);
 	}
 
 	@Override

@@ -8,23 +8,12 @@ import com.badlogic.gdx.math.Matrix4;
 
 public class CameraSystem extends EntitySystem {
 
-	private OrthographicCamera hudCamera;
-
 	private OrthographicCamera worldCamera;
 
 	public CameraSystem() {
-
-		hudCamera = new OrthographicCamera(GameConfig.WIDTH, GameConfig.HEIGHT);
-
-		hudCamera.translate(GameConfig.WIDTH / 2, GameConfig.HEIGHT / 2);
-
-		worldCamera = new OrthographicCamera(GameConfig.WIDTH
-				/ GameConfig.PIXELS_PER_METER, GameConfig.HEIGHT
-				/ GameConfig.PIXELS_PER_METER);
-		worldCamera.translate(worldCamera.viewportWidth / 2,
-				worldCamera.viewportHeight / 2);
-
-		worldCamera.zoom = 200;
+		worldCamera = new OrthographicCamera(
+				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
+				GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
 	}
 
 	@Override
@@ -36,7 +25,7 @@ public class CameraSystem extends EntitySystem {
 		return worldCamera.combined;
 	}
 
-	public OrthographicCamera getCamera() {
+	public OrthographicCamera getWorldCamera() {
 		return worldCamera;
 	}
 

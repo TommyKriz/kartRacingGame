@@ -39,7 +39,7 @@ public class RenderingSystem extends IteratingSystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		worldCamera = getEngine().getSystem(CameraSystem.class).getCamera();
+		worldCamera = getEngine().getSystem(CameraSystem.class).getWorldCamera();
 
 	}
 

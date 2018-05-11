@@ -56,7 +56,7 @@ public class CameraFollowSystem extends IteratingSystem {
 
 		super.addedToEngine(engine);
 
-		cam = getEngine().getSystem(CameraSystem.class).getCamera();
+		cam = getEngine().getSystem(CameraSystem.class).getWorldCamera();
 
 		lastKnownPos = new Vector2(cam.position.x, cam.position.y);
 	}

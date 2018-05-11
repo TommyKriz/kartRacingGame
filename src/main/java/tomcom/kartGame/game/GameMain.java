@@ -11,10 +11,4 @@ public class GameMain extends Game {
 		setScreen(new TestLevel(this));
 	}
 
-	@Override
-	public void render() {
-		// call the render method in the screens
-		super.render();
-	}
-
 }
