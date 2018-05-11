@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 public interface Body2D {
 
 	Vector2 getPosition();
-	
+
 	Vector2 getVelocity(Vector2 p);
 
 	Vector2 toLocalPoint(Vector2 wp);

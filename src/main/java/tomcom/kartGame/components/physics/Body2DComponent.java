@@ -10,7 +10,16 @@ public class Body2DComponent implements Body2D, Component {
 
 	private boolean dynamic;
 
-	// TODO: damping ...
+	private float damping;
+
+	public float getDamping() {
+		return damping;
+	}
+
+	public Body2DComponent setDamping(float damping) {
+		this.damping = damping;
+		return this;
+	}
 
 	public Body2DComponent setDynamic(boolean dynamic) {
 		this.dynamic = dynamic;

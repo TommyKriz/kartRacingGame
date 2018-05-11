@@ -2,7 +2,7 @@ package tomcom.kartGame.components;
 
 import com.badlogic.ashley.core.Component;
 
-public class InputComponent implements Component {
+public class KeyInputComponent implements Component {
 
 	/**
 	 * LEFT RIGHT UP DOWN NITRO
@@ -13,7 +13,7 @@ public class InputComponent implements Component {
 	 * @param keys
 	 *            LEFT RIGHT UP DOWN NITRO
 	 */
-	public InputComponent(int[] keys) {
+	public KeyInputComponent(int[] keys) {
 		this.keys = keys;
 	}
 

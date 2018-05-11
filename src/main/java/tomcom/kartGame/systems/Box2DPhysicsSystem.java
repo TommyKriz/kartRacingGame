@@ -23,14 +23,18 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Box2DPhysicsSystem extends EntitySystem {
 
-	private static final Family FAMILY = Family.all(Body2DComponent.class)
-			.get();
+	private static final Family FAMILY = Family.all(Body2DComponent.class,
+			PivotComponent.class).get();
+
+	private static float STEP_SIZE = 1 / 60f;
+
+	private static final int WORLD_POSITION_ITERATIONS = 4;
+
+	private static final int WORLD_VELOCITY_ITERATIONS = 4;
 
 	private World world;
 
 	private float timeAccumulator = 0f;
-
-	private static float STEP_SIZE = 1 / 60f;
 
 	public Box2DPhysicsSystem() {
 		world = new World(new Vector2(GameConfig.WORLD_GRAVITY_X,
@@ -46,7 +50,8 @@ public class Box2DPhysicsSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		timeAccumulator += deltaTime;
 		while (timeAccumulator > STEP_SIZE) {
-			world.step(STEP_SIZE, 4, 4);
+			world.step(STEP_SIZE, WORLD_VELOCITY_ITERATIONS,
+					WORLD_POSITION_ITERATIONS);
 			timeAccumulator -= STEP_SIZE;
 		}
 		world.clearForces();
@@ -81,6 +86,9 @@ public class Box2DPhysicsSystem extends EntitySystem {
 					bodyDef.type = BodyDef.BodyType.StaticBody;
 				}
 
+				// TODO: prevent null ?
+				bodyDef.linearDamping = body.getDamping();
+
 				PivotComponent pivot = entity
 						.getComponent(PivotComponent.class);
 
@@ -92,37 +100,39 @@ public class Box2DPhysicsSystem extends EntitySystem {
 						.getComponent(ColliderComponent.class);
 
 				if (collider != null) {
-					FixtureDef fixtureDef = new FixtureDef();
-
-					fixtureDef.density = collider.getDensity();
-					fixtureDef.friction = collider.getFriction();
-					fixtureDef.restitution = collider.getRestitution();
-
-					Shape shape = null;
-
-					if (collider instanceof RectangleColliderComponent) {
-						RectangleColliderComponent rect = (RectangleColliderComponent) collider;
-						PolygonShape rectangle = new PolygonShape();
-						rectangle.setAsBox(rect.getWidth(), rect.getHeight());
-						shape = rectangle;
-						rectangle.dispose();
-					} else if (collider instanceof CircleColliderComponent) {
-						CircleColliderComponent circ = (CircleColliderComponent) collider;
-						CircleShape circle = new CircleShape();
-						// TODO: is his necessary?
-						circle.setPosition(pivot.getPos());
-						circle.setRadius(circ.getRadius());
-						shape = circle;
-						circle.dispose();
-					}
-
-					fixtureDef.shape = shape;
-
-					body.getBody().createFixture(fixtureDef);
-
-					shape.dispose();
+					buildColliders(body, pivot, collider);
 				}
 
+			}
+
+			private void buildColliders(Body2DComponent body,
+					PivotComponent pivot, ColliderComponent collider) {
+				FixtureDef fixtureDef = new FixtureDef();
+
+				fixtureDef.density = collider.getDensity();
+				fixtureDef.friction = collider.getFriction();
+				fixtureDef.restitution = collider.getRestitution();
+
+				Shape shape = null;
+
+				if (collider instanceof RectangleColliderComponent) {
+					RectangleColliderComponent rect = (RectangleColliderComponent) collider;
+					PolygonShape rectangle = new PolygonShape();
+					rectangle.setAsBox(rect.getWidth(), rect.getHeight());
+					shape = rectangle;
+					rectangle.dispose();
+				} else if (collider instanceof CircleColliderComponent) {
+					CircleColliderComponent circ = (CircleColliderComponent) collider;
+					CircleShape circle = new CircleShape();
+					// TODO: is this necessary?
+					circle.setPosition(pivot.getPos());
+					circle.setRadius(circ.getRadius());
+					shape = circle;
+					circle.dispose();
+				}
+				fixtureDef.shape = shape;
+				body.getBody().createFixture(fixtureDef);
+				shape.dispose();
 			}
 		});
 	}

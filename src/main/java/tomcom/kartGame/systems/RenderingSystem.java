@@ -4,10 +4,12 @@ import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -26,6 +28,8 @@ public class RenderingSystem extends IteratingSystem {
 
 	private Array<Entity> renderQueue;
 
+	private OrthographicCamera worldCamera;
+
 	public RenderingSystem() {
 		super(FAMILY);
 		batch = new SpriteBatch();
@@ -33,11 +37,17 @@ public class RenderingSystem extends IteratingSystem {
 	}
 
 	@Override
+	public void addedToEngine(Engine engine) {
+		super.addedToEngine(engine);
+		worldCamera = getEngine().getSystem(CameraSystem.class).getCamera();
+
+	}
+
+	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 
-		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
-				.getProjectionMatrix());
+		batch.setProjectionMatrix(worldCamera.combined);
 		batch.begin();
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);

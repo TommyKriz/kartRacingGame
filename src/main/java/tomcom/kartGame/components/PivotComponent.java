@@ -19,4 +19,8 @@ public class PivotComponent implements Component {
 		this.pos = pos;
 	}
 
+	public boolean equalTo(Vector2 otherPos) {
+		return pos.x == otherPos.x && pos.y == otherPos.y;
+	}
+
 }
