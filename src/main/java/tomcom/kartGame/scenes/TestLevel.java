@@ -50,8 +50,8 @@ public class TestLevel implements Screen {
 		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new CameraSystem());
-		engine.addSystem(new Box2DRenderingSystem());
 		engine.addSystem(new RenderingSystem());
+		engine.addSystem(new Box2DRenderingSystem());
 
 		engine.addSystem(new CameraFollowSystem());
 

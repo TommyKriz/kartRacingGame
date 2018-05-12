@@ -3,6 +3,7 @@ package tomcom.kartGame.systems;
 import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.components.PivotComponent;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -16,6 +17,9 @@ public class CameraFollowSystem extends IteratingSystem {
 	private static final Family FAMILY = Family.all(PivotComponent.class,
 			CameraTargetComponent.class).get();
 
+	ComponentMapper<PivotComponent> pm = ComponentMapper
+			.getFor(PivotComponent.class);
+
 	OrthographicCamera cam;
 
 	Vector2 lastKnownPos;
@@ -27,7 +31,7 @@ public class CameraFollowSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 
-		PivotComponent pivot = entity.getComponent(PivotComponent.class);
+		PivotComponent pivot = pm.get(entity);
 
 		// TODO: only change camera pos when it was actually changed
 

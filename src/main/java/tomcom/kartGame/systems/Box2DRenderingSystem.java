@@ -15,7 +15,8 @@ public class Box2DRenderingSystem extends EntitySystem {
 	private Box2DDebugRenderer debugRenderer;
 
 	public Box2DRenderingSystem() {
-		debugRenderer = new Box2DDebugRenderer();
+		debugRenderer = new Box2DDebugRenderer(true, false, false, true, true,
+				true);
 	}
 
 	@Override
@@ -26,7 +27,8 @@ public class Box2DRenderingSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		world = engine.getSystem(Box2DPhysicsSystem.class).getWorld();
-		worldCamera = getEngine().getSystem(CameraSystem.class).getWorldCamera();
+		worldCamera = getEngine().getSystem(CameraSystem.class)
+				.getWorldCamera();
 	}
 
 }
