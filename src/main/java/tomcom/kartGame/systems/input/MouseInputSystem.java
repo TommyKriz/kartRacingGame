@@ -1,6 +1,7 @@
-package tomcom.kartGame.systems;
+package tomcom.kartGame.systems.input;
 
 import tomcom.kartGame.scenes.EntityBuilder;
+import tomcom.kartGame.systems.CameraSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;

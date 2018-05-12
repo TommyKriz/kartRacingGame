@@ -1,4 +1,4 @@
-package tomcom.kartGame.systems;
+package tomcom.kartGame.systems.input;
 
 import tomcom.kartGame.components.KeyInputComponent;
 import tomcom.kartGame.components.physics.Body2DComponent;
@@ -10,6 +10,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+@Deprecated
 public class KeyInputSystem extends IteratingSystem {
 
 	// TODO: why does increasing this number not make any significant
