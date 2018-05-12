@@ -39,7 +39,8 @@ public class RenderingSystem extends IteratingSystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		worldCamera = getEngine().getSystem(CameraSystem.class).getWorldCamera();
+		worldCamera = getEngine().getSystem(CameraSystem.class)
+				.getWorldCamera();
 
 	}
 
@@ -61,7 +62,8 @@ public class RenderingSystem extends IteratingSystem {
 					"RenderingSystem ",
 					"drawing Sprite at " + pivot.getPos().x + "|"
 							+ pivot.getPos().y);
-			batch.draw(sprite, pivot.getPos().x, pivot.getPos().y);
+			batch.draw(sprite, pivot.getPos().x - sprite.getWidth() / 2,
+					pivot.getPos().y - sprite.getHeight() / 2);
 		}
 
 		batch.end();

@@ -1,12 +1,12 @@
 package tomcom.kartGame.components.collision;
 
-public class RectangleColliderComponent extends ColliderComponent {
+public class RectangleCollider extends Collider {
 
 	private float width;
 
 	private float height;
 
-	public RectangleColliderComponent(float width, float height, float density,
+	public RectangleCollider(float width, float height, float density,
 			float friction, float restitution) {
 		super(density, friction, restitution);
 		this.width = width;

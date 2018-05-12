@@ -3,6 +3,8 @@ package tomcom.kartGame.scenes;
 import tomcom.kartGame.components.KeyInputComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
+import tomcom.kartGame.components.collision.ColliderComponent;
+import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
 
 import com.badlogic.ashley.core.Entity;
@@ -22,9 +24,9 @@ public class EntityBuilder {
 
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(0.3f));
 
-		// TODO: add fixture Def (Collider Component)
-
-		// kart.add(new CameraTargetComponent());
+		kart.add(new ColliderComponent(new RectangleCollider(spriteComponent
+				.getSprite().getWidth() / 2, spriteComponent.getSprite()
+				.getHeight() / 2, 0, 0, 0)));
 
 		return kart;
 

@@ -1,10 +1,10 @@
 package tomcom.kartGame.components.collision;
 
-public class CircleColliderComponent extends ColliderComponent {
+public class CircleCollider extends Collider {
 
 	private float radius;
 
-	public CircleColliderComponent(float radius, float density, float friction,
+	public CircleCollider(float radius, float density, float friction,
 			float restitution) {
 		super(density, friction, restitution);
 		this.radius = radius;

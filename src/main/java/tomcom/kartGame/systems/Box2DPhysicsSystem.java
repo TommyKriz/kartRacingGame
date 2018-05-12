@@ -1,12 +1,14 @@
 package tomcom.kartGame.systems;
 
 import tomcom.kartGame.components.PivotComponent;
-import tomcom.kartGame.components.collision.CircleColliderComponent;
+import tomcom.kartGame.components.collision.CircleCollider;
+import tomcom.kartGame.components.collision.Collider;
 import tomcom.kartGame.components.collision.ColliderComponent;
-import tomcom.kartGame.components.collision.RectangleColliderComponent;
+import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.game.GameConfig;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -25,6 +27,13 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 	private static final Family FAMILY = Family.all(Body2DComponent.class,
 			PivotComponent.class).get();
+
+	ComponentMapper<PivotComponent> pm = ComponentMapper
+			.getFor(PivotComponent.class);
+	ComponentMapper<Body2DComponent> bm = ComponentMapper
+			.getFor(Body2DComponent.class);
+	ComponentMapper<ColliderComponent> cm = ComponentMapper
+			.getFor(ColliderComponent.class);
 
 	private static float STEP_SIZE = 1 / 60f;
 
@@ -65,9 +74,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 			@Override
 			public void entityRemoved(Entity entity) {
 				Gdx.app.log("Box2DPhysicsSystem", "Entity removed from System");
-				Body2DComponent body = entity
-						.getComponent(Body2DComponent.class);
-
+				Body2DComponent body = bm.get(entity);
 				world.destroyBody(body.getBody());
 				body = null;
 			}
@@ -76,8 +83,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 			public void entityAdded(Entity entity) {
 				Gdx.app.log("Box2DPhysicsSystem", "Entity added to System");
 
-				Body2DComponent body = entity
-						.getComponent(Body2DComponent.class);
+				Body2DComponent body = bm.get(entity);
 
 				BodyDef bodyDef = new BodyDef();
 				if (body.isDynamic()) {
@@ -89,24 +95,23 @@ public class Box2DPhysicsSystem extends EntitySystem {
 				// TODO: prevent null ?
 				bodyDef.linearDamping = body.getDamping();
 
-				PivotComponent pivot = entity
-						.getComponent(PivotComponent.class);
+				PivotComponent pivot = pm.get(entity);
 
 				bodyDef.position.set(pivot.getPos().x, pivot.getPos().y);
 
 				body.setBody(world.createBody(bodyDef));
 
-				ColliderComponent collider = entity
-						.getComponent(ColliderComponent.class);
+				ColliderComponent colliderComponent = cm.get(entity);
 
-				if (collider != null) {
-					buildColliders(body, pivot, collider);
+				if (colliderComponent != null) {
+					buildColliders(body, pivot, colliderComponent.getCollider());
 				}
 
 			}
 
 			private void buildColliders(Body2DComponent body,
-					PivotComponent pivot, ColliderComponent collider) {
+					PivotComponent pivot, Collider collider) {
+
 				FixtureDef fixtureDef = new FixtureDef();
 
 				fixtureDef.density = collider.getDensity();
@@ -115,20 +120,20 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 				Shape shape = null;
 
-				if (collider instanceof RectangleColliderComponent) {
-					RectangleColliderComponent rect = (RectangleColliderComponent) collider;
+				if (collider instanceof RectangleCollider) {
+					Gdx.app.log("Box2DPhysicsSystem", "Rectangle Collider");
+					RectangleCollider rect = (RectangleCollider) collider;
 					PolygonShape rectangle = new PolygonShape();
 					rectangle.setAsBox(rect.getWidth(), rect.getHeight());
 					shape = rectangle;
-					rectangle.dispose();
-				} else if (collider instanceof CircleColliderComponent) {
-					CircleColliderComponent circ = (CircleColliderComponent) collider;
+				} else if (collider instanceof CircleCollider) {
+					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");
+					CircleCollider circ = (CircleCollider) collider;
 					CircleShape circle = new CircleShape();
 					// TODO: is this necessary?
 					circle.setPosition(pivot.getPos());
 					circle.setRadius(circ.getRadius());
 					shape = circle;
-					circle.dispose();
 				}
 				fixtureDef.shape = shape;
 				body.getBody().createFixture(fixtureDef);
