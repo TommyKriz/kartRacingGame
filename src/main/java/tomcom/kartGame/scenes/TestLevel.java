@@ -10,6 +10,7 @@ import tomcom.kartGame.systems.KeyInputSystem;
 import tomcom.kartGame.systems.MouseInputSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
+import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -50,10 +51,13 @@ public class TestLevel implements Screen {
 		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new CameraSystem());
+
+		engine.addSystem(new CameraFollowSystem());
+
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 
-		engine.addSystem(new CameraFollowSystem());
+		engine.addSystem(new VehicleDebugRendererSystem());
 
 		engine.addSystem(new KeyInputSystem());
 		engine.addSystem(new MouseInputSystem());

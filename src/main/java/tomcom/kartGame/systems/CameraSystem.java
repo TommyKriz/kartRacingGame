@@ -22,7 +22,7 @@ public class CameraSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		worldCamera.update();
 
-		// TODO: take out
+		// TODO: take out camera zoom
 
 		if (Gdx.input.isKeyPressed(Input.Keys.PLUS)) {
 			worldCamera.zoom += 0.02;
