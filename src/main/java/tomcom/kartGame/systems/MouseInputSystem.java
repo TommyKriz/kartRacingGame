@@ -35,7 +35,7 @@ public class MouseInputSystem extends EntitySystem {
 			// TODO: delete this later, its just for fun
 
 			getEngine().addEntity(
-					EntityBuilder.buildKart(clickCoords.x, clickCoords.y));
+					EntityBuilder.buildRoadBlock(clickCoords.x, clickCoords.y));
 		}
 
 	}

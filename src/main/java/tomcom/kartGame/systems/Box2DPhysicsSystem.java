@@ -130,8 +130,6 @@ public class Box2DPhysicsSystem extends EntitySystem {
 					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");
 					CircleCollider circ = (CircleCollider) collider;
 					CircleShape circle = new CircleShape();
-					// TODO: is this necessary?
-					circle.setPosition(pivot.getPos());
 					circle.setRadius(circ.getRadius());
 					shape = circle;
 				}

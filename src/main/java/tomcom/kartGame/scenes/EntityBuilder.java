@@ -3,6 +3,7 @@ package tomcom.kartGame.scenes;
 import tomcom.kartGame.components.KeyInputComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
+import tomcom.kartGame.components.collision.CircleCollider;
 import tomcom.kartGame.components.collision.ColliderComponent;
 import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
@@ -43,6 +44,17 @@ public class EntityBuilder {
 		bg.add(new PivotComponent(new Vector2(0, 0)));
 		bg.add(new SpriteComponent("BG.png"));
 		return bg;
+	}
+
+	public static Entity buildRoadBlock(float x, float y) {
+		SpriteComponent spriteComponent = new SpriteComponent("roadblock.png");
+		Entity raodBlock = new Entity();
+		raodBlock.add(new PivotComponent(new Vector2(x, y)));
+		raodBlock.add(spriteComponent);
+		raodBlock.add(new Body2DComponent().setDynamic(false));
+		raodBlock.add(new ColliderComponent(new CircleCollider(spriteComponent
+				.getSprite().getWidth() / 2, 0, 0, 0)));
+		return raodBlock;
 	}
 
 }
