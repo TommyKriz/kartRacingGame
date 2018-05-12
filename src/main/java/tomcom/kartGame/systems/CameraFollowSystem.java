@@ -8,9 +8,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 
 public class CameraFollowSystem extends IteratingSystem {
 
@@ -22,8 +20,6 @@ public class CameraFollowSystem extends IteratingSystem {
 
 	OrthographicCamera cam;
 
-	Vector2 lastKnownPos;
-
 	public CameraFollowSystem() {
 		super(FAMILY);
 	}
@@ -33,25 +29,14 @@ public class CameraFollowSystem extends IteratingSystem {
 
 		PivotComponent pivot = pm.get(entity);
 
-		// TODO: only change camera pos when it was actually changed
+		// TODO: only change camera pos when it was actually changed? is if and
+		// position comparing/remembering slower?
 
-		// Gdx.app.log("CameraFollowSystem", "Pivot: " +
-		// pivot.getPos().toString());
-		// Gdx.app.log("CameraFollowSystem", "Cam:   " +
-		// lastKnownPos.toString());
-		//
 		// if (!pivot.equalTo(lastKnownPos)) {
-		// // camera position has to change
-		//
-		// Gdx.app.log("CameraFollowSystem", "change");
-		// lastKnownPos = pivot.getPos();
-		// cam.position.set(lastKnownPos, 0);
+		// camera position has to change
 		// }
 
 		cam.position.set(pivot.getPos(), 0);
-
-		Gdx.app.log("CameraFollowSystem", "Cam:   "
-				+ new Vector2(cam.position.x, cam.position.y).toString());
 
 	}
 
@@ -62,7 +47,6 @@ public class CameraFollowSystem extends IteratingSystem {
 
 		cam = getEngine().getSystem(CameraSystem.class).getWorldCamera();
 
-		lastKnownPos = new Vector2(cam.position.x, cam.position.y);
 	}
 
 }
