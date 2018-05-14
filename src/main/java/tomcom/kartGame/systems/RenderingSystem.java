@@ -36,6 +36,10 @@ public class RenderingSystem extends IteratingSystem {
 		renderQueue = new Array<>();
 	}
 
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);

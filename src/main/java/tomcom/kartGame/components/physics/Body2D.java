@@ -8,6 +8,8 @@ public interface Body2D {
 
 	Vector2 getVelocity(Vector2 p);
 
+	Vector2 toWorldPoint(Vector2 lp);
+
 	Vector2 toLocalPoint(Vector2 wp);
 
 	Vector2 toLocalVector(Vector2 wv);

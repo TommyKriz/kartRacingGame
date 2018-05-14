@@ -75,4 +75,9 @@ public class Body2DComponent implements Body2D, Component {
 		this.body = body;
 	}
 
+	@Override
+	public Vector2 toWorldPoint(Vector2 lp) {
+		return body.getWorldPoint(lp);
+	}
+
 }

@@ -12,6 +12,7 @@ import tomcom.kartGame.components.vehicle.Wheel;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
@@ -22,7 +23,8 @@ public class EntityBuilder {
 		Entity kart = new Entity();
 		kart.add(new KeyInputComponent(new int[] { Input.Keys.A, Input.Keys.D,
 				Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
-		kart.add(new PivotComponent(new Vector2(x, y)));
+		Vector2 pos = new Vector2(x, y);
+		kart.add(new PivotComponent(pos));
 		kart.add(spriteComponent);
 
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(0.3f));
@@ -31,9 +33,10 @@ public class EntityBuilder {
 				.getSprite().getWidth() / 2, spriteComponent.getSprite()
 				.getHeight() / 2, 0, 0, 0)));
 
+		Texture wheeltexture = new Texture("wheel.png");
 		kart.add(new VehicleComponent().addWheel(
-				new Wheel(1.8f, 2, false, true)).addWheel(
-				new Wheel(-1.8f, 2, true, false)));
+				new Wheel(1.8f, 2, false, true, wheeltexture)).addWheel(
+				new Wheel(-1.8f, 2, true, false, wheeltexture)));
 
 		return kart;
 
