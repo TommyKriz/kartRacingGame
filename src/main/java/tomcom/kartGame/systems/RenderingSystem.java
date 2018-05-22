@@ -77,4 +77,9 @@ public class RenderingSystem extends IteratingSystem {
 		renderQueue.add(entity);
 	}
 
+	public SpriteBatch getBatch() {
+		// TODO Auto-generated method stub
+		return batch;
+	}
+
 }

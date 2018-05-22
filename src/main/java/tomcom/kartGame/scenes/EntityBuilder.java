@@ -17,33 +17,35 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
 
-	private static final float KART_WIDTH = 2f;
-
-	private static final float KART_HEIGHT = 4f;
-
-	private static final float ROADBLOCK_R = 1.5f;
-
 	public static Entity buildKart(float x, float y) {
 
-		SpriteComponent spriteComponent = new SpriteComponent(
-				TexturePaths.KART_TEXTURE, KART_WIDTH, KART_HEIGHT);
-
 		Entity kart = new Entity();
+
 		kart.add(new KeyInputComponent(new int[] { Input.Keys.A, Input.Keys.D,
 				Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
+
 		Vector2 pos = new Vector2(x, y);
 		kart.add(new PivotComponent(pos));
+
+		SpriteComponent spriteComponent = new SpriteComponent(
+				TexturePaths.KART_TEXTURE, EntityConfig.KART_WIDTH,
+				EntityConfig.KART_HEIGHT);
 		kart.add(spriteComponent);
 
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(22.3f));
 
-		kart.add(new ColliderComponent(new RectangleCollider(KART_WIDTH,
-				KART_HEIGHT, 0, 0, 0)));
+		kart.add(new ColliderComponent(new RectangleCollider(
+				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT, 0, 0, 0)));
 
-		Texture wheeltexture = new Texture(TexturePaths.WHEEL);
-		kart.add(new VehicleComponent().addWheel(
-				new Wheel(1.8f, 2, false, true, wheeltexture)).addWheel(
-				new Wheel(-1.8f, 2, true, false, wheeltexture)));
+		float xWheelOffset = EntityConfig.KART_WIDTH / 2
+				+ EntityConfig.WHEEL_WIDTH / 2;
+		float yWheelOffset = EntityConfig.KART_HEIGHT / 2
+				- EntityConfig.WHEEL_HEIGHT;
+		kart.add(new VehicleComponent()
+				.addWheel(new Wheel(xWheelOffset, yWheelOffset, false, true))
+				.addWheel(new Wheel(-xWheelOffset, yWheelOffset, false, true))
+				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, true, false))
+				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, true, false)));
 
 		return kart;
 
@@ -51,7 +53,8 @@ public class EntityBuilder {
 
 	public static Entity buildRoadBlock(float x, float y) {
 		SpriteComponent spriteComponent = new SpriteComponent(
-				TexturePaths.ROADBLOCK, ROADBLOCK_R, ROADBLOCK_R);
+				TexturePaths.ROADBLOCK, EntityConfig.ROADBLOCK_R,
+				EntityConfig.ROADBLOCK_R);
 		Entity raodBlock = new Entity();
 		raodBlock.add(new PivotComponent(new Vector2(x, y)));
 		raodBlock.add(spriteComponent);

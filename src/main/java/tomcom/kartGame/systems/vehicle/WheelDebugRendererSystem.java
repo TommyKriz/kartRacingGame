@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class WheelDebugRendererSystem extends IteratingSystem {
 
-	private static final int DIRECTION_VECTOR_SCALE = 4;
+	private static final int DIRECTION_VECTOR_SCALE = 1;
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			PivotComponent.class).get();
