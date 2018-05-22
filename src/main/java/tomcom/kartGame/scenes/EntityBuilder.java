@@ -9,7 +9,6 @@ import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
-import tomcom.kartGame.game.GameConfig;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
@@ -18,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
 
-	private static final float KART_WIDTH = 2.5f;
+	private static final float KART_WIDTH = 2f;
 
 	private static final float KART_HEIGHT = 4f;
 
@@ -28,7 +27,7 @@ public class EntityBuilder {
 
 		SpriteComponent spriteComponent = new SpriteComponent(
 				TexturePaths.KART_TEXTURE, KART_WIDTH, KART_HEIGHT);
-		
+
 		Entity kart = new Entity();
 		kart.add(new KeyInputComponent(new int[] { Input.Keys.A, Input.Keys.D,
 				Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
@@ -38,9 +37,8 @@ public class EntityBuilder {
 
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(22.3f));
 
-		kart.add(new ColliderComponent(new RectangleCollider(spriteComponent
-				.getSprite().getWidth() / 2, spriteComponent.getSprite()
-				.getHeight() / 2, 0, 0, 0)));
+		kart.add(new ColliderComponent(new RectangleCollider(KART_WIDTH,
+				KART_HEIGHT, 0, 0, 0)));
 
 		Texture wheeltexture = new Texture(TexturePaths.WHEEL);
 		kart.add(new VehicleComponent().addWheel(

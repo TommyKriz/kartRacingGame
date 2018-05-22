@@ -124,7 +124,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 					Gdx.app.log("Box2DPhysicsSystem", "Rectangle Collider");
 					RectangleCollider rect = (RectangleCollider) collider;
 					PolygonShape rectangle = new PolygonShape();
-					rectangle.setAsBox(rect.getWidth(), rect.getHeight());
+					rectangle.setAsBox(rect.getWidth()/2, rect.getHeight()/2);
 					shape = rectangle;
 				} else if (collider instanceof CircleCollider) {
 					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");

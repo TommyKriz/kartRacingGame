@@ -39,8 +39,9 @@ public class RenderingSystem extends IteratingSystem {
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
 
-		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
-				.getProjectionMatrix());
+
+//		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
+//				.getProjectionMatrix());
 
 	}
 
@@ -48,6 +49,9 @@ public class RenderingSystem extends IteratingSystem {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 
+		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
+				.getProjectionMatrix());
+		
 		batch.begin();
 
 		Gdx.gl.glClearColor(0, 1, 0, 1);

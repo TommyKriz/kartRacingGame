@@ -43,6 +43,9 @@ public class WheelDebugRendererSystem extends IteratingSystem {
 
 		Array<Wheel> wheels = vehicle.getWheels();
 
+		renderer.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
+				.getProjectionMatrix());
+
 		renderer.begin(ShapeType.Line);
 
 		Vector2 entityPivot = pm.get(entity).getPos();
@@ -72,8 +75,8 @@ public class WheelDebugRendererSystem extends IteratingSystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		renderer.setProjectionMatrix(engine.getSystem(CameraSystem.class)
-				.getProjectionMatrix());
+		// renderer.setProjectionMatrix(engine.getSystem(CameraSystem.class)
+		// .getProjectionMatrix());
 	}
 
 	// TODO: necessary?

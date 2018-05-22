@@ -1,6 +1,7 @@
 package tomcom.kartGame.scenes;
 
 import tomcom.kartGame.components.CameraTargetComponent;
+import tomcom.kartGame.game.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
@@ -37,6 +38,10 @@ public class TestLevel implements Screen {
 		viewport = new StretchViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), engine.getSystem(CameraSystem.class)
 						.getWorldCamera());
+		// viewport.apply();
+		// TODO: why is this necessary?
+		viewport.setWorldSize(GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
+				GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
 
 		initEntities();
 	}
@@ -47,10 +52,11 @@ public class TestLevel implements Screen {
 	}
 
 	private void initSystems() {
-		engine.addSystem(new Box2DPhysicsSystem());
-		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new CameraSystem());
+
+		engine.addSystem(new Box2DPhysicsSystem());
+		engine.addSystem(new PivotUpdateSystem());
 
 		// engine.addSystem(new CameraFollowSystem());
 
@@ -64,6 +70,7 @@ public class TestLevel implements Screen {
 		engine.addSystem(new WheelDebugRendererSystem());
 
 		engine.addSystem(new MouseInputSystem());
+
 	}
 
 	@Override
@@ -71,7 +78,6 @@ public class TestLevel implements Screen {
 		// init
 	}
 
-	//
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

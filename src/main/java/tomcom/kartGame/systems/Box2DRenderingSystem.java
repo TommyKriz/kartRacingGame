@@ -10,7 +10,7 @@ public class Box2DRenderingSystem extends EntitySystem {
 
 	private World world;
 
-//	private OrthographicCamera worldCamera;
+	// private OrthographicCamera worldCamera;
 
 	private Box2DDebugRenderer debugRenderer;
 
@@ -28,8 +28,8 @@ public class Box2DRenderingSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		world = engine.getSystem(Box2DPhysicsSystem.class).getWorld();
-//		worldCamera = getEngine().getSystem(CameraSystem.class)
-//				.getWorldCamera();
+		// worldCamera = getEngine().getSystem(CameraSystem.class)
+		// .getWorldCamera();
 	}
 
 }
