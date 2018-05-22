@@ -62,12 +62,12 @@ public class VehicleKeyInputSystem extends IteratingSystem {
 		}
 		if (Gdx.input.isKeyPressed(keys[2])) {
 			Gdx.app.log("Input received -", "PEDAL TO THE METAL");
-			gas(wheels, chassis);
+			gas(true, wheels, chassis);
 		}
-		// if (Gdx.input.isKeyPressed(keys[3])) {
-		// Gdx.app.log("Input received -", "BACK/BREAK");
-		// vehicle.applyForce(DOWN_FORCE);
-		// }
+		if (Gdx.input.isKeyPressed(keys[3])) {
+			Gdx.app.log("Input received -", "BACK/BRAKE");
+			gas(false, wheels, chassis);
+		}
 		if (Gdx.input.isKeyPressed(keys[4])) {
 			Gdx.app.log("Input received -", "NITRO BOOST");
 			chassis.applyForce(NITRO_FORCE);
@@ -75,7 +75,8 @@ public class VehicleKeyInputSystem extends IteratingSystem {
 
 	}
 
-	private void gas(Array<Wheel> wheels, Body2DComponent chassis) {
+	private void gas(boolean forward, Array<Wheel> wheels,
+			Body2DComponent chassis) {
 		float wx;
 		float wy;
 		Vector2 wheelPivot;
@@ -94,8 +95,15 @@ public class VehicleKeyInputSystem extends IteratingSystem {
 			System.out.println("---_--- " + wheelPivot.toString());
 
 			// cpy()!!
-			chassis.applyForce(w.getDirectionVector().cpy().scl(4.1f),
-					wheelPivot);
+			if (forward) {
+				chassis.applyForce(w.getDirectionVector().cpy().scl(4.1f),
+						wheelPivot);
+			} else {
+				chassis.applyForce(
+						w.getDirectionVector().cpy().scl(1, -1).scl(4.1f),
+						wheelPivot);
+			}
+
 		}
 	}
 
