@@ -10,8 +10,8 @@ public class GameConfig {
 
 	public static final float WORLD_GRAVITY_Y = 0;
 
-	public static final float WORLD_WIDTH_SEEN_THROUGH_CAMERA = 30;
+	public static final float WORLD_WIDTH_SEEN_THROUGH_CAMERA = 10;
 
-	public static final float WORLD_HEIGHT_SEEN_THROUGH_CAMERA = 40;
+	public static final float WORLD_HEIGHT_SEEN_THROUGH_CAMERA = 20;
 
 }

@@ -13,7 +13,11 @@ public class CameraSystem extends EntitySystem {
 	private OrthographicCamera worldCamera;
 
 	public CameraSystem() {
-		worldCamera = new OrthographicCamera(
+		// worldCamera = new OrthographicCamera(
+		// GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
+		// GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
+		worldCamera = new OrthographicCamera();
+		worldCamera.setToOrtho(false,
 				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
 				GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
 	}
@@ -25,6 +29,7 @@ public class CameraSystem extends EntitySystem {
 		// TODO: take out camera zoom
 
 		if (Gdx.input.isKeyPressed(Input.Keys.PLUS)) {
+			// TODO: Why is this not shown??
 			worldCamera.zoom += 0.02;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
 			worldCamera.zoom -= 0.02;

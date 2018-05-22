@@ -6,8 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Wheel {
 
-	public Vector2 pos = new Vector2(0, 0);
-
 	public float xOffsetFromPivot;
 
 	public float yOffsetFromPivot;
@@ -40,10 +38,5 @@ public class Wheel {
 	 * wheel rotation can be controlled
 	 */
 	public boolean steerable;
-
-	public void updatePos(Vector2 chassisPivot) {
-		pos.x = chassisPivot.x + xOffsetFromPivot;
-		pos.y = chassisPivot.y + yOffsetFromPivot;
-	}
 
 }

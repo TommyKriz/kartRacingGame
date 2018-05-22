@@ -11,12 +11,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class VehicleDebugRendererSystem extends IteratingSystem {
+public class WheelDebugRendererSystem extends IteratingSystem {
 
 	private static final int DIRECTION_VECTOR_SCALE = 4;
 
@@ -30,7 +31,7 @@ public class VehicleDebugRendererSystem extends IteratingSystem {
 
 	ShapeRenderer renderer;
 
-	public VehicleDebugRendererSystem() {
+	public WheelDebugRendererSystem() {
 		super(FAMILY);
 		renderer = new ShapeRenderer();
 	}
@@ -45,34 +46,24 @@ public class VehicleDebugRendererSystem extends IteratingSystem {
 		renderer.begin(ShapeType.Line);
 
 		Vector2 entityPivot = pm.get(entity).getPos();
+
 		float wx;
 		float wy;
 
 		for (Wheel w : wheels) {
-			/*
-			 * this demonstrates using LOCAL Coords, as the origin 0,0 is the
-			 * pivot of the entity.
-			 */
 
-			w.updatePos(entityPivot);
+			Gdx.app.log("WheelDebugRendererSystem",
+					" ENTITY PIVOT (World Coords) " + entityPivot.toString());
 
-			System.out.println(" WORLD PIVOT " + entityPivot.toString());
+			wx = entityPivot.x + w.xOffsetFromPivot;
+			wy = entityPivot.y + w.yOffsetFromPivot;
 
-			System.out.println(" WHEEL PIVOT " + w.pos);
-
-			// System.out.println(" WHEEL OFFSET " + w.xOffsetFromPivot + "|"
-			// + w.yOffsetFromPivot);
-
-			// wx = worldPivot.x + w.xOffsetFromPivot;
-			// wy = worldPivot.y + w.yOffsetFromPivot;
-
-			// System.out.println(" WHEEL PIVOT " + wx + "|" + wy);
-
-			// renderer.line(wx, wy, wx + w.getDirectionVector().x
-			// * DIRECTION_VECTOR_SCALE, wy + w.getDirectionVector().y
-			// * DIRECTION_VECTOR_SCALE);
-
-			renderer.line(w.pos.x, w.pos.y, 0, 0);
+			renderer.setColor(Color.FIREBRICK);
+			renderer.line(wx, wy, wx + w.getDirectionVector().x
+					* DIRECTION_VECTOR_SCALE, wy + w.getDirectionVector().y
+					* DIRECTION_VECTOR_SCALE);
+			renderer.setColor(Color.GOLDENROD);
+			renderer.line(wx, wy, entityPivot.x, entityPivot.y);
 		}
 
 		renderer.end();

@@ -4,15 +4,14 @@ import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
-import tomcom.kartGame.systems.CameraFollowSystem;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.input.KeyInputSystem;
 import tomcom.kartGame.systems.input.MouseInputSystem;
-import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.VehicleKeyInputSystem;
-import tomcom.kartGame.systems.vehicle.VehicleSystem;
+import tomcom.kartGame.systems.vehicle.WheelDebugRendererSystem;
+import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -43,7 +42,6 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEntities() {
-		engine.addEntity(EntityBuilder.buildBG());
 		engine.addEntity(EntityBuilder.buildKart(2, 2).add(
 				new CameraTargetComponent()));
 	}
@@ -54,16 +52,16 @@ public class TestLevel implements Screen {
 
 		engine.addSystem(new CameraSystem());
 
-//		engine.addSystem(new CameraFollowSystem());
+		// engine.addSystem(new CameraFollowSystem());
 
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 
-//		engine.addSystem(new KeyInputSystemwd());
+		engine.addSystem(new KeyInputSystem());
 
-		 engine.addSystem(new VehicleSystem());
-		 engine.addSystem(new VehicleKeyInputSystem());
-		 engine.addSystem(new VehicleDebugRendererSystem());
+		// engine.addSystem(new WheelRenderingSystem());
+		engine.addSystem(new VehicleKeyInputSystem());
+		engine.addSystem(new WheelDebugRendererSystem());
 
 		engine.addSystem(new MouseInputSystem());
 	}

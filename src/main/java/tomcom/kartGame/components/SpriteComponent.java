@@ -9,8 +9,10 @@ public class SpriteComponent implements Component {
 
 	private Sprite sprite;
 
-	public SpriteComponent(String textureName) {
+	public SpriteComponent(String textureName, float widthInWorldUnits,
+			float heightInWorldUnits) {
 		sprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
+		sprite.setSize(widthInWorldUnits, heightInWorldUnits);
 	}
 
 	public Sprite getSprite() {

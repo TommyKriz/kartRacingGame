@@ -3,7 +3,6 @@ package tomcom.kartGame.systems.vehicle;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
-import tomcom.kartGame.game.GameConfig;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 
@@ -12,16 +11,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-public class VehicleSystem extends IteratingSystem {
+public class WheelRenderingSystem extends IteratingSystem {
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class).get();
@@ -36,7 +32,7 @@ public class VehicleSystem extends IteratingSystem {
 
 	// private Sprite wheelTexture;
 
-	public VehicleSystem() {
+	public WheelRenderingSystem() {
 		super(FAMILY);
 		// wheelTexture = new Sprite(new
 		// Texture(Gdx.files.internal("wheel.png")));
@@ -45,7 +41,7 @@ public class VehicleSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 
-		Body2DComponent chassis = bm.get(entity);
+		// Body2DComponent chassis = bm.get(entity);
 
 		VehicleComponent vehicle = vm.get(entity);
 
@@ -54,11 +50,19 @@ public class VehicleSystem extends IteratingSystem {
 		// float normalForce = calcNormalForce(chassis, wheels.size);
 
 		// TODO: warum überflüssig?
-		// batch.setProjectionMatrix(worldCam.combined);
+		batch.setProjectionMatrix(worldCam.combined);
 
 		batch.begin();
 
+		Vector2 entityPivot = bm.get(entity).getPosition();
+
+		float wx;
+		float wy;
+
 		for (Wheel w : wheels) {
+
+			wx = entityPivot.x + w.xOffsetFromPivot;
+			wy = entityPivot.y + w.yOffsetFromPivot;
 
 			// chassis.applyForce(new Vector2(1, 1), chassis
 			// .toWorldPoint(new Vector2(w.xOffsetFromPivot,
@@ -88,7 +92,10 @@ public class VehicleSystem extends IteratingSystem {
 			// wheelTexture.setRotation(w.orientation);
 			// wheelTexture.draw(batch);
 
-			w.wheelTexture.setPosition(w.pos.x, w.pos.y);
+			Vector3 screenCoords = worldCam.project(new Vector3(wx, wy, 0));
+
+			w.wheelTexture.setPosition(wx, wy);
+			// w.wheelTexture.setPosition(screenCoords.x, screenCoords.y);
 			w.wheelTexture.draw(batch);
 
 		}
