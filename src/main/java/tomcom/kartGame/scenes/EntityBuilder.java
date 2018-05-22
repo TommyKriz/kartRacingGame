@@ -1,6 +1,6 @@
 package tomcom.kartGame.scenes;
 
-import tomcom.kartGame.components.KeyInputComponent;
+import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
 import tomcom.kartGame.components.collision.CircleCollider;
@@ -11,7 +11,6 @@ import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
@@ -20,8 +19,11 @@ public class EntityBuilder {
 
 		Entity kart = new Entity();
 
-		kart.add(new KeyInputComponent(new int[] { Input.Keys.A, Input.Keys.D,
-				Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
+		// kart.add(new KeyInputComponent(new int[] { Input.Keys.A,
+		// Input.Keys.D,
+		// Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
+
+		kart.add(new GamepadInputComponent());
 
 		Vector2 pos = new Vector2(x, y);
 		kart.add(new PivotComponent(pos));

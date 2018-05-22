@@ -62,7 +62,27 @@
 			<classifier>natives-desktop</classifier>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers-desktop -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers-desktop</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers-platform -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<classifier>natives-desktop</classifier>
+		</dependency>
 
 	</dependencies>
 

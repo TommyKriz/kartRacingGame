@@ -9,7 +9,7 @@ import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.input.MouseInputSystem;
-import tomcom.kartGame.systems.vehicle.VehicleKeyInputSystem;
+import tomcom.kartGame.systems.vehicle.VehicleGamepadInputSystem;
 import tomcom.kartGame.systems.vehicle.WheelDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
@@ -62,9 +62,11 @@ public class TestLevel implements Screen {
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 
+		engine.addSystem(new WheelRenderingSystem());
 
-		 engine.addSystem(new WheelRenderingSystem());
-		engine.addSystem(new VehicleKeyInputSystem());
+		// engine.addSystem(new VehicleKeyInputSystem());
+		engine.addSystem(new VehicleGamepadInputSystem());
+
 		engine.addSystem(new WheelDebugRendererSystem());
 
 		engine.addSystem(new MouseInputSystem());

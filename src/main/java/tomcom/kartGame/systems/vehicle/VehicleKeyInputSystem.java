@@ -77,17 +77,8 @@ public class VehicleKeyInputSystem extends IteratingSystem {
 
 	private void gas(boolean forward, Array<Wheel> wheels,
 			Body2DComponent chassis) {
-		float wx;
-		float wy;
 		Vector2 wheelPivot;
 		for (Wheel w : wheels) {
-
-			// TODO: whats faster??
-
-			wx = chassis.getBody().getPosition().x + w.xOffsetFromPivot;
-			wy = chassis.getBody().getPosition().y + w.yOffsetFromPivot;
-
-			System.out.println("------- " + wx + "|" + wy);
 
 			wheelPivot = chassis.toWorldPoint(new Vector2(w.xOffsetFromPivot,
 					w.yOffsetFromPivot));
