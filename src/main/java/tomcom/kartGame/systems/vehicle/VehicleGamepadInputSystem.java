@@ -12,6 +12,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class VehicleGamepadInputSystem extends IteratingSystem {
@@ -46,6 +47,14 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 			Gdx.app.log("VehicleGamepadInputSystem", " axis 1 (LX): "
 					+ controller.getAxis(1));
 
+			for (Wheel w : wheels) {
+				if (w.steerable) {
+					// TODO: +90?
+					w.orientation = controller.getAxis(1) * 100 + 90;
+					w.getDirectionVector().setAngle(w.orientation);
+				}
+			}
+
 			Gdx.app.log("VehicleGamepadInputSystem", " axis 2 (RY): "
 					+ controller.getAxis(2));
 
@@ -55,6 +64,17 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 			Gdx.app.log("VehicleGamepadInputSystem", " axis 4 (LT RT): "
 					+ controller.getAxis(4));
 
+			Vector2 wheelPivot;
+			for (Wheel w : wheels) {
+
+				wheelPivot = chassis.toWorldPoint(new Vector2(
+						w.xOffsetFromPivot, w.yOffsetFromPivot));
+
+				chassis.applyForce(
+						w.getDirectionVector().cpy()
+								.scl(controller.getAxis(4) * -6f), wheelPivot);
+
+			}
 		}
 
 	}
