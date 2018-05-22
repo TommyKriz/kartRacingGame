@@ -3,10 +3,8 @@ package tomcom.kartGame.systems.vehicle;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
-import tomcom.kartGame.game.GameConfig;
 import tomcom.kartGame.scenes.EntityConfig;
 import tomcom.kartGame.scenes.TexturePaths;
-import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 
 import com.badlogic.ashley.core.ComponentMapper;
