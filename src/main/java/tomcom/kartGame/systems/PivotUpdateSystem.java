@@ -28,7 +28,7 @@ public class PivotUpdateSystem extends IteratingSystem {
 		Body2DComponent body = bc.get(entity);
 		PivotComponent pivot = pc.get(entity);
 		pivot.setPos(body.getPosition());
-		Gdx.app.log("BodyUpdateSystem", "body " + body.getPosition());
+		//Gdx.app.log("BodyUpdateSystem", "body " + body.getPosition());
 	}
 
 }

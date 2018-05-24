@@ -47,10 +47,10 @@ public class RenderingSystem extends IteratingSystem {
 			PivotComponent pivot = pc.get(entity);
 
 			final Sprite sprite = visual.getSprite();
-			Gdx.app.log(
+			/*Gdx.app.log(
 					"RenderingSystem ",
 					"drawing Sprite at " + pivot.getPos().x + "|"
-							+ pivot.getPos().y);
+							+ pivot.getPos().y);*/
 			batch.draw(sprite, pivot.getPos().x, pivot.getPos().y);
 		}
 

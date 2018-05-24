@@ -11,6 +11,7 @@ import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.InputSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
+import tomcom.kartGame.systems.Network.NetworkingSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -22,6 +23,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TestLevel implements Screen {
 
+	private final boolean  IS_SERVER = false;
+	
 	private GameMain game;
 
 	private Engine engine;
@@ -69,7 +72,7 @@ public class TestLevel implements Screen {
 		engine.addSystem(new InputSystem());
 		engine.addSystem(new Box2DPhysicsSystem());
 		engine.addSystem(new PivotUpdateSystem());
-
+		engine.addSystem(new NetworkingSystem(IS_SERVER));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 		engine.addSystem(new RenderingSystem());
@@ -85,7 +88,7 @@ public class TestLevel implements Screen {
 	public void render(float delta) {
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.app.log("TestLevel ", "updateEngine");
+		//Gdx.app.log("TestLevel ", "updateEngine");
 		engine.update(delta);
 	}
 

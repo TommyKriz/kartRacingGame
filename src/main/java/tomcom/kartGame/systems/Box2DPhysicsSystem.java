@@ -52,7 +52,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 			@Override
 			public void entityRemoved(Entity entity) {
-				Gdx.app.log("Box2DPhysicsSystem", "Entity removed from System");
+				//Gdx.app.log("Box2DPhysicsSystem", "Entity removed from System");
 				Body2DComponent body = entity
 						.getComponent(Body2DComponent.class);
 
@@ -62,7 +62,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 			@Override
 			public void entityAdded(Entity entity) {
-				Gdx.app.log("Box2DPhysicsSystem", "Entity added to System");
+				//Gdx.app.log("Box2DPhysicsSystem", "Entity added to System");
 
 				Body2DComponent body = entity
 						.getComponent(Body2DComponent.class);

@@ -43,31 +43,31 @@ public class InputSystem extends IteratingSystem {
 
 		// TODO: else's here???
 		if (Gdx.input.isKeyPressed(keys[0])) {
-			Gdx.app.log("Input received -", "LEFT");
+			//Gdx.app.log("Input received -", "LEFT");
 			body.applyForce(LEFT_FORCE);
 		}
 		if (Gdx.input.isKeyPressed(keys[1])) {
-			Gdx.app.log("Input received -", "RIGHT");
+			//Gdx.app.log("Input received -", "RIGHT");
 			body.applyForce(RIGHT_FORCE);
 		}
 		if (Gdx.input.isKeyPressed(keys[2])) {
-			Gdx.app.log("Input received -", "UP");
+			//Gdx.app.log("Input received -", "UP");
 			body.applyForce(UP_FORCE);
 		}
 		if (Gdx.input.isKeyPressed(keys[3])) {
-			Gdx.app.log("Input received -", "DOWN");
+			//Gdx.app.log("Input received -", "DOWN");
 			body.applyForce(DOWN_FORCE);
 		}
 		if (Gdx.input.isKeyPressed(keys[4])) {
-			Gdx.app.log("Input received -", "NITRO");
+			//Gdx.app.log("Input received -", "NITRO");
 			body.applyForce(NITRO_FORCE);
 		}
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			Gdx.app.log(
+			/*Gdx.app.log(
 					"Input received -",
 					"MOUSE CLICKed @ " + Gdx.input.getX() + "|"
-							+ Gdx.input.getY());
+							+ Gdx.input.getY());*/
 		}
 
 	}
