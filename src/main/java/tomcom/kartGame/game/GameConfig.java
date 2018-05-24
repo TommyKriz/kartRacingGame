@@ -10,8 +10,9 @@ public class GameConfig {
 
 	public static final float WORLD_GRAVITY_Y = 0;
 
-	public static final float WORLD_WIDTH_SEEN_THROUGH_CAMERA = 4.8f;
+	// TODO: aspect ratio of screen!!!
+	public static final float WORLD_WIDTH_SEEN_THROUGH_CAMERA = 8f;
 
-	public static final float WORLD_HEIGHT_SEEN_THROUGH_CAMERA = 12;
+	public static final float WORLD_HEIGHT_SEEN_THROUGH_CAMERA = 6;
 
 }

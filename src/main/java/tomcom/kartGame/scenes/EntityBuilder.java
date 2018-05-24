@@ -43,10 +43,10 @@ public class EntityBuilder {
 		float yWheelOffset = EntityConfig.KART_HEIGHT / 2
 				- EntityConfig.WHEEL_HEIGHT;
 		kart.add(new VehicleComponent()
-				.addWheel(new Wheel(xWheelOffset, yWheelOffset, false, true))
-				.addWheel(new Wheel(-xWheelOffset, yWheelOffset, false, true))
-				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, true, false))
-				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, true, false)));
+				.addWheel(new Wheel(xWheelOffset, yWheelOffset, true))
+				.addWheel(new Wheel(-xWheelOffset, yWheelOffset, true))
+				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, false))
+				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, false)));
 
 		return kart;
 

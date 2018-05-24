@@ -64,7 +64,6 @@ public class TestLevel implements Screen {
 
 		engine.addSystem(new WheelRenderingSystem());
 
-		// engine.addSystem(new VehicleKeyInputSystem());
 		engine.addSystem(new VehicleGamepadInputSystem());
 
 		engine.addSystem(new WheelDebugRendererSystem());

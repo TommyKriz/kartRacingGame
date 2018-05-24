@@ -17,6 +17,10 @@ import com.badlogic.gdx.utils.Array;
 
 public class VehicleGamepadInputSystem extends IteratingSystem {
 
+	private static final int SEITENFUEHRUNGSKRAFT = 6;
+
+	private static final float MAXIMUM_GAS_FORCE = -6f;
+
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
 
@@ -34,8 +38,6 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		VehicleComponent vehicle = vc.get(entity);
 
-		Array<Wheel> wheels = vehicle.getWheels();
-
 		Body2DComponent chassis = bc.get(entity);
 
 		for (Controller controller : Controllers.getControllers()) {
@@ -47,12 +49,10 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 			Gdx.app.log("VehicleGamepadInputSystem", " axis 1 (LX): "
 					+ controller.getAxis(1));
 
-			for (Wheel w : wheels) {
-				if (w.steerable) {
-					// TODO: +90?
-					w.orientation = controller.getAxis(1) * 100 + 90;
-					w.getDirectionVector().setAngle(w.orientation);
-				}
+			for (Wheel w : vehicle.getSteerableWheels()) {
+				// TODO: +90?
+				w.orientation = controller.getAxis(1) * -100 + 90;
+				w.getDirectionVector().setAngle(w.orientation);
 			}
 
 			Gdx.app.log("VehicleGamepadInputSystem", " axis 2 (RY): "
@@ -65,14 +65,38 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 					+ controller.getAxis(4));
 
 			Vector2 wheelPivot;
-			for (Wheel w : wheels) {
+			for (Wheel w : vehicle.getWheels()) {
 
 				wheelPivot = chassis.toWorldPoint(new Vector2(
 						w.xOffsetFromPivot, w.yOffsetFromPivot));
 
+				// TODO: visuzalize Forces
+
+				// TODO: missing seitenführungskräfte! dependant on velocity on
+				// wheelPivot
+
+				Vector2 normalDirectionVector = w.getDirectionVector().cpy()
+						.rotate(90);
+				float seitenfuehrungsSpeed = normalDirectionVector.dot(chassis
+						.getVelocity(wheelPivot));
+
+				Gdx.app.log("VehicleGameInputSystem", "SEITENFÜHRUNGSKRAFT: "
+						+ seitenfuehrungsSpeed);
+
+				// chassis.getVelocity(wheelPivot)
+
+				if (seitenfuehrungsSpeed > 0) {
+					chassis.applyForce(new Vector2(-SEITENFUEHRUNGSKRAFT, 0),
+							wheelPivot);
+				} else if (seitenfuehrungsSpeed < 0) {
+					chassis.applyForce(new Vector2(SEITENFUEHRUNGSKRAFT, 0),
+							wheelPivot);
+				}
+
 				chassis.applyForce(
 						w.getDirectionVector().cpy()
-								.scl(controller.getAxis(4) * -6f), wheelPivot);
+								.scl(controller.getAxis(4) * MAXIMUM_GAS_FORCE),
+						wheelPivot);
 
 			}
 		}

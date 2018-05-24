@@ -43,20 +43,24 @@ public class WheelRenderingSystem extends IteratingSystem {
 	}
 
 	@Override
+	public void update(float deltaTime) {
+		batch.begin();
+		super.update(deltaTime);
+		batch.end();
+	}
+
+	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		VehicleComponent vehicle = vm.get(entity);
-
-		Array<Wheel> wheels = vehicle.getWheels();
-
-		batch.begin();
 
 		Vector2 entityPivot = bm.get(entity).getPosition();
 
 		float wx;
 		float wy;
 
-		for (Wheel w : wheels) {
+		for (Wheel w : vehicle.getDrivenWheels()) {
 
+			// TODO: replace with chassis.toWorldPoint(xOff,yOff) for rotation !
 			wx = entityPivot.x + w.xOffsetFromPivot;
 			wy = entityPivot.y + w.yOffsetFromPivot;
 
@@ -66,8 +70,18 @@ public class WheelRenderingSystem extends IteratingSystem {
 			wheelSprite.draw(batch);
 
 		}
+		for (Wheel w : vehicle.getSteerableWheels()) {
 
-		batch.end();
+			// TODO: replace with chassis.toWorldPoint(xOff,yOff) for rotation !
+			wx = entityPivot.x + w.xOffsetFromPivot;
+			wy = entityPivot.y + w.yOffsetFromPivot;
+
+			wheelSprite.setRotation(w.orientation - 90);
+			wheelSprite.setPosition(wx - EntityConfig.WHEEL_WIDTH / 2, wy
+					- EntityConfig.WHEEL_HEIGHT / 2);
+			wheelSprite.draw(batch);
+
+		}
 
 	}
 

@@ -36,24 +36,32 @@ public class WheelDebugRendererSystem extends IteratingSystem {
 		renderer = new ShapeRenderer();
 	}
 
+	// TODO: do that for other system
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
+	public void update(float deltaTime) {
 
-		VehicleComponent vehicle = vm.get(entity);
-
-		Array<Wheel> wheels = vehicle.getWheels();
-
+		// TODO: dirty flag?
 		renderer.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
 				.getProjectionMatrix());
 
 		renderer.begin(ShapeType.Line);
+
+		super.update(deltaTime);
+
+		renderer.end();
+	}
+
+	@Override
+	protected void processEntity(Entity entity, float deltaTime) {
+
+		VehicleComponent vehicle = vm.get(entity);
 
 		Vector2 entityPivot = pm.get(entity).getPos();
 
 		float wx;
 		float wy;
 
-		for (Wheel w : wheels) {
+		for (Wheel w : vehicle.getWheels()) {
 
 			Gdx.app.log("WheelDebugRendererSystem",
 					" ENTITY PIVOT (World Coords) " + entityPivot.toString());
@@ -69,7 +77,6 @@ public class WheelDebugRendererSystem extends IteratingSystem {
 			renderer.line(wx, wy, entityPivot.x, entityPivot.y);
 		}
 
-		renderer.end();
 	}
 
 	@Override

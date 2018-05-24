@@ -32,9 +32,7 @@ public class Body2DComponent implements Body2D, Component {
 
 	@Override
 	public Vector2 getVelocity(Vector2 p) {
-		// TODO Oder World Point ???
-		body.getLinearVelocityFromLocalPoint(p);
-		return null;
+		return body.getLinearVelocityFromWorldPoint(p);
 	}
 
 	@Override
