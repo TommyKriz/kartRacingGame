@@ -10,12 +10,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class VehicleGamepadInputSystem extends IteratingSystem {
+
+	private static final int MAXIMUM_WHEEL_ANGLE = 60;
 
 	private static final int SEITENFUEHRUNGSKRAFT = 6;
 
@@ -51,7 +54,8 @@ public class VehicleGamepadInputSystem extends IteratingSystem {
 
 			for (Wheel w : vehicle.getSteerableWheels()) {
 				// TODO: +90?
-				w.orientation = controller.getAxis(1) * -100 + 90;
+				w.orientation = controller.getAxis(1) * -MAXIMUM_WHEEL_ANGLE
+						+ 90;
 				w.getDirectionVector().setAngle(w.orientation);
 			}
 

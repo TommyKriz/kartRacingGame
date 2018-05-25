@@ -27,9 +27,7 @@ public class CameraSystem extends EntitySystem {
 		worldCamera.update();
 
 		// TODO: take out camera zoom
-
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			// TODO: Why is this not shown??
 			worldCamera.zoom += 0.02;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
 			worldCamera.zoom -= 0.02;

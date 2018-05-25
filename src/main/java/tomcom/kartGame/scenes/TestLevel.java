@@ -5,10 +5,11 @@ import tomcom.kartGame.game.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
+import tomcom.kartGame.systems.CameraFollowSystem;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
-import tomcom.kartGame.systems.input.MouseInputSystem;
+import tomcom.kartGame.systems.TrackEditorSystem;
 import tomcom.kartGame.systems.vehicle.VehicleGamepadInputSystem;
 import tomcom.kartGame.systems.vehicle.WheelDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
@@ -57,7 +58,7 @@ public class TestLevel implements Screen {
 		engine.addSystem(new Box2DPhysicsSystem());
 		engine.addSystem(new PivotUpdateSystem());
 
-		// engine.addSystem(new CameraFollowSystem());
+//		 engine.addSystem(new CameraFollowSystem());
 
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
@@ -68,8 +69,7 @@ public class TestLevel implements Screen {
 
 		engine.addSystem(new WheelDebugRendererSystem());
 
-		engine.addSystem(new MouseInputSystem());
-
+		engine.addSystem(new TrackEditorSystem());
 	}
 
 	@Override

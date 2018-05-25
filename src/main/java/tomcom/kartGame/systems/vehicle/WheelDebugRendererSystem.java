@@ -82,8 +82,8 @@ public class WheelDebugRendererSystem extends IteratingSystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		// renderer.setProjectionMatrix(engine.getSystem(CameraSystem.class)
-		// .getProjectionMatrix());
+		renderer.setProjectionMatrix(engine.getSystem(CameraSystem.class)
+				.getProjectionMatrix());
 	}
 
 	// TODO: necessary?

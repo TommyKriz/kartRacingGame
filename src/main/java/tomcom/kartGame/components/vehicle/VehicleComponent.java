@@ -17,6 +17,8 @@ public class VehicleComponent implements Component {
 
 	public VehicleComponent addWheel(Wheel w) {
 		if (w.steerable) {
+			// TODO: because of controller offset
+			w.orientation += 90;
 			steerableWheels.add(w);
 		} else {
 			drivenWheels.add(w);

@@ -49,20 +49,28 @@ public class EntityBuilder {
 				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, false)));
 
 		return kart;
-
 	}
 
 	public static Entity buildRoadBlock(float x, float y) {
 		SpriteComponent spriteComponent = new SpriteComponent(
-				TexturePaths.ROADBLOCK, EntityConfig.ROADBLOCK_R,
-				EntityConfig.ROADBLOCK_R);
-		Entity raodBlock = new Entity();
-		raodBlock.add(new PivotComponent(new Vector2(x, y)));
-		raodBlock.add(spriteComponent);
-		raodBlock.add(new Body2DComponent().setDynamic(false));
-		raodBlock.add(new ColliderComponent(new CircleCollider(spriteComponent
+				TexturePaths.ROADBLOCK, EntityConfig.ROADBLOCK_R * 2,
+				EntityConfig.ROADBLOCK_R * 2);
+		Entity roadBlock = new Entity();
+		roadBlock.add(new PivotComponent(new Vector2(x, y)));
+		roadBlock.add(spriteComponent);
+		roadBlock.add(new Body2DComponent().setDynamic(false));
+		roadBlock.add(new ColliderComponent(new CircleCollider(spriteComponent
 				.getSprite().getWidth() / 2, 0, 0, 0)));
-		return raodBlock;
+		return roadBlock;
+	}
+
+	public static Entity buildInvisibleRoadBlock(float x, float y) {
+		Entity roadBlock = new Entity();
+		roadBlock.add(new PivotComponent(new Vector2(x, y)));
+		roadBlock.add(new Body2DComponent().setDynamic(false));
+		roadBlock.add(new ColliderComponent(new CircleCollider(
+				EntityConfig.ROADBLOCK_R, 0, 0, 0)));
+		return roadBlock;
 	}
 
 }
