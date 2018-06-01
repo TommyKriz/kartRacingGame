@@ -78,4 +78,8 @@ public class Body2DComponent implements Body2D, Component {
 		return body.getWorldPoint(lp);
 	}
 
+	public float getAngleInRadians() {
+		return body.getAngle();
+	}
+
 }

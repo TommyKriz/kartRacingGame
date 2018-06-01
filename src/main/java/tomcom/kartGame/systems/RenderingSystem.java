@@ -11,7 +11,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector3;
 
 public class RenderingSystem extends IteratingSystem {
 
@@ -23,62 +23,52 @@ public class RenderingSystem extends IteratingSystem {
 	private ComponentMapper<PivotComponent> pc = ComponentMapper
 			.getFor(PivotComponent.class);
 
-	// TODO: Where to dispose?
 	private SpriteBatch batch;
-
-	private Array<Entity> renderQueue;
 
 	public RenderingSystem() {
 		super(FAMILY);
 		batch = new SpriteBatch();
-		renderQueue = new Array<>();
-	}
-
-	@Override
-	public void addedToEngine(Engine engine) {
-		super.addedToEngine(engine);
-
-
-//		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
-//				.getProjectionMatrix());
-
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		super.update(deltaTime);
 
+		// TODO: dirty flag?
 		batch.setProjectionMatrix(getEngine().getSystem(CameraSystem.class)
 				.getProjectionMatrix());
-		
+
 		batch.begin();
 
-		Gdx.gl.glClearColor(0, 1, 0, 1);
+		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 
-		for (Entity entity : renderQueue) {
-			SpriteComponent visual = sc.get(entity);
-			PivotComponent pivot = pc.get(entity);
-
-			final Sprite sprite = visual.getSprite();
-			// // pivot is seen in the middle of the sprite
-			sprite.setPosition(pivot.getPos().x - sprite.getWidth() / 2,
-					pivot.getPos().y - sprite.getHeight() / 2);
-
-			sprite.draw(batch);
-		}
+		super.update(deltaTime);
 
 		batch.end();
-		renderQueue.clear();
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		renderQueue.add(entity);
+
+		final Vector3 pivot = pc.get(entity).getPos();
+		final Sprite sprite = sc.get(entity).getSprite();
+
+		sprite.setPosition(pivot.x - sprite.getWidth() / 2,
+				pivot.y - sprite.getHeight() / 2);
+
+		sprite.setRotation(pivot.z);
+
+		sprite.draw(batch);
 	}
 
 	public SpriteBatch getBatch() {
 		// TODO Auto-generated method stub
 		return batch;
+	}
+
+	@Override
+	public void removedFromEngine(Engine engine) {
+		super.removedFromEngine(engine);
+		batch.dispose();
 	}
 
 }

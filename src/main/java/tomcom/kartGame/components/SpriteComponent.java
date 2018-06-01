@@ -13,6 +13,7 @@ public class SpriteComponent implements Component {
 			float heightInWorldUnits) {
 		sprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
 		sprite.setSize(widthInWorldUnits, heightInWorldUnits);
+		sprite.setOriginCenter();
 	}
 
 	public Sprite getSprite() {

@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 
 public class PivotUpdateSystem extends IteratingSystem {
 
@@ -27,8 +28,9 @@ public class PivotUpdateSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		Body2DComponent body = bc.get(entity);
 		PivotComponent pivot = pc.get(entity);
-		pivot.setPos(body.getPosition());
-		Gdx.app.log("BodyUpdateSystem", "body " + body.getPosition());
+		// convert the radians to degrees here
+		pivot.setPos(body.getPosition(), body.getAngleInRadians()
+				/ MathUtils.degreesToRadians);
 	}
 
 }

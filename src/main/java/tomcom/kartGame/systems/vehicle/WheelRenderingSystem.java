@@ -53,32 +53,31 @@ public class WheelRenderingSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		VehicleComponent vehicle = vm.get(entity);
 
-		Vector2 entityPivot = bm.get(entity).getPosition();
+		Body2DComponent chassis = bm.get(entity);
 
-		float wx;
-		float wy;
+		Vector2 wheelPivot;
 
 		for (Wheel w : vehicle.getDrivenWheels()) {
 
-			// TODO: replace with chassis.toWorldPoint(xOff,yOff) for rotation !
-			wx = entityPivot.x + w.xOffsetFromPivot;
-			wy = entityPivot.y + w.yOffsetFromPivot;
+			wheelPivot = chassis.toWorldPoint(new Vector2(w.xOffsetFromPivot,
+					w.yOffsetFromPivot));
 
 			wheelSprite.setRotation(w.orientation);
-			wheelSprite.setPosition(wx - EntityConfig.WHEEL_WIDTH / 2, wy
-					- EntityConfig.WHEEL_HEIGHT / 2);
+			wheelSprite.setPosition(
+					wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
+							- EntityConfig.WHEEL_HEIGHT / 2);
 			wheelSprite.draw(batch);
 
 		}
 		for (Wheel w : vehicle.getSteerableWheels()) {
 
-			// TODO: replace with chassis.toWorldPoint(xOff,yOff) for rotation !
-			wx = entityPivot.x + w.xOffsetFromPivot;
-			wy = entityPivot.y + w.yOffsetFromPivot;
+			wheelPivot = chassis.toWorldPoint(new Vector2(w.xOffsetFromPivot,
+					w.yOffsetFromPivot));
 
 			wheelSprite.setRotation(w.orientation - 90);
-			wheelSprite.setPosition(wx - EntityConfig.WHEEL_WIDTH / 2, wy
-					- EntityConfig.WHEEL_HEIGHT / 2);
+			wheelSprite.setPosition(
+					wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
+							- EntityConfig.WHEEL_HEIGHT / 2);
 			wheelSprite.draw(batch);
 
 		}
