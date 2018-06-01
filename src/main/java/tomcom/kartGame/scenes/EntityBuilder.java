@@ -36,7 +36,10 @@ public class EntityBuilder {
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(22.3f));
 
 		kart.add(new ColliderComponent(new RectangleCollider(
-				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT, 0, 0, 0)));
+				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT,
+				EntityConfig.KART_MASS
+						/ (EntityConfig.KART_WIDTH * EntityConfig.KART_HEIGHT),
+				0, 0)));
 
 		float xWheelOffset = EntityConfig.KART_WIDTH / 2
 				+ EntityConfig.WHEEL_WIDTH / 2;

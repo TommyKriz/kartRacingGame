@@ -10,7 +10,7 @@ public class Main {
 		cfg.title = "Kart Game Physics Spike";
 		cfg.width = GameConfig.SCREEN_WIDTH;
 		cfg.height = GameConfig.SCREEN_HEIGHT;
-		cfg.resizable = false;
+		cfg.resizable = true;
 		new LwjglApplication(new GameMain(), cfg);
 	}
 
