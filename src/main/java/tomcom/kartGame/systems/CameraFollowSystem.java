@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 
 public class CameraFollowSystem extends IteratingSystem {
 
@@ -24,6 +25,8 @@ public class CameraFollowSystem extends IteratingSystem {
 		super(FAMILY);
 	}
 
+	Vector3 oldPos;
+
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 
@@ -36,7 +39,14 @@ public class CameraFollowSystem extends IteratingSystem {
 		// camera position has to change
 		// }
 
-		cam.position.set(pivot.getPos(), 0);
+		Vector3 newPos = oldPos.lerp(
+				new Vector3(pivot.getPos().x, pivot.getPos().y, 0), 0.4f);
+
+		// pivot.getPos().lerp
+
+		cam.position.set(newPos);
+
+		oldPos = newPos;
 
 	}
 
@@ -46,6 +56,8 @@ public class CameraFollowSystem extends IteratingSystem {
 		super.addedToEngine(engine);
 
 		cam = getEngine().getSystem(CameraSystem.class).getWorldCamera();
+
+		oldPos = cam.position;
 
 	}
 

@@ -42,7 +42,7 @@ public class TrackEditorSystem extends EntitySystem {
 					+ clickCoords.x + "|" + clickCoords.y);
 			placedRoadblocks.add(roadblockToBePlaced);
 			getEngine().addEntity(
-					EntityBuilder.buildInvisibleRoadBlock(clickCoords.x,
+					EntityBuilder.buildRoadBlock(clickCoords.x,
 							clickCoords.y));
 		}
 	}

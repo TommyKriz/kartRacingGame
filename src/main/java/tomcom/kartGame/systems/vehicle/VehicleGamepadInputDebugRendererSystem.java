@@ -24,7 +24,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	private static final int SEITENFUEHRUNGSKRAFT = 4000;
 
-	private static final float MAXIMUM_GAS_FORCE = -5000f;
+	private static final float MAXIMUM_GAS_FORCE = -10000f;
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
