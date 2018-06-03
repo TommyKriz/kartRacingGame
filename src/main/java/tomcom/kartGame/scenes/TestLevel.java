@@ -46,6 +46,7 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEntities() {
+		engine.addEntity(EntityBuilder.buildMap());
 		engine.addEntity(EntityBuilder.buildKart(2, 2).add(
 				new CameraTargetComponent()));
 	}

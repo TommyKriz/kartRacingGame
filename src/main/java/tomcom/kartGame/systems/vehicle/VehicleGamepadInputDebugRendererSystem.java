@@ -19,13 +19,19 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * TODO:
+ * 
+ * ausrollen (rückwärtsfahren) , zur nuller force lerpen BREMSEN ackermann
+ * lenkung (differential?) driften schleudern reibungskoeffizient
+ */
 public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	private static final int MAXIMUM_WHEEL_ANGLE = 60;
 
 	private static final int SEITENFUEHRUNGSKRAFT = 4000;
 
-	private static final float MAXIMUM_GAS_FORCE = -30000f;
+	private static final float MAXIMUM_GAS_FORCE = -100000f;
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
@@ -80,6 +86,9 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	private void gas(VehicleComponent vehicle, Body2DComponent chassis,
 			float controllerYaxis) {
+
+		// TODO: if yAxis == 0, letzteForce - %, lerp
+
 		for (Wheel w : vehicle.getDrivenWheels()) {
 
 			chassis.applyForce(

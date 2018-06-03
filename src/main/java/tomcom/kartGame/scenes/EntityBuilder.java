@@ -76,4 +76,11 @@ public class EntityBuilder {
 		return roadBlock;
 	}
 
+	public static Entity buildMap() {
+		Entity bg = new Entity();
+		bg.add(new PivotComponent(new Vector2(0, 0)));
+		bg.add(new SpriteComponent(TexturePaths.MAP, 128, 92));
+		return bg;
+	}
+
 }

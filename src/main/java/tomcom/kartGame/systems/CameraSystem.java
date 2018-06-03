@@ -20,6 +20,7 @@ public class CameraSystem extends EntitySystem {
 		worldCamera.setToOrtho(false,
 				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
 				GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
+		worldCamera.zoom = 8;
 	}
 
 	@Override
