@@ -1,11 +1,13 @@
 package tomcom.kartGame.scenes;
 
 import tomcom.kartGame.components.CameraTargetComponent;
-import tomcom.kartGame.game.GameConfig;
+import tomcom.kartGame.config.GameConfig;
+import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
 import tomcom.kartGame.systems.CameraSystem;
+import tomcom.kartGame.systems.CameraZoomSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.TrackEditorSystem;
@@ -38,15 +40,17 @@ public class TestLevel implements Screen {
 				Gdx.graphics.getHeight(), engine.getSystem(CameraSystem.class)
 						.getWorldCamera());
 		// viewport.apply();
-		// TODO: why is this necessary?
+		// TODO: why is only this necessary () ?
 		viewport.setWorldSize(GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
-				GameConfig.WORLD_HEIGHT_SEEN_THROUGH_CAMERA);
+				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA
+						* (GameConfig.SCREEN_WIDTH / GameConfig.SCREEN_HEIGHT));
 
 		initEntities();
 	}
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMap());
+		engine.addEntity(EntityBuilder.buildFinishLine(2, 2));
 		engine.addEntity(EntityBuilder.buildKart(2, 2).add(
 				new CameraTargetComponent()));
 	}
@@ -54,6 +58,7 @@ public class TestLevel implements Screen {
 	private void initSystems() {
 
 		engine.addSystem(new CameraSystem());
+		engine.addSystem(new CameraZoomSystem());
 
 		engine.addSystem(new Box2DPhysicsSystem());
 		engine.addSystem(new PivotUpdateSystem());
@@ -76,7 +81,6 @@ public class TestLevel implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.app.log("TestLevel ", "updateEngine");
 		engine.update(delta);
 	}
 

@@ -1,4 +1,4 @@
-package tomcom.kartGame.scenes;
+package tomcom.kartGame.entities;
 
 import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.PivotComponent;
@@ -9,6 +9,8 @@ import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
+import tomcom.kartGame.config.EntityConfig;
+import tomcom.kartGame.config.TexturePaths;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -18,10 +20,6 @@ public class EntityBuilder {
 	public static Entity buildKart(float x, float y) {
 
 		Entity kart = new Entity();
-
-		// kart.add(new KeyInputComponent(new int[] { Input.Keys.A,
-		// Input.Keys.D,
-		// Input.Keys.W, Input.Keys.S, Input.Keys.SPACE }));
 
 		kart.add(new GamepadInputComponent());
 
@@ -81,6 +79,16 @@ public class EntityBuilder {
 		bg.add(new PivotComponent(new Vector2(0, 0)));
 		bg.add(new SpriteComponent(TexturePaths.MAP, 128, 92));
 		return bg;
+	}
+
+	public static Entity buildFinishLine(int x, int y) {
+		Entity roadBlock = new Entity();
+		roadBlock.add(new PivotComponent(new Vector2(x, y)));
+		roadBlock.add(new Body2DComponent().setDynamic(false));
+		roadBlock.add(new ColliderComponent(
+				new RectangleCollider(6, 1, 0, 0, 0).setSensor(true)
+						.setUserData(EntityConfig.FINISH_LINE_COLLIDER)));
+		return roadBlock;
 	}
 
 }

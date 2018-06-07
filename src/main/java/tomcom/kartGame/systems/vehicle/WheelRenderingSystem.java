@@ -3,8 +3,8 @@ package tomcom.kartGame.systems.vehicle;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
-import tomcom.kartGame.scenes.EntityConfig;
-import tomcom.kartGame.scenes.TexturePaths;
+import tomcom.kartGame.config.EntityConfig;
+import tomcom.kartGame.config.TexturePaths;
 import tomcom.kartGame.systems.RenderingSystem;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 public class WheelRenderingSystem extends IteratingSystem {
 

@@ -1,4 +1,4 @@
-package tomcom.kartGame.game;
+package tomcom.kartGame.config;
 
 public class GameConfig {
 
@@ -10,9 +10,9 @@ public class GameConfig {
 
 	public static final float WORLD_GRAVITY_Y = 0;
 
-	// TODO: aspect ratio of screen!!!
+	/**
+	 * height is calculated in relation to aspect ratio
+	 */
 	public static final float WORLD_WIDTH_SEEN_THROUGH_CAMERA = 8f;
-
-	public static final float WORLD_HEIGHT_SEEN_THROUGH_CAMERA = 6;
 
 }

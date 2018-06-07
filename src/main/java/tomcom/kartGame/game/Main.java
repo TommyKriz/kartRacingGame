@@ -1,5 +1,7 @@
 package tomcom.kartGame.game;
 
+import tomcom.kartGame.config.GameConfig;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 

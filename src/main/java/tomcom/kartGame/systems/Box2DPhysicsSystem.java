@@ -1,12 +1,13 @@
 package tomcom.kartGame.systems;
 
 import tomcom.kartGame.components.PivotComponent;
+import tomcom.kartGame.components.collision.Box2DPhysicsSystemCollisionListener;
 import tomcom.kartGame.components.collision.CircleCollider;
 import tomcom.kartGame.components.collision.Collider;
 import tomcom.kartGame.components.collision.ColliderComponent;
 import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
-import tomcom.kartGame.game.GameConfig;
+import tomcom.kartGame.config.GameConfig;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -49,6 +50,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 		world = new World(new Vector2(GameConfig.WORLD_GRAVITY_X,
 				GameConfig.WORLD_GRAVITY_Y), true);
 		world.setAutoClearForces(false);
+		world.setContactListener(new Box2DPhysicsSystemCollisionListener());
 	}
 
 	public World getWorld() {
@@ -124,7 +126,8 @@ public class Box2DPhysicsSystem extends EntitySystem {
 					Gdx.app.log("Box2DPhysicsSystem", "Rectangle Collider");
 					RectangleCollider rect = (RectangleCollider) collider;
 					PolygonShape rectangle = new PolygonShape();
-					rectangle.setAsBox(rect.getWidth()/2, rect.getHeight()/2);
+					rectangle.setAsBox(rect.getWidth() / 2,
+							rect.getHeight() / 2);
 					shape = rectangle;
 				} else if (collider instanceof CircleCollider) {
 					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");
@@ -134,7 +137,9 @@ public class Box2DPhysicsSystem extends EntitySystem {
 					shape = circle;
 				}
 				fixtureDef.shape = shape;
-				body.getBody().createFixture(fixtureDef);
+				fixtureDef.isSensor = collider.isSensor();
+				body.getBody().createFixture(fixtureDef)
+						.setUserData(collider.getUserData());
 				shape.dispose();
 			}
 		});

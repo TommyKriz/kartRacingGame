@@ -1,7 +1,7 @@
 package tomcom.kartGame.systems;
 
-import tomcom.kartGame.scenes.EntityBuilder;
-import tomcom.kartGame.scenes.EntityConfig;
+import tomcom.kartGame.config.EntityConfig;
+import tomcom.kartGame.entities.EntityBuilder;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;

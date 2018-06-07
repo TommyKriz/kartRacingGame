@@ -1,4 +1,4 @@
-package tomcom.kartGame.scenes;
+package tomcom.kartGame.config;
 
 public class TexturePaths {
 

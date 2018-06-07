@@ -10,7 +10,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
@@ -126,9 +125,6 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 			float seitenfuehrungsSpeed = normalDirectionVector.dot(chassis
 					.getVelocity(wheelPivot));
-
-			Gdx.app.log("VehicleGameInputSystem", "SEITENFÜHRUNGSKRAFT: "
-					+ seitenfuehrungsSpeed);
 
 			Vector2 sideForce = normalDirectionVector.cpy().scl(
 					SEITENFUEHRUNGSKRAFT);
