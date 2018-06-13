@@ -14,7 +14,7 @@ public interface Body2D {
 
 	Vector2 toLocalVector(Vector2 wv);
 
-	void applyForce(Vector2 f); // kraft in world space angeben
+	void applyForce(Vector2 f);
 
 	void applyForce(Vector2 f, Vector2 p);
 

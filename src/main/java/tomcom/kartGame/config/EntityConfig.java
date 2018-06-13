@@ -8,7 +8,7 @@ public class EntityConfig {
 
 	public static final float KART_MASS = 1000f;
 
-	public static final float ROADBLOCK_R = 0.5f;
+	public static final float ROADBLOCK_R = 0.95f;
 
 	public static final float WHEEL_WIDTH = 0.3f;
 

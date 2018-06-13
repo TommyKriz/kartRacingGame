@@ -8,20 +8,22 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class CameraZoomSystem extends EntitySystem {
 
-	private static final float CAMERA_STARTING_ZOOM = 8f;
+	private static final float CAMERA_ZOOM_SPEED = 0.2f;
+
+	private float startingZoom = 8f;
 
 	private OrthographicCamera worldCamera;
 
-	public CameraZoomSystem() {
-
+	public CameraZoomSystem(float startingZoom) {
+		this.startingZoom = startingZoom;
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			worldCamera.zoom += 0.02;
+			worldCamera.zoom += CAMERA_ZOOM_SPEED;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-			worldCamera.zoom -= 0.02;
+			worldCamera.zoom -= CAMERA_ZOOM_SPEED;
 		}
 	}
 
@@ -29,6 +31,6 @@ public class CameraZoomSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
 		worldCamera = engine.getSystem(CameraSystem.class).getWorldCamera();
-		worldCamera.zoom = CAMERA_STARTING_ZOOM;
+		worldCamera.zoom = startingZoom;
 	}
 }

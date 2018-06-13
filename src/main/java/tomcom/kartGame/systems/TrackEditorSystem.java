@@ -2,6 +2,7 @@ package tomcom.kartGame.systems;
 
 import tomcom.kartGame.config.EntityConfig;
 import tomcom.kartGame.entities.EntityBuilder;
+import tomcom.kartGame.utils.TrackEditorSaver;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
@@ -21,13 +22,26 @@ public class TrackEditorSystem extends EntitySystem {
 	@Override
 	public void update(float deltaTime) {
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			placeRoadblock(worldCamera.unproject(new Vector3(Gdx.input.getX(),
-					Gdx.input.getY(), 0)));
+			placeRoadblock(getClickWorldCoords());
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+
+			Gdx.app.log("TrackEditorSystem", "Saving roadblocks to file");
+
+			final OrthographicCamera cam = getEngine().getSystem(
+					CameraSystem.class).getWorldCamera();
+
+			new TrackEditorSaver(placedRoadblocks, cam.position, cam.zoom);
 		}
 	}
 
-	private void placeRoadblock(Vector3 clickCoords) {
-		Circle roadblockToBePlaced = new Circle(clickCoords.x, clickCoords.y,
+	private Vector3 getClickWorldCoords() {
+		return worldCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input
+				.getY(), 0));
+
+	}
+
+	private void placeRoadblock(Vector3 worldCoords) {
+		Circle roadblockToBePlaced = new Circle(worldCoords.x, worldCoords.y,
 				EntityConfig.ROADBLOCK_R);
 
 		if (!placedRoadblocks.contains(roadblockToBePlaced, false)) {
@@ -37,13 +51,9 @@ public class TrackEditorSystem extends EntitySystem {
 					return;
 				}
 			}
-
-			Gdx.app.log("TrackEditorSystem", "Placing roadblock at "
-					+ clickCoords.x + "|" + clickCoords.y);
 			placedRoadblocks.add(roadblockToBePlaced);
 			getEngine().addEntity(
-					EntityBuilder.buildRoadBlock(clickCoords.x,
-							clickCoords.y));
+					EntityBuilder.buildRoadBlock(worldCoords.x, worldCoords.y));
 		}
 	}
 

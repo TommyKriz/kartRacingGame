@@ -31,7 +31,7 @@ public class EntityBuilder {
 				EntityConfig.KART_HEIGHT);
 		kart.add(spriteComponent);
 
-		kart.add(new Body2DComponent().setDynamic(true).setDamping(22.3f));
+		kart.add(new Body2DComponent().setDynamic(true).setDamping(0f));
 
 		kart.add(new ColliderComponent(new RectangleCollider(
 				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT,
@@ -77,7 +77,7 @@ public class EntityBuilder {
 	public static Entity buildMap() {
 		Entity bg = new Entity();
 		bg.add(new PivotComponent(new Vector2(0, 0)));
-		bg.add(new SpriteComponent(TexturePaths.MAP, 128, 92));
+		bg.add(new SpriteComponent(TexturePaths.MAP, 190, 160));
 		return bg;
 	}
 

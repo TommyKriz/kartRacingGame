@@ -10,12 +10,13 @@ public class CameraSystem extends EntitySystem {
 
 	private OrthographicCamera worldCamera;
 
-	public CameraSystem() {
+	public CameraSystem(float startPosX, float startPosY) {
 		worldCamera = new OrthographicCamera();
 		worldCamera.setToOrtho(false,
 				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
 				GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA
 						* (GameConfig.SCREEN_WIDTH / GameConfig.SCREEN_HEIGHT));
+		worldCamera.translate(startPosX, startPosY);
 	}
 
 	@Override
