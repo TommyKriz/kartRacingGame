@@ -4,7 +4,7 @@ public class EntityConfig {
 
 	public static final float KART_WIDTH = 2f;
 
-	public static final float KART_HEIGHT = 4f;
+	public static final float KART_HEIGHT = 4.5f;
 
 	public static final float KART_MASS = 1000f;
 

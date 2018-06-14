@@ -4,7 +4,6 @@ import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
 import tomcom.kartGame.config.EntityConfig;
-import tomcom.kartGame.config.TexturePaths;
 import tomcom.kartGame.systems.RenderingSystem;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -12,7 +11,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,10 +30,9 @@ public class WheelRenderingSystem extends IteratingSystem {
 
 	private Sprite wheelSprite;
 
-	public WheelRenderingSystem() {
+	public WheelRenderingSystem(Texture wheelTexture) {
 		super(FAMILY);
-		wheelSprite = new Sprite(new Texture(
-				Gdx.files.internal(TexturePaths.WHEEL)));
+		wheelSprite = new Sprite(wheelTexture);
 		wheelSprite
 				.setSize(EntityConfig.WHEEL_WIDTH, EntityConfig.WHEEL_HEIGHT);
 		wheelSprite.setOriginCenter();

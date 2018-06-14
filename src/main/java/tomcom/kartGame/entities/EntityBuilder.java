@@ -10,7 +10,8 @@ import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
 import tomcom.kartGame.config.EntityConfig;
-import tomcom.kartGame.config.TexturePaths;
+import tomcom.kartGame.game.resources.ResourceManager;
+import tomcom.kartGame.game.resources.TextureKeys;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -27,8 +28,8 @@ public class EntityBuilder {
 		kart.add(new PivotComponent(pos));
 
 		SpriteComponent spriteComponent = new SpriteComponent(
-				TexturePaths.KART_TEXTURE, EntityConfig.KART_WIDTH,
-				EntityConfig.KART_HEIGHT);
+				ResourceManager.getTexture(TextureKeys.KART),
+				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT);
 		kart.add(spriteComponent);
 
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(0f));
@@ -54,8 +55,8 @@ public class EntityBuilder {
 
 	public static Entity buildRoadBlock(float x, float y) {
 		SpriteComponent spriteComponent = new SpriteComponent(
-				TexturePaths.ROADBLOCK, EntityConfig.ROADBLOCK_R * 2,
-				EntityConfig.ROADBLOCK_R * 2);
+				ResourceManager.getTexture(TextureKeys.ROADBLOCK),
+				EntityConfig.ROADBLOCK_R * 2, EntityConfig.ROADBLOCK_R * 2);
 		Entity roadBlock = new Entity();
 		roadBlock.add(new PivotComponent(new Vector2(x, y)));
 		roadBlock.add(spriteComponent);
@@ -77,7 +78,8 @@ public class EntityBuilder {
 	public static Entity buildMap() {
 		Entity bg = new Entity();
 		bg.add(new PivotComponent(new Vector2(0, 0)));
-		bg.add(new SpriteComponent(TexturePaths.MAP, 190, 160));
+		bg.add(new SpriteComponent(ResourceManager.getTexture(TextureKeys.MAP),
+				190, 160));
 		return bg;
 	}
 
