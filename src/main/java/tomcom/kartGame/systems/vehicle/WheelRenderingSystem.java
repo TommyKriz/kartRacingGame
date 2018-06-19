@@ -55,8 +55,7 @@ public class WheelRenderingSystem extends IteratingSystem {
 
 		for (Wheel w : vehicle.getDrivenWheels()) {
 
-			wheelPivot = chassis.toWorldPoint(new Vector2(w.xOffsetFromPivot,
-					w.yOffsetFromPivot));
+			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
 			wheelSprite.setRotation(w.orientation);
 			wheelSprite.setPosition(
@@ -67,8 +66,7 @@ public class WheelRenderingSystem extends IteratingSystem {
 		}
 		for (Wheel w : vehicle.getSteerableWheels()) {
 
-			wheelPivot = chassis.toWorldPoint(new Vector2(w.xOffsetFromPivot,
-					w.yOffsetFromPivot));
+			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
 			wheelSprite.setRotation(w.orientation - 90);
 			wheelSprite.setPosition(

@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 // TODO: Ackermann, Differential
+@Deprecated
 public class WheelSystem extends IteratingSystem {
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
@@ -30,8 +31,8 @@ public class WheelSystem extends IteratingSystem {
 
 		float angle = pm.get(entity).getPos().z;
 
-//		System.out.println(angle);
-		
+		// System.out.println(angle);
+
 		for (Wheel w : vehicle.getDrivenWheels()) {
 			w.orientation = angle;
 			w.getDirectionVector().setAngle(angle + 90);

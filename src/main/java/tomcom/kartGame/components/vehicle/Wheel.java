@@ -4,9 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Wheel {
 
-	public float xOffsetFromPivot;
-
-	public float yOffsetFromPivot;
+	public Vector2 offsetFromPivot;
 
 	/**
 	 * point upwards by default.
@@ -17,8 +15,7 @@ public class Wheel {
 
 	public Wheel(float xOffsetFromPivot, float yOffsetFromPivot,
 			boolean steerable) {
-		this.xOffsetFromPivot = xOffsetFromPivot;
-		this.yOffsetFromPivot = yOffsetFromPivot;
+		offsetFromPivot = new Vector2(xOffsetFromPivot, yOffsetFromPivot);
 		this.steerable = steerable;
 	}
 
