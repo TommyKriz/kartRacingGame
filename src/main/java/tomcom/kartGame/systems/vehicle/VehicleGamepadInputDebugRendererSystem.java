@@ -39,7 +39,6 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	private static final float DIRECTION_VECTOR_SCALE = 1f;
 
-
 	private ComponentMapper<VehicleComponent> vc = ComponentMapper
 			.getFor(VehicleComponent.class);
 
@@ -137,7 +136,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		Vector2 drivingWheelPivot = chassis
 				.toWorldPoint(drivingWheel.offsetFromPivot);
 
-		float offsetX = calcIntersectionPointOffsetX(inputAngle,
+		float offsetX = -calcIntersectionPointOffsetX(inputAngle,
 				firstSteeringWheelPivot, drivingWheelPivot);
 
 		Vector2 intersectionPoint = chassis
@@ -165,37 +164,12 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 		renderer.line(secondSteeringWheelPivot, intersectionPoint);
 
-		float secondAngle = 0;
+		// because 45°
+		float secondAngle = 135 - secondSteeringWheelPivot.cpy()
+				.sub(intersectionPoint).angle();
 
-		// TODO: take out they are constant
-		float leftDrivingWheelOffsetX = vehicle.getDrivenWheels().get(1).offsetFromPivot.x;
-		float rightDrivingWheelOffsetX = vehicle.getDrivenWheels().get(0).offsetFromPivot.x;
-
-		// TODO: because origin is seen at driving car pivot as opposed to an
-		// axis middle point
-		// offsetX += rightDrivingWheelOffsetX;
-
-		if (offsetX + rightDrivingWheelOffsetX > leftDrivingWheelOffsetX) {
-			secondAngle = inputAngle;
-		} else {
-
-			Vector2 a = secondSteeringWheelPivot.cpy().sub(intersectionPoint);
-			drawVector(secondSteeringWheelPivot, a, 3, Color.BLACK);
-			Vector2 b = new Vector2(1, 0);
-			drawVector(secondSteeringWheelPivot, b, 3, Color.BLACK);
-
-			// float dot = a.cpy().nor().dot(b);
-			// System.out.println("dot product: " + " acos of dot: "
-			// + Math.acos(dot));
-			// secondAngle = (float) (Math.acos(dot) /
-			// MathUtils.degreesToRadians);
-
-			// secondAngle = (float) (Math.atan2(b.y, b.x) - Math.atan2(a.y,
-			// a.x));
-
-			secondAngle = a.angle() - 90;
-
-		}
+		System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
+				+ inputAngle);
 
 		drawVector(secondSteeringWheelPivot, secondSteeringWheel
 				.getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
@@ -222,7 +196,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		Vector2 drivingWheelPivot = chassis
 				.toWorldPoint(drivingWheel.offsetFromPivot);
 
-		float offsetX = calcIntersectionPointOffsetX(inputAngle,
+		float offsetX = -calcIntersectionPointOffsetX(inputAngle,
 				firstSteeringWheelPivot, drivingWheelPivot);
 
 		Vector2 intersectionPoint = chassis
@@ -236,158 +210,32 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 		drawVector(firstSteeringWheelPivot, firstSteeringWheel
 				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
-	}
 
-	private void ackermann(float inputAngle, Body2DComponent chassis,
-			VehicleComponent vehicle) {
+		// -------------------------------------------------------
+		// second wheel stuff
+		// -------------------------------------------------------
 
-		// TODO: replace with axis center point ?
-		Wheel drivingWheel = vehicle.getDrivenWheels().get(0);
-		Vector2 drivingWheelPivot = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot);
+		int SECOND_WHEEL_INDEX = 1 - AXIS_INDEX;
 
-		// TODO: pick inner wheel as first wheel !
-		Wheel firstSteeringWheel = vehicle.getSteerableWheels().get(0);
-		Vector2 firstSteeringWheelPivot = chassis
-				.toWorldPoint(firstSteeringWheel.offsetFromPivot);
-
-		Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(1);
+		Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(
+				SECOND_WHEEL_INDEX);
 		Vector2 secondSteeringWheelPivot = chassis
 				.toWorldPoint(secondSteeringWheel.offsetFromPivot);
 
-		float offsetX = calcIntersectionPointOffsetX(inputAngle,
-				firstSteeringWheelPivot, drivingWheelPivot);
-
-		Vector2 intersectionPoint = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot.cpy()
-						.add(offsetX, 0));
-
-		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.4f);
-		renderer.line(firstSteeringWheelPivot, intersectionPoint);
-		renderer.line(drivingWheelPivot, intersectionPoint);
 		renderer.line(secondSteeringWheelPivot, intersectionPoint);
 
-		drawVector(firstSteeringWheelPivot, firstSteeringWheel
-				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+		// "difference in rigtH"
+		// because 45°
+		float secondAngle = 135 - secondSteeringWheelPivot.cpy()
+				.sub(intersectionPoint).angle() - 90;
 
-		// TODO: replace witc
-		//
-
-		float nextAngle = 0;
-
-		float leftDrivingWheelOffsetX = vehicle.getDrivenWheels().get(1).offsetFromPivot.x;
-		float rightDrivingWheelOffsetX = vehicle.getDrivenWheels().get(0).offsetFromPivot.x;
-		System.out.println(offsetX + " l  " + leftDrivingWheelOffsetX + " r "
-				+ rightDrivingWheelOffsetX);
-
-		// TODO: because origin is seen at driving car pivot as opposed to an
-		// axis middle point
-		offsetX += rightDrivingWheelOffsetX;
-
-		nextAngle = drivingWheelPivot.cpy().sub(intersectionPoint).cpy()
-				.dot(secondSteeringWheelPivot.cpy().sub(intersectionPoint));
-
-		nextAngle = 90 - (-nextAngle);
-
-		if (offsetX > leftDrivingWheelOffsetX
-				&& offsetX < rightDrivingWheelOffsetX) {
-			System.out.println("sdasdasds");
-			nextAngle = inputAngle;
-		}
-
-		System.out.println("inputAngle: " + inputAngle + "  nextAngle: "
-				+ nextAngle);
+		System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
+				+ inputAngle);
 
 		drawVector(secondSteeringWheelPivot, secondSteeringWheel
-				.getDirectionVector().cpy().rotate(nextAngle), 2, Color.PINK);
-
-		// float alphaArcTan = (float) Math.atan2(a, b)
-		// / MathUtils.degreesToRadians;
-		//
-		// System.out.println("alpha: " + alpha + " alphaArcTan: " +
-		// alphaArcTan);
-		//
-		// renderer.circle(secondSteeringWheelPivot.x,
-		// secondSteeringWheelPivot.y,
-		// 0.4f);
-		//
-
-		//
-
-		//
-		// System.out.println("nextAngle: " + nextAngle);
-		//
-		// drawVector(firstSteeringWheelPivot,
-		// firstSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
-		//
-		// drawVector(secondSteeringWheelPivot,
-		// secondSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
-
-		//
-		// drawVector(intersectionPoint, new Vector2(0, 1).rotate(-nextAngle),
-		// 2,
-		// Color.GOLD);
-
-		// TODO: https://www.quora.com/How-do-I-calculate-Ackerman-angle#
-		// https://www.volksbot.de/ackermann-de.php
-		// https://de.wikipedia.org/wiki/Momentanpol
-
-		// // // // // TODO:
-		// firstSteeringWheel.orientation = chassis.getAngleInRadians()
-		// / MathUtils.degreesToRadians + inputAngle + 90;
-		// firstSteeringWheel.getDirectionVector().setAngle(
-		// firstSteeringWheel.orientation);
+				.getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
 
 	}
-
-	// for (Wheel w : vehicle.getSteerableWheels()) {
-	// // TODO: +90?
-	// // TODO: take out chassis degrad
-	// w.orientation = maximumAngle;
-	// w.getDirectionVector().setAngle(w.orientation);
-	//
-	//
-
-	//
-	// // Vector2 intersectionPoint = intersect(wheelPivot,
-	// // w.getDirectionVector(), drivingWheelPivot,
-	// // drivingWheel.getDirectionVector());
-	//
-
-	//
-
-	//
-	// drawLine(wheelPivot, chassis.toLocalPoint(intersectionPoint),
-	// Color.SKY);
-	// }
-
-	// private void drawLine(Vector2 point1, Vector2 point2, Color color) {
-	// renderer.setColor(color);
-	// renderer.line(point1, point2);
-	// }
-
-	//
-	// /**
-	// * interpret x as k, y as d.
-	// *
-	// * @param line1
-	// * @param line2
-	// * @return
-	// */
-	// private Vector2 intersect(final Vector2 startingPoint1,
-	// final Vector2 directionalVector1, final Vector2 startingPoint2,
-	// Vector2 directionalVector2) {
-	// float dx = startingPoint2.x - startingPoint1.x;
-	// float dy = startingPoint2.y - startingPoint1.y;
-	// Gdx.app.log("inetrsect", dx + "|" + dy);
-	//
-	// float det = directionalVector2.x * directionalVector1.y
-	// - directionalVector2.y * directionalVector1.x;
-	// float u = (dy * directionalVector2.x - dx * directionalVector2.y) / det;
-	// float v = (dy * directionalVector1.x - dx * directionalVector1.y) / det;
-	// Gdx.app.log("inetrsect", u + "|" + v);
-	// return new Vector2(u, v);
-	// }
 
 	private float calcIntersectionPointOffsetX(float inputAngle,
 			Vector2 firstSteeringWheelPivot, Vector2 drivingWheelPivot) {
