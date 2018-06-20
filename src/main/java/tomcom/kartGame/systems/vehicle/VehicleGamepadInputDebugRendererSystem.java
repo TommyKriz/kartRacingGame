@@ -87,54 +87,61 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	}
 
-	// TODO: Lenkgeschwidnigkeit
 	private void turnWheels(VehicleComponent vehicle, Body2DComponent chassis,
 			float controllerXaxis) {
-		// range from [-MWA, MWA]
+
 		float inputAngle = controllerXaxis * -MAXIMUM_WHEEL_ANGLE;
-		System.out.println("Input Angle " + inputAngle);
 
-		kackermann(inputAngle, chassis, vehicle);
-
-		// ackermann(inputAngle, chassis, vehicle);
-	}
-
-	private void kackermann(float inputAngle, Body2DComponent chassis,
-			VehicleComponent vehicle) {
+		// adjustWheelsAngle(vehicle, chassis);
 
 		if (inputAngle > 0) {
-
-			Gdx.app.log("Ackermann", "STEERING LEFT  -  inputAngle: "
-					+ inputAngle);
-			ackermannLeft(inputAngle, chassis, vehicle);
+			Gdx.app.log("Ackermann",
+					"\n\n##############################\nSTEERING LEFT  -  inputAngle: "
+							+ inputAngle);
+			setAckermannAngle(inputAngle, chassis, vehicle, 1);
 		} else {
-
-			Gdx.app.log("Ackermann", "STEERING RIGHT  -  inputAngle: "
-					+ inputAngle);
-			ackermannRight(inputAngle, chassis, vehicle);
+			Gdx.app.log("Ackermann",
+					"\n\n##############################\nSTEERING RIGHT  -  inputAngle: "
+							+ inputAngle);
+			setAckermannAngle(inputAngle, chassis, vehicle, 0);
 		}
 
 	}
 
-	private void ackermannRight(float inputAngle, Body2DComponent chassis,
-			VehicleComponent vehicle) {
+	// private void adjustWheelsAngle(VehicleComponent vehicle,
+	// Body2DComponent chassis) {
+	//
+	// for(Wheel w : vehci)
+	//
+	// }
 
-		int AXIS_INDEX = 0;
+	/**
+	 * 
+	 * @param inputAngle
+	 * @param chassis
+	 * @param vehicle
+	 * @param axisIdx
+	 *            0 for right, 1 for left
+	 */
+	private void setAckermannAngle(float inputAngle, Body2DComponent chassis,
+			VehicleComponent vehicle, int axisIdx) {
 
-		// TODO: automate picking inner wheel
+		Wheel firstSteelWheel = vehicle.getSteerableWheels().get(axisIdx);
 
-		// pick right wheel as first wheel
-		Wheel firstSteeringWheel = vehicle.getSteerableWheels().get(AXIS_INDEX);
 		Vector2 firstSteeringWheelPivot = chassis
-				.toWorldPoint(firstSteeringWheel.offsetFromPivot);
+				.toWorldPoint(firstSteelWheel.offsetFromPivot);
 
-		drawVector(firstSteeringWheelPivot, firstSteeringWheel
-				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+		renderer.setColor(Color.CHARTREUSE);
+		renderer.circle(firstSteeringWheelPivot.x, firstSteeringWheelPivot.y,
+				0.2f);
 
-		// TODO: replace with axis center point ?
-		Wheel drivingWheel = vehicle.getDrivenWheels().get(AXIS_INDEX);
+		Wheel drivingWheel = vehicle.getDrivenWheels().get(axisIdx);
+
 		Vector2 drivingWheelPivot = chassis
 				.toWorldPoint(drivingWheel.offsetFromPivot);
+
+		renderer.setColor(Color.FIREBRICK);
+		renderer.circle(drivingWheelPivot.x, drivingWheelPivot.y, 0.2f);
 
 		float offsetX = -calcIntersectionPointOffsetX(inputAngle,
 				firstSteeringWheelPivot, drivingWheelPivot);
@@ -143,99 +150,186 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				.toWorldPoint(drivingWheel.offsetFromPivot.cpy()
 						.add(offsetX, 0));
 
-		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.4f);
-		renderer.line(firstSteeringWheelPivot, intersectionPoint);
-		renderer.line(drivingWheelPivot, intersectionPoint);
-		// renderer.line(secondSteeringWheelPivot, intersectionPoint);
-
-		drawVector(firstSteeringWheelPivot, firstSteeringWheel
-				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+		renderer.setColor(Color.GREEN);
+		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
 
 		// -------------------------------------------------------
 		// second wheel stuff
 		// -------------------------------------------------------
 
-		int SECOND_WHEEL_INDEX = 1 - AXIS_INDEX;
+		int SECOND_WHEEL_INDEX = 1 - axisIdx;
 
-		Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(
+		Wheel otherSteeringWheel = vehicle.getSteerableWheels().get(
 				SECOND_WHEEL_INDEX);
-		Vector2 secondSteeringWheelPivot = chassis
-				.toWorldPoint(secondSteeringWheel.offsetFromPivot);
 
-		renderer.line(secondSteeringWheelPivot, intersectionPoint);
+		Vector2 otherSteeringWheelPivot = chassis
+				.toWorldPoint(otherSteeringWheel.offsetFromPivot);
 
+		renderer.setColor(Color.YELLOW);
+		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
+
+		renderer.setColor(Color.FIREBRICK);
+		renderer.line(intersectionPoint, firstSteeringWheelPivot);
+		renderer.line(drivingWheelPivot, otherSteeringWheelPivot);
+		renderer.line(intersectionPoint, drivingWheelPivot);
+
+		// TODO: get rid of * axisIdx !
 		// because 45°
-		float secondAngle = 135 - secondSteeringWheelPivot.cpy()
-				.sub(intersectionPoint).angle();
 
-		System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
-				+ inputAngle);
+		// float otherAngle = 135
+		// - otherSteeringWheelPivot.cpy().sub(intersectionPoint).angle()
+		// - 90 * axisIdx;
 
-		drawVector(secondSteeringWheelPivot, secondSteeringWheel
-				.getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
+		float chassisAngle = chassis.getAngleInRadians()
+				/ MathUtils.degreesToRadians;
+
+		System.out.println("chassisAngle: " + chassisAngle);
+
+		float otherAngle = 45
+				- otherSteeringWheelPivot.cpy().sub(intersectionPoint).angle()
+				+ 90 * (1 - axisIdx);
+
+		otherAngle += chassisAngle;
+
+		System.out.println("     INPUT ANGLE " + inputAngle + "   otherAngle: "
+				+ otherAngle);
+
+		firstSteelWheel.updateAngle(chassisAngle + inputAngle);
+		//
+		otherSteeringWheel.updateAngle(chassisAngle + otherAngle);
+		//
+		drawVector(firstSteeringWheelPivot,
+				firstSteelWheel.getDirectionVector(), 2, Color.PINK);
+		drawVector(otherSteeringWheelPivot,
+				otherSteeringWheel.getDirectionVector(), 2, Color.PINK);
+
+		System.out.println("input "
+				+ firstSteelWheel.getDirectionVector().angle() + " other "
+				+ otherSteeringWheel.getDirectionVector().angle());
 
 	}
 
-	private void ackermannLeft(float inputAngle, Body2DComponent chassis,
-			VehicleComponent vehicle) {
+	//
+	// private void ackermannRight(float inputAngle, Body2DComponent chassis,
+	// VehicleComponent vehicle) {
+	//
+	// int AXIS_INDEX = 0;
+	//
+	// // TODO: automate picking inner wheel
+	//
+	// // pick right wheel as first wheel
+	// Wheel firstSteeringWheel = vehicle.getSteerableWheels().get(AXIS_INDEX);
+	// Vector2 firstSteeringWheelPivot = chassis
+	// .toWorldPoint(firstSteeringWheel.offsetFromPivot);
+	//
+	// drawVector(firstSteeringWheelPivot, firstSteeringWheel
+	// .getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+	//
+	// // TODO: replace with axis center point ?
+	// Wheel drivingWheel = vehicle.getDrivenWheels().get(AXIS_INDEX);
+	// Vector2 drivingWheelPivot = chassis
+	// .toWorldPoint(drivingWheel.offsetFromPivot);
+	//
+	// float offsetX = -calcIntersectionPointOffsetX(inputAngle,
+	// firstSteeringWheelPivot, drivingWheelPivot);
+	//
+	// Vector2 intersectionPoint = chassis
+	// .toWorldPoint(drivingWheel.offsetFromPivot.cpy()
+	// .add(offsetX, 0));
+	//
+	// renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.4f);
+	// renderer.line(firstSteeringWheelPivot, intersectionPoint);
+	// renderer.line(drivingWheelPivot, intersectionPoint);
+	// // renderer.line(secondSteeringWheelPivot, intersectionPoint);
+	//
+	// drawVector(firstSteeringWheelPivot, firstSteeringWheel
+	// .getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+	//
+	// // -------------------------------------------------------
+	// // second wheel stuff
+	// // -------------------------------------------------------
+	//
+	// int SECOND_WHEEL_INDEX = 1 - AXIS_INDEX;
+	//
+	// Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(
+	// SECOND_WHEEL_INDEX);
+	// Vector2 secondSteeringWheelPivot = chassis
+	// .toWorldPoint(secondSteeringWheel.offsetFromPivot);
+	//
+	// renderer.line(secondSteeringWheelPivot, intersectionPoint);
+	//
+	// // because 45°
+	// float secondAngle = 135 - secondSteeringWheelPivot.cpy()
+	// .sub(intersectionPoint).angle();
+	//
+	// System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
+	// + inputAngle);
+	//
+	// drawVector(secondSteeringWheelPivot, secondSteeringWheel
+	// .getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
+	//
+	// }
 
-		int AXIS_INDEX = 1;
-
-		// TODO: automate picking inner wheel
-
-		// pick right wheel as first wheel
-		Wheel firstSteeringWheel = vehicle.getSteerableWheels().get(AXIS_INDEX);
-		Vector2 firstSteeringWheelPivot = chassis
-				.toWorldPoint(firstSteeringWheel.offsetFromPivot);
-
-		drawVector(firstSteeringWheelPivot, firstSteeringWheel
-				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
-
-		// TODO: replace with axis center point ?
-		Wheel drivingWheel = vehicle.getDrivenWheels().get(AXIS_INDEX);
-		Vector2 drivingWheelPivot = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot);
-
-		float offsetX = -calcIntersectionPointOffsetX(inputAngle,
-				firstSteeringWheelPivot, drivingWheelPivot);
-
-		Vector2 intersectionPoint = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot.cpy()
-						.add(offsetX, 0));
-
-		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.4f);
-		renderer.line(firstSteeringWheelPivot, intersectionPoint);
-		renderer.line(drivingWheelPivot, intersectionPoint);
-		// renderer.line(secondSteeringWheelPivot, intersectionPoint);
-
-		drawVector(firstSteeringWheelPivot, firstSteeringWheel
-				.getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
-
-		// -------------------------------------------------------
-		// second wheel stuff
-		// -------------------------------------------------------
-
-		int SECOND_WHEEL_INDEX = 1 - AXIS_INDEX;
-
-		Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(
-				SECOND_WHEEL_INDEX);
-		Vector2 secondSteeringWheelPivot = chassis
-				.toWorldPoint(secondSteeringWheel.offsetFromPivot);
-
-		renderer.line(secondSteeringWheelPivot, intersectionPoint);
-
-		// "difference in rigtH"
-		// because 45°
-		float secondAngle = 135 - secondSteeringWheelPivot.cpy()
-				.sub(intersectionPoint).angle() - 90;
-
-		System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
-				+ inputAngle);
-
-		drawVector(secondSteeringWheelPivot, secondSteeringWheel
-				.getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
-
-	}
+	// private void ackermannLeft(float inputAngle, Body2DComponent chassis,
+	// VehicleComponent vehicle) {
+	//
+	// int AXIS_INDEX = 1;
+	//
+	// // TODO: automate picking inner wheel
+	//
+	// // pick right wheel as first wheel
+	// Wheel firstSteeringWheel = vehicle.getSteerableWheels().get(AXIS_INDEX);
+	// Vector2 firstSteeringWheelPivot = chassis
+	// .toWorldPoint(firstSteeringWheel.offsetFromPivot);
+	//
+	// drawVector(firstSteeringWheelPivot, firstSteeringWheel
+	// .getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+	//
+	// // TODO: replace with axis center point ?
+	// Wheel drivingWheel = vehicle.getDrivenWheels().get(AXIS_INDEX);
+	// Vector2 drivingWheelPivot = chassis
+	// .toWorldPoint(drivingWheel.offsetFromPivot);
+	//
+	// float offsetX = -calcIntersectionPointOffsetX(inputAngle,
+	// firstSteeringWheelPivot, drivingWheelPivot);
+	//
+	// Vector2 intersectionPoint = chassis
+	// .toWorldPoint(drivingWheel.offsetFromPivot.cpy()
+	// .add(offsetX, 0));
+	//
+	// renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.4f);
+	// renderer.line(firstSteeringWheelPivot, intersectionPoint);
+	// renderer.line(drivingWheelPivot, intersectionPoint);
+	// // renderer.line(secondSteeringWheelPivot, intersectionPoint);
+	//
+	// drawVector(firstSteeringWheelPivot, firstSteeringWheel
+	// .getDirectionVector().cpy().rotate(inputAngle), 2, Color.PINK);
+	//
+	// // -------------------------------------------------------
+	// // second wheel stuff
+	// // -------------------------------------------------------
+	//
+	// int SECOND_WHEEL_INDEX = 1 - AXIS_INDEX;
+	//
+	// Wheel secondSteeringWheel = vehicle.getSteerableWheels().get(
+	// SECOND_WHEEL_INDEX);
+	// Vector2 secondSteeringWheelPivot = chassis
+	// .toWorldPoint(secondSteeringWheel.offsetFromPivot);
+	//
+	// renderer.line(secondSteeringWheelPivot, intersectionPoint);
+	//
+	// // "difference in rigtH"
+	// // because 45°
+	// float secondAngle = 135 - secondSteeringWheelPivot.cpy()
+	// .sub(intersectionPoint).angle() - 90;
+	//
+	// System.out.println("Ackermann angle: " + secondAngle + "  -  input: "
+	// + inputAngle);
+	//
+	// drawVector(secondSteeringWheelPivot, secondSteeringWheel
+	// .getDirectionVector().cpy().rotate(secondAngle), 2, Color.GREEN);
+	//
+	// }
 
 	private float calcIntersectionPointOffsetX(float inputAngle,
 			Vector2 firstSteeringWheelPivot, Vector2 drivingWheelPivot) {
