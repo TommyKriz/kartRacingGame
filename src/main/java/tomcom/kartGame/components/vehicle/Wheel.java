@@ -1,5 +1,6 @@
 package tomcom.kartGame.components.vehicle;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Wheel {
@@ -27,5 +28,12 @@ public class Wheel {
 	 * wheel rotation can be controlled
 	 */
 	public boolean steerable;
+
+	public void updateAngle(float angle) {
+		directionVector.x = 0;
+		directionVector.y = 1;
+		orientation = angle;
+		directionVector.rotate(orientation);
+	}
 
 }

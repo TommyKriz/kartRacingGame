@@ -1,6 +1,7 @@
 package tomcom.kartGame.components.physics;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -78,8 +79,8 @@ public class Body2DComponent implements Body2D, Component {
 		return body.getWorldPoint(lp).cpy();
 	}
 
-	public float getAngleInRadians() {
-		return body.getAngle();
+	public float getAngleInDegrees() {
+		return body.getAngle() / MathUtils.degreesToRadians;
 	}
 
 }

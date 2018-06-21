@@ -14,6 +14,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class WheelRenderingSystem extends IteratingSystem {
@@ -53,28 +54,46 @@ public class WheelRenderingSystem extends IteratingSystem {
 
 		Vector2 wheelPivot;
 
-		for (Wheel w : vehicle.getDrivenWheels()) {
+		for (Wheel w : vehicle.getWheels()) {
+			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot).add(
+					-EntityConfig.WHEEL_WIDTH / 2,
+					-EntityConfig.WHEEL_HEIGHT / 2);
 
-			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+			// wheelSprite.setRotation( + w.orientation);
 
-			wheelSprite.setRotation(w.orientation);
-			wheelSprite.setPosition(
-					wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
-							- EntityConfig.WHEEL_HEIGHT / 2);
+			float chassisAngle = chassis.getAngleInDegrees();
+
+			System.out.println(" chassisAngle: " + chassisAngle);
+
+			wheelSprite.setRotation(w.orientation + chassisAngle);
+			wheelSprite.setPosition(wheelPivot.x, wheelPivot.y);
 			wheelSprite.draw(batch);
 
 		}
-		for (Wheel w : vehicle.getSteerableWheels()) {
 
-			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
-
-			wheelSprite.setRotation(w.orientation - 90);
-			wheelSprite.setPosition(
-					wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
-							- EntityConfig.WHEEL_HEIGHT / 2);
-			wheelSprite.draw(batch);
-
-		}
+		//
+		// for (Wheel w : vehicle.getDrivenWheels()) {
+		//
+		// wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+		//
+		// wheelSprite.setRotation(w.orientation);
+		// wheelSprite.setPosition(
+		// wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
+		// - EntityConfig.WHEEL_HEIGHT / 2);
+		// wheelSprite.draw(batch);
+		//
+		// }
+		// for (Wheel w : vehicle.getSteerableWheels()) {
+		//
+		// wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+		//
+		// wheelSprite.setRotation(w.orientation - 90);
+		// wheelSprite.setPosition(
+		// wheelPivot.x - EntityConfig.WHEEL_WIDTH / 2, wheelPivot.y
+		// - EntityConfig.WHEEL_HEIGHT / 2);
+		// wheelSprite.draw(batch);
+		//
+		// }
 
 	}
 
