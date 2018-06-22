@@ -4,8 +4,6 @@ import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
-import tomcom.kartGame.game.resources.ResourceManager;
-import tomcom.kartGame.game.resources.TextureKeys;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
 import tomcom.kartGame.systems.CameraMoveSystem;
@@ -15,7 +13,6 @@ import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.TrackEditorSystem;
 import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
-import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
