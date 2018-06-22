@@ -52,7 +52,7 @@ public class TestLevel implements Screen {
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMap());
-		engine.addEntity(EntityBuilder.buildFinishLine(2, 2));
+		engine.addEntity(EntityBuilder.buildFinishLine(-19.5f, 38));
 		engine.addEntity(EntityBuilder.buildKart(2, 2).add(
 				new CameraTargetComponent()));
 		initRoadblocks();
@@ -238,8 +238,8 @@ public class TestLevel implements Screen {
 		engine.addSystem(new Box2DRenderingSystem());
 
 		// TODO: !!!
-//		engine.addSystem(new WheelRenderingSystem(ResourceManager
-//				.getTexture(TextureKeys.WHEEL)));
+		// engine.addSystem(new WheelRenderingSystem(ResourceManager
+		// .getTexture(TextureKeys.WHEEL)));
 		engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
 
 		engine.addSystem(new TrackEditorSystem());

@@ -83,13 +83,13 @@ public class EntityBuilder {
 		return bg;
 	}
 
-	public static Entity buildFinishLine(int x, int y) {
+	public static Entity buildFinishLine(float f, float y) {
 		Entity roadBlock = new Entity();
-		roadBlock.add(new PivotComponent(new Vector2(x, y)));
+		roadBlock.add(new PivotComponent(new Vector2(f, y)));
 		roadBlock.add(new Body2DComponent().setDynamic(false));
-		roadBlock.add(new ColliderComponent(
-				new RectangleCollider(6, 1, 0, 0, 0).setSensor(true)
-						.setUserData(EntityConfig.FINISH_LINE_COLLIDER)));
+		roadBlock.add(new ColliderComponent(new RectangleCollider(1, 10, 0, 0,
+				0).setSensor(true).setUserData(
+				EntityConfig.FINISH_LINE_COLLIDER)));
 		return roadBlock;
 	}
 
