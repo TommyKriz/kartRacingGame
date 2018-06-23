@@ -4,8 +4,11 @@ import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
+import tomcom.kartGame.game.resources.ResourceManager;
+import tomcom.kartGame.game.resources.TextureKeys;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
+import tomcom.kartGame.systems.CameraFollowSystem;
 import tomcom.kartGame.systems.CameraMoveSystem;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.CameraZoomSystem;
@@ -13,12 +16,13 @@ import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.TrackEditorSystem;
 import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
+import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class TestLevel implements Screen {
 
@@ -26,7 +30,7 @@ public class TestLevel implements Screen {
 
 	private Engine engine;
 
-	private StretchViewport viewport;
+	private FitViewport viewport;
 
 	public TestLevel(GameMain game) {
 		this.game = game;
@@ -35,7 +39,7 @@ public class TestLevel implements Screen {
 
 		initSystems();
 
-		viewport = new StretchViewport(Gdx.graphics.getWidth(),
+		viewport = new FitViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), engine.getSystem(CameraSystem.class)
 						.getWorldCamera());
 		// viewport.apply();
@@ -228,15 +232,16 @@ public class TestLevel implements Screen {
 		engine.addSystem(new CameraZoomSystem(19.499977f));
 		engine.addSystem(new CameraMoveSystem());
 
+		engine.addSystem(new CameraFollowSystem());
+
 		engine.addSystem(new Box2DPhysicsSystem());
 		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 
-		// TODO: !!!
-		// engine.addSystem(new WheelRenderingSystem(ResourceManager
-		// .getTexture(TextureKeys.WHEEL)));
+		engine.addSystem(new WheelRenderingSystem(ResourceManager
+				.getTexture(TextureKeys.WHEEL)));
 		engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
 
 		engine.addSystem(new TrackEditorSystem());
