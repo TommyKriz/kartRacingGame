@@ -4,7 +4,6 @@ import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
-import tomcom.kartGame.config.EntityConfig;
 import tomcom.kartGame.systems.CameraSystem;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -20,26 +19,19 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-/**
- * TODO:
- * 
- * ausrollen (rückwärtsfahren) , zur nuller force lerpen BREMSEN ackermann
- * lenkung (differential?) driften schleudern reibungskoeffizient
- */
 public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
-
-	private static final int MAXIMUM_WHEEL_ANGLE = 60;
-
-	private static final int SEITENFUEHRUNGSKRAFT = 4000;
-
-	private static final float MAXIMUM_GAS_FORCE = -6000f;
 
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
 
-	private static final float DIRECTION_VECTOR_SCALE = 1f;
+	private static final int MAXIMUM_WHEEL_ANGLE = 55;
+
+	private static final float MAXIMUM_GAS_FORCE = 6000f;
 
 	private static final float KAMMSCHER_KREIS_RADIUS = 12000;
+
+	// TODO: replace with MASS / nWheels
+	private static final float NORMAL_FORCE = 2000;
 
 	private ComponentMapper<VehicleComponent> vc = ComponentMapper
 			.getFor(VehicleComponent.class);
@@ -71,22 +63,15 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		VehicleComponent vehicle = vc.get(entity);
 
+		VehicleComponent vehicle = vc.get(entity);
 		Body2DComponent chassis = bc.get(entity);
 
 		for (Controller controller : Controllers.getControllers()) {
-
 			turnWheels(vehicle, chassis, controller.getAxis(1));
-
 			gasAndSideForce(vehicle, chassis, controller.getAxis(4));
-			//
-			// sideForce(vehicle, chassis);
-
-			// rollingResistance(vehicle, chassis);
-
+			rollingResistance(vehicle, chassis);
 		}
-
 	}
 
 	private void gasAndSideForce(VehicleComponent vehicle,
@@ -96,7 +81,21 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 			Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
-			Vector2 force = gasForce(w, axis).add(sideForce());
+			Vector2 gasForce;
+			if (w.steerable) {
+				gasForce = new Vector2(0, 0);
+			} else {
+				gasForce = gasForce(w, axis);
+			}
+
+			drawVector(wheelPivot, gasForce, 0.001f, Color.GOLDENROD);
+
+			Vector2 sideForce = sideForce(w.getDirectionVector().cpy(),
+					chassis.getVelocity(wheelPivot));
+
+			drawVector(wheelPivot, sideForce, 0.001f, Color.GOLDENROD);
+
+			Vector2 force = gasForce.add(sideForce);
 
 			if (force.len() > KAMMSCHER_KREIS_RADIUS) {
 				force = force.nor().scl(KAMMSCHER_KREIS_RADIUS);
@@ -108,14 +107,35 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	}
 
+	private Vector2 sideForce(Vector2 directionVector, final Vector2 velocity) {
+
+		Vector2 normalDirectionVector = directionVector.rotate(90).nor();
+
+		float slipAngle = normalDirectionVector.dot(velocity);
+
+		Vector2 sideForce = normalDirectionVector.scl(1.1f * NORMAL_FORCE);
+
+		if (slipAngle < 0) {
+			return sideForce;
+		} else if (slipAngle > 0) {
+			return sideForce.scl(-1, -1);
+		}
+		return new Vector2(0, 0);
+
+	}
+
 	private Vector2 gasForce(Wheel w, float controllerYAxis) {
 		return w.getDirectionVector().cpy()
 				.scl(-controllerYAxis * MAXIMUM_GAS_FORCE);
 	}
 
-	private Vector2 sideForce() {
-		// TODO Auto-generated method stub
-		return null;
+	private float slipAngleCoefficient(float slipAngle) {
+		if (slipAngle > 0) {
+			return 1.1f;
+		} else if (slipAngle < 0) {
+			return -1.1f;
+		}
+		return 0;
 	}
 
 	private void turnWheels(VehicleComponent vehicle, Body2DComponent chassis,
@@ -222,13 +242,13 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				+ otherAngle);
 
 		firstSteelWheel.updateAngle(chassisAngle + inputAngle);
-		//
+
 		otherSteeringWheel.updateAngle(chassisAngle + otherAngle);
-		//
+
 		drawVector(firstSteeringWheelPivot,
-				firstSteelWheel.getDirectionVector(), 2, Color.PINK);
+				firstSteelWheel.getDirectionVector(), 2, Color.GREEN);
 		drawVector(otherSteeringWheelPivot,
-				otherSteeringWheel.getDirectionVector(), 2, Color.PINK);
+				otherSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
 
 		System.out.println("input "
 				+ firstSteelWheel.getDirectionVector().angle() + " other "
@@ -246,11 +266,9 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 		if (inputAngle > 0) {
 			// steering left
-			System.out.println("Steering L E F T");
 			return a;
 		} else {
 			// steering right
-			System.out.println("Steering R I G H T");
 			return -a;
 		}
 	}
@@ -262,126 +280,35 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 	 * @return
 	 */
 	private float wswSatzRechtwinkligesDreieck(float alpha, float b) {
-		// TODO Auto-generated method stub
 		return (float) (Math.tan(alpha * MathUtils.degreesToRadians) * b);
 	}
 
-	private void gas(VehicleComponent vehicle, Body2DComponent chassis,
-			float controllerYaxis) {
-
-		// TODO: if yAxis == 0, letzteForce - %, lerp
-
-		Vector2 wheelPivot;
-
-		for (Wheel w : vehicle.getWheels()) {
-
-			// TODO: take out
-			drawVector(chassis.toWorldPoint(w.offsetFromPivot),
-					w.getDirectionVector(), 1, Color.PINK);
-			Gdx.app.log("############# G A S ################", ""
-					+ w.getDirectionVector().len());
-
-			chassis.applyForce(
-					w.getDirectionVector().cpy()
-							.scl(calcNormalForce(controllerYaxis, vehicle)),
-					chassis.toWorldPoint(w.offsetFromPivot));
-
-		}
-
-	}
-
-	private float calcNormalForce(float controllerYaxis,
-			VehicleComponent vehicle) {
-
-		float normalForce = (EntityConfig.KART_MASS / vehicle.getWheels().size);
-		System.out.println("normalForce    " + normalForce);
-
-		// Normalkraft (masse / anzahl der wheels) * 9.81 ist die Kraft wie
-		// stark das Auto aufs Wheel drückt
-		//
-		// normalkraft * reibungskoeffizienten (~1.8)
-
-		return -controllerYaxis * normalForce * 1.8f * 9.81f;
-	}
-
-	// TODO:! !!
 	private void rollingResistance(VehicleComponent vehicle,
 			Body2DComponent chassis) {
-		Vector2 wheelPivot;
-
-		Vector2 directionalVector;
 
 		for (Wheel w : vehicle.getWheels()) {
 
-			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+			Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
-			directionalVector = w.getDirectionVector().cpy();
+			Vector2 rollingResistanceForce = w.getDirectionVector().cpy()
+					.scl(0.04f * NORMAL_FORCE);
 
-			drawVector(wheelPivot, directionalVector, 1f, Color.GREEN);
+			float angle = w.getDirectionVector().cpy()
+					.dot(chassis.getVelocity(wheelPivot));
 
-			Gdx.app.log("#######################################", ""
-					+ directionalVector.len());
+			if (angle > 0) {
+				rollingResistanceForce.scl(-1, -1);
+			} else if (angle < 0) {
 
-			float rollingResistance = directionalVector.dot(chassis
-					.getVelocity(wheelPivot));
-
-			Gdx.app.log("Rolling Resistance", "" + rollingResistance);
-			//
-			// Vector2 rollingResistanceForce = directionalVector.scl(1, -1);
-			//
-			// if (rollingResistance > -0.0001 && rollingResistance < 0.0001) {
-			// Gdx.app.log("Rolling Resistance", "     IS ZERO !!!!!!!");
-			// rollingResistanceForce.scl(-1, -1);
-			// }
-			//
-			// drawVector(wheelPivot, rollingResistanceForce, 1f, Color.GREEN);
-			//
-			// chassis.applyForce(rollingResistanceForce, wheelPivot);
-
-		}
-	}
-
-	private void sideForce(VehicleComponent vehicle, Body2DComponent chassis) {
-		Vector2 wheelPivot;
-		for (Wheel w : vehicle.getWheels()) {
-
-			wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
-
-			// visualize direction vector
-			drawVector(wheelPivot, w.getDirectionVector(),
-					DIRECTION_VECTOR_SCALE, Color.FIREBRICK);
-
-			Vector2 normalDirectionVector = w.getDirectionVector().cpy()
-					.rotate(90);
-			// visualize normal to direction vector
-			drawVector(wheelPivot, normalDirectionVector,
-					DIRECTION_VECTOR_SCALE, Color.YELLOW);
-
-			// visualize velocity
-			// drawVector(wheelPivot, chassis.getVelocity(wheelPivot), 1,
-			// Color.BLUE);
-
-			renderer.setColor(Color.GOLDENROD);
-			renderer.line(wheelPivot, chassis.getPosition());
-
-			float seitenfuehrungsSpeed = normalDirectionVector.dot(chassis
-					.getVelocity(wheelPivot));
-
-			Vector2 sideForce = normalDirectionVector.cpy().scl(
-					SEITENFUEHRUNGSKRAFT);
-			if (seitenfuehrungsSpeed < 0) {
-				// sideForce = normalDirectionVector;
-			} else if (seitenfuehrungsSpeed > 0) {
-				sideForce.scl(-1, -1);
 			} else {
-				sideForce = new Vector2(0, 0);
+				rollingResistanceForce = new Vector2(0, 0);
 			}
-			// drawVector(wheelPivot, sideForce, 0.001f, Color.PINK);
 
-			chassis.applyForce(sideForce, wheelPivot);
+			drawVector(wheelPivot, rollingResistanceForce, 0.01f, Color.BLACK);
+
+			chassis.applyForce(rollingResistanceForce, wheelPivot);
 
 		}
-
 	}
 
 	private void drawVector(Vector2 pivot, Vector2 v, float scale, Color color) {
