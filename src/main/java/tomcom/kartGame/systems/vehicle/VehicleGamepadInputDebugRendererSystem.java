@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
+	private static final float FORCE_DRAWING_SCALE = 0.001f;
+
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
 
@@ -71,7 +73,36 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			turnWheels(vehicle, chassis, controller.getAxis(1));
 			gasAndSideForce(vehicle, chassis, controller.getAxis(4));
 			rollingResistance(vehicle, chassis);
+
+			if (controller.getButton(1)) {
+				// XBOX B
+				brake(vehicle, chassis);
+			}
+
 		}
+	}
+
+	private void brake(VehicleComponent vehicle, Body2DComponent chassis) {
+
+		for (Wheel w : vehicle.getWheels()) {
+
+			Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+
+			Vector2 velocity = chassis.getVelocity(wheelPivot).cpy();
+
+			float speed = velocity.len();
+			if (speed != 0) {
+				System.out.println("BRAKING");
+				Vector2 brakingForce = velocity.scl(-1, -1).nor()
+				// TODO: other brake Force?
+						.scl(MAXIMUM_GAS_FORCE);
+				drawVector(wheelPivot, brakingForce, FORCE_DRAWING_SCALE,
+						Color.ROYAL);
+				chassis.applyForce(brakingForce, wheelPivot);
+			}
+
+		}
+
 	}
 
 	private void gasAndSideForce(VehicleComponent vehicle,
@@ -88,12 +119,14 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				gasForce = gasForce(w, axis);
 			}
 
-			drawVector(wheelPivot, gasForce, 0.001f, Color.GOLDENROD);
+			drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE,
+					Color.GOLDENROD);
 
 			Vector2 sideForce = sideForce(w.getDirectionVector().cpy(),
 					chassis.getVelocity(wheelPivot));
 
-			drawVector(wheelPivot, sideForce, 0.001f, Color.GOLDENROD);
+			drawVector(wheelPivot, sideForce, FORCE_DRAWING_SCALE,
+					Color.GOLDENROD);
 
 			Vector2 force = gasForce.add(sideForce);
 
@@ -304,7 +337,8 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				rollingResistanceForce = new Vector2(0, 0);
 			}
 
-			drawVector(wheelPivot, rollingResistanceForce, 0.01f, Color.BLACK);
+			drawVector(wheelPivot, rollingResistanceForce, FORCE_DRAWING_SCALE,
+					Color.BLACK);
 
 			chassis.applyForce(rollingResistanceForce, wheelPivot);
 
