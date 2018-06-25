@@ -41,6 +41,10 @@ public class TrackEditorSystem extends EntitySystem {
 	}
 
 	private void placeRoadblock(Vector3 worldCoords) {
+
+		Gdx.app.log("TrackEditorSystem",
+				"Placing Roadblock @ " + worldCoords.toString());
+
 		Circle roadblockToBePlaced = new Circle(worldCoords.x, worldCoords.y,
 				EntityConfig.ROADBLOCK_R);
 

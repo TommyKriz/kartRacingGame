@@ -53,14 +53,14 @@ public class HagenbergDemo implements Screen {
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMapHagenberg());
-		engine.addEntity(EntityBuilder.buildLamborghini(2, 2).add(
+		engine.addEntity(EntityBuilder.buildLamborghini(177.3f,-249.6f).add(
 				new CameraTargetComponent()));
 	}
 
 	private void initSystems() {
 
 		engine.addSystem(new CameraSystem(-8.199994f, -0.8999984f));
-		engine.addSystem(new CameraZoomSystem(19.499977f));
+		engine.addSystem(new CameraZoomSystem(8f));
 		engine.addSystem(new CameraMoveSystem());
 
 		engine.addSystem(new CameraFollowSystem());

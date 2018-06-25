@@ -22,11 +22,6 @@ public class CameraZoomSystem extends EntitySystem {
 
 	@Override
 	public void update(float deltaTime) {
-		// if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-		// worldCamera.zoom += CAMERA_ZOOM_SPEED;
-		// } else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-		// worldCamera.zoom -= CAMERA_ZOOM_SPEED;
-		// }
 
 		for (Controller controller : Controllers.getControllers()) {
 
@@ -34,6 +29,13 @@ public class CameraZoomSystem extends EntitySystem {
 				worldCamera.zoom += CAMERA_ZOOM_SPEED;
 			} else if (controller.getButton(3)) {
 				worldCamera.zoom -= CAMERA_ZOOM_SPEED;
+			}
+
+			// TODO: move to new camera rotate system
+			if (controller.getButton(4)) {
+				worldCamera.rotate(-1f);
+			} else if (controller.getButton(5)) {
+				worldCamera.rotate(1f);
 			}
 
 		}

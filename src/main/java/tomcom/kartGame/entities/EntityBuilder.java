@@ -105,11 +105,11 @@ public class EntityBuilder {
 		Entity bg = new Entity();
 		bg.add(new PivotComponent(new Vector2(0, 0)));
 		bg.add(new SpriteComponent(ResourceManager
-				.getTexture(TextureKeys.HAGENBERG_MAP), 550, 550));
+				.getTexture(TextureKeys.HAGENBERG_MAP), 700, 700));
 		return bg;
 	}
 
-	public static Entity buildLamborghini(int x, int y) {
+	public static Entity buildLamborghini(float x, float y) {
 		Entity kart = new Entity();
 
 		kart.add(new GamepadInputComponent());
