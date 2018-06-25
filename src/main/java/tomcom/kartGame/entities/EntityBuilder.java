@@ -93,4 +93,56 @@ public class EntityBuilder {
 		return roadBlock;
 	}
 
+	public static Entity buildMapVienna() {
+		Entity bg = new Entity();
+		bg.add(new PivotComponent(new Vector2(0, 0)));
+		bg.add(new SpriteComponent(ResourceManager
+				.getTexture(TextureKeys.VIENNA_MAP), 2580, 1868));
+		return bg;
+	}
+
+	public static Entity buildMapHagenberg() {
+		Entity bg = new Entity();
+		bg.add(new PivotComponent(new Vector2(0, 0)));
+		bg.add(new SpriteComponent(ResourceManager
+				.getTexture(TextureKeys.HAGENBERG_MAP), 550, 550));
+		return bg;
+	}
+
+	public static Entity buildLamborghini(int x, int y) {
+		Entity kart = new Entity();
+
+		kart.add(new GamepadInputComponent());
+
+		Vector2 pos = new Vector2(x, y);
+		kart.add(new PivotComponent(pos));
+
+		SpriteComponent spriteComponent = new SpriteComponent(
+				ResourceManager.getTexture(TextureKeys.LAMBO),
+				EntityConfig.LAMBO_WIDTH, EntityConfig.LAMBO_HEIGHT);
+		kart.add(spriteComponent);
+
+		kart.add(new Body2DComponent().setDynamic(true).setDamping(0f));
+
+		kart.add(new ColliderComponent(
+				new RectangleCollider(
+						EntityConfig.LAMBO_WIDTH,
+						EntityConfig.LAMBO_HEIGHT,
+						EntityConfig.KART_MASS
+								/ (EntityConfig.LAMBO_WIDTH * EntityConfig.LAMBO_HEIGHT),
+						0, 0)));
+
+		float xWheelOffset = EntityConfig.LAMBO_WIDTH / 2
+				+ EntityConfig.WHEEL_WIDTH / 2;
+		float yWheelOffset = EntityConfig.LAMBO_HEIGHT / 2
+				- EntityConfig.WHEEL_HEIGHT;
+		kart.add(new VehicleComponent()
+				.addWheel(new Wheel(xWheelOffset, yWheelOffset, true))
+				.addWheel(new Wheel(-xWheelOffset, yWheelOffset, true))
+				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, false))
+				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, false)));
+
+		return kart;
+	}
+
 }

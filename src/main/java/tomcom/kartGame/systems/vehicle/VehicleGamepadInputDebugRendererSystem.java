@@ -4,6 +4,7 @@ import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
+import tomcom.kartGame.config.EntityConfig;
 import tomcom.kartGame.systems.CameraSystem;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -19,6 +20,19 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * TODO:
+ * 
+ * slip angle sinus funktion parametrisch modellieren (grafisch plotten?) .
+ * initialer größerer antriebsaufwand beim wegfahren. luftwiderstand. .
+ * Reibungskoeffizient.
+ * 
+ * TODO: wasserfläche!
+ * 
+ * 
+ * @author Tommy
+ *
+ */
 public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	private static final float FORCE_DRAWING_SCALE = 0.001f;
@@ -33,7 +47,9 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 	private static final float KAMMSCHER_KREIS_RADIUS = 12000;
 
 	// TODO: replace with MASS / nWheels
-	private static final float NORMAL_FORCE = 2000;
+	// private static final float NORMAL_FORCE = 2000;
+
+	float normalForcePerWheel;
 
 	private ComponentMapper<VehicleComponent> vc = ComponentMapper
 			.getFor(VehicleComponent.class);
@@ -69,7 +85,13 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		VehicleComponent vehicle = vc.get(entity);
 		Body2DComponent chassis = bc.get(entity);
 
+		normalForcePerWheel = EntityConfig.LAMBO_MASS
+				/ vehicle.getWheels().size * 9.81f;
+
+		System.out.println("normaleForce " + normalForcePerWheel);
+
 		for (Controller controller : Controllers.getControllers()) {
+
 			turnWheels(vehicle, chassis, controller.getAxis(1));
 			gasAndSideForce(vehicle, chassis, controller.getAxis(4));
 			rollingResistance(vehicle, chassis);
@@ -93,9 +115,10 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			float speed = velocity.len();
 			if (speed != 0) {
 				System.out.println("BRAKING");
-				Vector2 brakingForce = velocity.scl(-1, -1).nor()
-				// TODO: other brake Force?
-						.scl(MAXIMUM_GAS_FORCE);
+				Vector2 brakingForce = w.getDirectionVector().cpy().scl(-1, -1)
+						.nor()
+						// TODO: other brake Force?
+						.scl(normalForcePerWheel * 1f);
 				drawVector(wheelPivot, brakingForce, FORCE_DRAWING_SCALE,
 						Color.ROYAL);
 				chassis.applyForce(brakingForce, wheelPivot);
@@ -128,6 +151,13 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			drawVector(wheelPivot, sideForce, FORCE_DRAWING_SCALE,
 					Color.GOLDENROD);
 
+			// initiale stärkere kraft
+			if (chassis.getVelocity(chassis.getPosition()).len() < 4) {
+				Gdx.app.log("VehicleGamepadInputSystem",
+						"initial driving force available");
+				gasForce.scl(1.8f);
+			}
+
 			Vector2 force = gasForce.add(sideForce);
 
 			if (force.len() > KAMMSCHER_KREIS_RADIUS) {
@@ -146,7 +176,8 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 		float slipAngle = normalDirectionVector.dot(velocity);
 
-		Vector2 sideForce = normalDirectionVector.scl(1.1f * NORMAL_FORCE);
+		Vector2 sideForce = normalDirectionVector
+				.scl(1.1f * normalForcePerWheel);
 
 		if (slipAngle < 0) {
 			return sideForce;
@@ -324,7 +355,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
 			Vector2 rollingResistanceForce = w.getDirectionVector().cpy()
-					.scl(0.04f * NORMAL_FORCE);
+					.scl(0.4f * normalForcePerWheel);
 
 			float angle = w.getDirectionVector().cpy()
 					.dot(chassis.getVelocity(wheelPivot));
@@ -338,7 +369,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			}
 
 			drawVector(wheelPivot, rollingResistanceForce, FORCE_DRAWING_SCALE,
-					Color.BLACK);
+					Color.WHITE);
 
 			chassis.applyForce(rollingResistanceForce, wheelPivot);
 

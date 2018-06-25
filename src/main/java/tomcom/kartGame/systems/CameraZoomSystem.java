@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class CameraZoomSystem extends EntitySystem {
@@ -20,10 +22,20 @@ public class CameraZoomSystem extends EntitySystem {
 
 	@Override
 	public void update(float deltaTime) {
-		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			worldCamera.zoom += CAMERA_ZOOM_SPEED;
-		} else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-			worldCamera.zoom -= CAMERA_ZOOM_SPEED;
+		// if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+		// worldCamera.zoom += CAMERA_ZOOM_SPEED;
+		// } else if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
+		// worldCamera.zoom -= CAMERA_ZOOM_SPEED;
+		// }
+
+		for (Controller controller : Controllers.getControllers()) {
+
+			if (controller.getButton(2)) {
+				worldCamera.zoom += CAMERA_ZOOM_SPEED;
+			} else if (controller.getButton(3)) {
+				worldCamera.zoom -= CAMERA_ZOOM_SPEED;
+			}
+
 		}
 	}
 

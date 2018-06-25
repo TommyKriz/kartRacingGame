@@ -16,4 +16,13 @@ public class EntityConfig {
 
 	public static final String FINISH_LINE_COLLIDER = "FINISH_LINE";
 
+	// see
+	// https://www.lamborghini.com/de-en/modelle/aventador/aventador-s-roadster
+	// datenblatt
+	public static final float LAMBO_WIDTH = 2.26f;
+
+	public static final float LAMBO_HEIGHT = 4.8f;
+
+	public static final float LAMBO_MASS = 1625f;
+
 }

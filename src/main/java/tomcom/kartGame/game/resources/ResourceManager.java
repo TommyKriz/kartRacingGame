@@ -20,6 +20,9 @@ public class ResourceManager {
 		textures.put(TextureKeys.WHEEL, new Texture(TexturePaths.WHEEL));
 		textures.put(TextureKeys.ROADBLOCK, new Texture(TexturePaths.ROADBLOCK));
 		textures.put(TextureKeys.MAP, new Texture(TexturePaths.MAP));
+		textures.put(TextureKeys.VIENNA_MAP, new Texture(TexturePaths.VIENNA_MAP));
+		textures.put(TextureKeys.LAMBO, new Texture(TexturePaths.LAMBO));
+		textures.put(TextureKeys.HAGENBERG_MAP, new Texture(TexturePaths.HAGENBERG_MAP));
 	}
 
 	public static Texture getTexture(String key) {
