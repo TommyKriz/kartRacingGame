@@ -40,7 +40,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 	private static final Family FAMILY = Family.all(VehicleComponent.class,
 			Body2DComponent.class, GamepadInputComponent.class).get();
 
-	private static final int MAXIMUM_WHEEL_ANGLE = 55;
+	private static final int MAXIMUM_WHEEL_ANGLE = 60;
 
 	private static final float MAXIMUM_GAS_FORCE = 6000f;
 
@@ -88,8 +88,6 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		normalForcePerWheel = EntityConfig.LAMBO_MASS
 				/ vehicle.getWheels().size * 9.81f;
 
-		System.out.println("normaleForce " + normalForcePerWheel);
-
 		for (Controller controller : Controllers.getControllers()) {
 
 			turnWheels(vehicle, chassis, controller.getAxis(1));
@@ -114,7 +112,6 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 			float speed = velocity.len();
 			if (speed != 0) {
-				System.out.println("BRAKING");
 				Vector2 brakingForce = w.getDirectionVector().cpy().scl(-1, -1)
 						.nor()
 						// TODO: other brake Force?
@@ -136,14 +133,13 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
 
 			Vector2 gasForce;
-			if (w.steerable) {
-				gasForce = new Vector2(0, 0);
-			} else {
+			if (w.driven) {
 				gasForce = gasForce(w, axis);
+			} else {
+				gasForce = new Vector2(0, 0);
 			}
 
-			drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE,
-					Color.GOLDENROD);
+			drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE, Color.PINK);
 
 			Vector2 sideForce = sideForce(w.getDirectionVector().cpy(),
 					chassis.getVelocity(wheelPivot));
@@ -155,7 +151,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			if (chassis.getVelocity(chassis.getPosition()).len() < 4) {
 				Gdx.app.log("VehicleGamepadInputSystem",
 						"initial driving force available");
-				gasForce.scl(1.8f);
+				gasForce.scl(2f);
 			}
 
 			Vector2 force = gasForce.add(sideForce);
@@ -202,12 +198,17 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		return 0;
 	}
 
+	// TODO: put this in vehicle
+	float AXIS_HEIGHT;
+
 	private void turnWheels(VehicleComponent vehicle, Body2DComponent chassis,
 			float controllerXaxis) {
 
 		float inputAngle = controllerXaxis * -MAXIMUM_WHEEL_ANGLE;
 
 		adjustDrivingWheelsAngle(vehicle, chassis);
+
+		AXIS_HEIGHT = getAxisHeight();
 
 		if (inputAngle > 0) {
 			Gdx.app.log("Ackermann",
@@ -223,128 +224,68 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 	}
 
-	private void adjustDrivingWheelsAngle(VehicleComponent vehicle,
-			Body2DComponent chassis) {
-		float chassisAngle = chassis.getAngleInDegrees();
-		for (Wheel w : vehicle.getDrivenWheels()) {
-			w.updateAngle(chassisAngle);
-			drawVector(chassis.toWorldPoint(w.offsetFromPivot),
-					w.getDirectionVector(), 2, Color.YELLOW);
-		}
-
-	}
-
-	/**
-	 * 
-	 * @param inputAngle
-	 * @param chassis
-	 * @param vehicle
-	 * @param axisIdx
-	 *            0 for right, 1 for left
-	 */
 	private void setAckermannAngle(float inputAngle, Body2DComponent chassis,
-			VehicleComponent vehicle, int axisIdx) {
+			VehicleComponent vehicle, int axis) {
 
-		Wheel firstSteelWheel = vehicle.getSteerableWheels().get(axisIdx);
+		Wheel firstSteelWheel = vehicle.getSteerableWheels().get(axis);
 
 		Vector2 firstSteeringWheelPivot = chassis
 				.toWorldPoint(firstSteelWheel.offsetFromPivot);
 
-		renderer.setColor(Color.CHARTREUSE);
-		renderer.circle(firstSteeringWheelPivot.x, firstSteeringWheelPivot.y,
-				0.2f);
+		Wheel firstBottomWheel = vehicle.getWheels().get(2 + axis);
 
-		Wheel drivingWheel = vehicle.getDrivenWheels().get(axisIdx);
-
-		Vector2 drivingWheelPivot = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot);
+		Vector2 firstBottomWheelPivot = chassis
+				.toWorldPoint(firstBottomWheel.offsetFromPivot);
 
 		renderer.setColor(Color.FIREBRICK);
-		renderer.circle(drivingWheelPivot.x, drivingWheelPivot.y, 0.2f);
+		renderer.circle(firstBottomWheelPivot.x, firstBottomWheelPivot.y, 0.2f);
 
-		float offsetX = -calcIntersectionPointOffsetX(inputAngle,
-				firstSteeringWheelPivot, drivingWheelPivot);
+		float offsetX = -(float) (Math.sin(inputAngle
+				* MathUtils.degreesToRadians) * AXIS_HEIGHT);
 
 		Vector2 intersectionPoint = chassis
-				.toWorldPoint(drivingWheel.offsetFromPivot.cpy()
-						.add(offsetX, 0));
+				.toWorldPoint(firstBottomWheel.offsetFromPivot.cpy().add(
+						offsetX, 0));
 
 		renderer.setColor(Color.GREEN);
 		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
 
-		// -------------------------------------------------------
-		// second wheel stuff
-		// -------------------------------------------------------
-
-		int SECOND_WHEEL_INDEX = 1 - axisIdx;
-
-		Wheel otherSteeringWheel = vehicle.getSteerableWheels().get(
-				SECOND_WHEEL_INDEX);
+		Wheel otherSteeringWheel = vehicle.getWheels().get(1 - axis);
 
 		Vector2 otherSteeringWheelPivot = chassis
 				.toWorldPoint(otherSteeringWheel.offsetFromPivot);
 
-		renderer.setColor(Color.YELLOW);
-		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
+		Vector2 v = otherSteeringWheelPivot.cpy().sub(intersectionPoint.cpy());
 
-		renderer.setColor(Color.FIREBRICK);
-		renderer.line(intersectionPoint, firstSteeringWheelPivot);
-		renderer.line(drivingWheelPivot, otherSteeringWheelPivot);
-		renderer.line(intersectionPoint, drivingWheelPivot);
+		Vector2 v1 = otherSteeringWheelPivot.cpy().sub(
+				firstBottomWheelPivot.cpy());
 
-		float chassisAngle = chassis.getAngleInDegrees();
+		float otherAngle = v1.angle() - v.angle();
 
-		System.out.println("chassisAngle: " + chassisAngle);
+		firstSteelWheel.updateAngle(firstSteelWheel.orientation + inputAngle);
 
-		float otherAngle = 45
-				- otherSteeringWheelPivot.cpy().sub(intersectionPoint).angle()
-				+ 90 * (1 - axisIdx);
-
-		otherAngle += chassisAngle;
-
-		System.out.println("     INPUT ANGLE " + inputAngle + "   otherAngle: "
+		otherSteeringWheel.updateAngle(otherSteeringWheel.orientation
 				+ otherAngle);
-
-		firstSteelWheel.updateAngle(chassisAngle + inputAngle);
-
-		otherSteeringWheel.updateAngle(chassisAngle + otherAngle);
-
 		drawVector(firstSteeringWheelPivot,
 				firstSteelWheel.getDirectionVector(), 2, Color.GREEN);
+
 		drawVector(otherSteeringWheelPivot,
 				otherSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
-
-		System.out.println("input "
-				+ firstSteelWheel.getDirectionVector().angle() + " other "
-				+ otherSteeringWheel.getDirectionVector().angle());
-
 	}
 
-	private float calcIntersectionPointOffsetX(float inputAngle,
-			Vector2 firstSteeringWheelPivot, Vector2 drivingWheelPivot) {
-		// Dreieck WSW Satz
-		float alpha = Math.abs(inputAngle);
-		// TODO: replace with Axis point this is constant!
-		float b = firstSteeringWheelPivot.dst(drivingWheelPivot);
-		float a = wswSatzRechtwinkligesDreieck(alpha, b);
+	private float getAxisHeight() {
+		return (EntityConfig.LAMBO_HEIGHT / 2 - EntityConfig.WHEEL_HEIGHT) * 2;
+	}
 
-		if (inputAngle > 0) {
-			// steering left
-			return a;
-		} else {
-			// steering right
-			return -a;
+	private void adjustDrivingWheelsAngle(VehicleComponent vehicle,
+			Body2DComponent chassis) {
+		float chassisAngle = chassis.getAngleInDegrees();
+		for (Wheel w : vehicle.getWheels()) {
+			w.updateAngle(chassisAngle);
+			// drawVector(chassis.toWorldPoint(w.offsetFromPivot),
+			// w.getDirectionVector(), 1, Color.YELLOW);
 		}
-	}
 
-	/**
-	 * 
-	 * @param alpha
-	 * @param b
-	 * @return
-	 */
-	private float wswSatzRechtwinkligesDreieck(float alpha, float b) {
-		return (float) (Math.tan(alpha * MathUtils.degreesToRadians) * b);
 	}
 
 	private void rollingResistance(VehicleComponent vehicle,
