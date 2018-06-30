@@ -14,43 +14,31 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * 
- * Choose between Host or Join Mode
+ * Choose between Maps and display IP-Address.
  * 
  * @author Tommy
  *
  */
-public class MenuScreen implements Screen {
+public class HostScreen implements Screen {
 
 	private Stage stage;
 
-	public MenuScreen(GameMain game) {
+	public HostScreen(GameMain game) {
 		stage = new Stage();
 
 		Skin mySkin = ResourceManager.getSkin();
 
 		Gdx.input.setInputProcessor(stage);
 
-		TextButton button1 = new TextButton("HOST", mySkin);
-		button1.setBounds(200, 480, 300, 100);
-		button1.addListener(new ClickListener() {
+		TextButton back = new TextButton("Back", mySkin);
+		back.setBounds(500, 60, 100, 100);
+		back.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new HostScreen(game));
+				game.setScreen(new MenuScreen(game));
 			}
 		});
-
-		stage.addActor(button1);
-
-		TextButton button2 = new TextButton("JOIN", mySkin);
-		button2.setBounds(200, 360, 300, 100);
-		button2.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new JoinScreen(game));
-			}
-		});
-
-		stage.addActor(button2);
+		stage.addActor(back);
 
 	}
 
