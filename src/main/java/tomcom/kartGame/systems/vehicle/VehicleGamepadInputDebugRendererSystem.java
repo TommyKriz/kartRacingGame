@@ -116,8 +116,8 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 						.nor()
 						// TODO: other brake Force?
 						.scl(normalForcePerWheel * 1f);
-				drawVector(wheelPivot, brakingForce, FORCE_DRAWING_SCALE,
-						Color.ROYAL);
+				// drawVector(wheelPivot, brakingForce, FORCE_DRAWING_SCALE,
+				// Color.ROYAL);
 				chassis.applyForce(brakingForce, wheelPivot);
 			}
 
@@ -139,13 +139,13 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				gasForce = new Vector2(0, 0);
 			}
 
-			drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE, Color.PINK);
+			 drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE,
+			 Color.PINK);
 
-			Vector2 sideForce = sideForce(w.getDirectionVector().cpy(),
-					chassis.getVelocity(wheelPivot));
+			Vector2 sideForce = sideForce(w, chassis);
 
-			drawVector(wheelPivot, sideForce, FORCE_DRAWING_SCALE,
-					Color.GOLDENROD);
+			// drawVector(wheelPivot, sideForce, FORCE_DRAWING_SCALE,
+			// Color.GOLDENROD);
 
 			// initiale stärkere kraft
 			if (chassis.getVelocity(chassis.getPosition()).len() < 4) {
@@ -154,26 +154,47 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				gasForce.scl(2f);
 			}
 
-			Vector2 force = gasForce.add(sideForce);
-
-			if (force.len() > KAMMSCHER_KREIS_RADIUS) {
-				force = force.nor().scl(KAMMSCHER_KREIS_RADIUS);
-			}
-
-			chassis.applyForce(force, wheelPivot);
+			chassis.applyForce(circleOfForces(gasForce, sideForce), wheelPivot);
 
 		}
 
 	}
 
-	private Vector2 sideForce(Vector2 directionVector, final Vector2 velocity) {
+	private Vector2 circleOfForces(Vector2 gasForce, Vector2 sideForce) {
+		Vector2 force = gasForce.add(sideForce);
+		if (force.len() > KAMMSCHER_KREIS_RADIUS) {
+			force = force.nor().scl(KAMMSCHER_KREIS_RADIUS);
+		}
+		return force;
+	}
 
-		Vector2 normalDirectionVector = directionVector.rotate(90).nor();
+	private Vector2 sideForce(Wheel w, final Body2DComponent chassis) {
 
-		float slipAngle = normalDirectionVector.dot(velocity);
+		Vector2 directionVector = w.getDirectionVector().cpy().nor();
+
+		// Vector2 wheelPivot = chassis.toWorldPoint(w.offsetFromPivot);
+		//
+		// Vector2 velocityAtThisWheel = chassis.getVelocity(wheelPivot).cpy();
+		//
+		// drawVector(wheelPivot, directionVector, 4, Color.PINK);
+		// drawVector(wheelPivot, velocityAtThisWheel, 2, Color.GREEN);
+		//
+		// // float slipAngle = (float)
+		// // Math.acos(normalDirectionVector.dot(velocity
+		// // .cpy().nor()));
+		//
+		// float slipAngle =
+		// directionVector.cpy().dot(velocityAtThisWheel.nor());
+		//
+		// // System.out.println("slipAngle: " +slipAngle);
+		// System.out.println("slipAngle acos: " + Math.acos(slipAngle));
+
+		Vector2 normalDirectionVector = directionVector.rotate(90);
 
 		Vector2 sideForce = normalDirectionVector
 				.scl(1.1f * normalForcePerWheel);
+
+		float slipAngle = 0;
 
 		if (slipAngle < 0) {
 			return sideForce;
@@ -185,7 +206,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 	}
 
 	private Vector2 gasForce(Wheel w, float controllerYAxis) {
-		return w.getDirectionVector().cpy()
+		return w.getDirectionVector().cpy().nor()
 				.scl(-controllerYAxis * MAXIMUM_GAS_FORCE);
 	}
 
@@ -237,8 +258,9 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 		Vector2 firstBottomWheelPivot = chassis
 				.toWorldPoint(firstBottomWheel.offsetFromPivot);
 
-		renderer.setColor(Color.FIREBRICK);
-		renderer.circle(firstBottomWheelPivot.x, firstBottomWheelPivot.y, 0.2f);
+		// renderer.setColor(Color.FIREBRICK);
+		// renderer.circle(firstBottomWheelPivot.x, firstBottomWheelPivot.y,
+		// 0.2f);
 
 		float offsetX = -(float) (Math.sin(inputAngle
 				* MathUtils.degreesToRadians) * AXIS_HEIGHT);
@@ -247,8 +269,8 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				.toWorldPoint(firstBottomWheel.offsetFromPivot.cpy().add(
 						offsetX, 0));
 
-		renderer.setColor(Color.GREEN);
-		renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
+		// renderer.setColor(Color.GREEN);
+		// renderer.circle(intersectionPoint.x, intersectionPoint.y, 0.2f);
 
 		Wheel otherSteeringWheel = vehicle.getWheels().get(1 - axis);
 
@@ -266,11 +288,11 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 
 		otherSteeringWheel.updateAngle(otherSteeringWheel.orientation
 				+ otherAngle);
-		drawVector(firstSteeringWheelPivot,
-				firstSteelWheel.getDirectionVector(), 2, Color.GREEN);
+		// drawVector(firstSteeringWheelPivot,
+		// firstSteelWheel.getDirectionVector(), 2, Color.GREEN);
 
-		drawVector(otherSteeringWheelPivot,
-				otherSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
+		// drawVector(otherSteeringWheelPivot,
+		// otherSteeringWheel.getDirectionVector(), 2, Color.YELLOW);
 	}
 
 	private float getAxisHeight() {
