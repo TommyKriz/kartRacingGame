@@ -32,6 +32,12 @@ public class ResourceManager {
 		textures.put(TextureKeys.LAMBO, new Texture(TexturePaths.LAMBO));
 		textures.put(TextureKeys.HAGENBERG_MAP, new Texture(
 				TexturePaths.HAGENBERG_MAP));
+		textures.put(TextureKeys.LEVEL1_PREVIEW, new Texture(
+				TexturePaths.LEVEL1_PREVIEW));
+		textures.put(TextureKeys.LEVEL2_PREVIEW, new Texture(
+				TexturePaths.LEVEL2_PREVIEW));
+		textures.put(TextureKeys.LEVEL3_PREVIEW, new Texture(
+				TexturePaths.LEVEL3_PREVIEW));
 	}
 
 	public static Texture getTexture(String key) {

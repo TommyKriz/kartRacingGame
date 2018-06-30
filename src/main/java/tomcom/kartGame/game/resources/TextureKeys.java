@@ -8,4 +8,7 @@ public class TextureKeys {
 	public static final String VIENNA_MAP = "VIENNA_MAP";
 	public static final String HAGENBERG_MAP = "HGB";
 	public static final String LAMBO = "LAMBO";
+	public static final String LEVEL1_PREVIEW = "LEVEL1";
+	public static final String LEVEL2_PREVIEW = "LEVEL2";
+	public static final String LEVEL3_PREVIEW = "LEVEL3";
 }
