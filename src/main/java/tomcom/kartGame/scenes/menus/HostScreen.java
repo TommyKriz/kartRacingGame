@@ -1,9 +1,10 @@
-package tomcom.kartGame.scenes;
+package tomcom.kartGame.scenes.menus;
 
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.ResourceManager;
 import tomcom.kartGame.game.resources.TextureKeys;
+import tomcom.kartGame.scenes.TestLevel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

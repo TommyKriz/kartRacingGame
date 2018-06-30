@@ -1,7 +1,7 @@
 package tomcom.kartGame.game;
 
-import tomcom.kartGame.scenes.HostScreen;
-import tomcom.kartGame.scenes.SplashScreen;
+import tomcom.kartGame.scenes.menus.HostScreen;
+import tomcom.kartGame.scenes.menus.SplashScreen;
 
 import com.badlogic.gdx.Game;
 

@@ -1,4 +1,4 @@
-package tomcom.kartGame.scenes;
+package tomcom.kartGame.scenes.menus;
 
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.ResourceManager;
