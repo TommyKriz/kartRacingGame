@@ -8,7 +8,6 @@ import tomcom.kartGame.game.resources.ResourceManager;
 import tomcom.kartGame.game.resources.TextureKeys;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
-import tomcom.kartGame.systems.CameraFollowSystem;
 import tomcom.kartGame.systems.CameraMoveSystem;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.CameraZoomSystem;
@@ -33,6 +32,7 @@ public class TestLevel implements Screen {
 	private FitViewport viewport;
 
 	public TestLevel(GameMain game) {
+
 		this.game = game;
 
 		engine = new Engine();
@@ -231,8 +231,6 @@ public class TestLevel implements Screen {
 		engine.addSystem(new CameraSystem(-8.199994f, -0.8999984f));
 		engine.addSystem(new CameraZoomSystem(19.499977f));
 		engine.addSystem(new CameraMoveSystem());
-
-		engine.addSystem(new CameraFollowSystem());
 
 		engine.addSystem(new Box2DPhysicsSystem());
 		engine.addSystem(new PivotUpdateSystem());
