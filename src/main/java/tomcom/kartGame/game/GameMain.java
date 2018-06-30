@@ -1,6 +1,6 @@
 package tomcom.kartGame.game;
 
-import tomcom.kartGame.scenes.HagenbergDemo;
+import tomcom.kartGame.scenes.SplashScreen;
 
 import com.badlogic.gdx.Game;
 
@@ -8,7 +8,7 @@ public class GameMain extends Game {
 
 	@Override
 	public void create() {
-		setScreen(new HagenbergDemo(this));
+		setScreen(new SplashScreen(this));
 	}
 
 }
