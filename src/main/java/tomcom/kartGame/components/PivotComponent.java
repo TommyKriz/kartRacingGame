@@ -14,6 +14,10 @@ public class PivotComponent implements Component {
 	public PivotComponent(Vector2 pos) {
 		this.pos = new Vector3(pos, 0);
 	}
+	
+	public PivotComponent(Vector2 pos, float angle) {
+		this.pos = new Vector3(pos, angle);
+	}
 
 	public Vector3 getPos() {
 		return pos;

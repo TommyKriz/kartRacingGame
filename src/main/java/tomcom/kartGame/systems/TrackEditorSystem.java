@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class TrackEditorSystem extends EntitySystem {
 
-	OrthographicCamera worldCamera;
+	OrthographicCamera cam;
 
 	Array<Circle> placedRoadblocks = new Array<>();
 
@@ -27,43 +27,36 @@ public class TrackEditorSystem extends EntitySystem {
 
 			Gdx.app.log("TrackEditorSystem", "Saving roadblocks to file");
 
-			final OrthographicCamera cam = getEngine().getSystem(
-					CameraSystem.class).getWorldCamera();
+			// cam = getEngine().getSystem(CameraSystem.class).getWorldCamera();
 
 			new TrackEditorSaver(placedRoadblocks, cam.position, cam.zoom);
 		}
 	}
 
 	private Vector3 getClickWorldCoords() {
-		return worldCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input
-				.getY(), 0));
+		return cam
+				.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
 	}
 
 	private void placeRoadblock(Vector3 worldCoords) {
-
-		Gdx.app.log("TrackEditorSystem",
-				"Placing Roadblock @ " + worldCoords.toString());
-
 		Circle roadblockToBePlaced = new Circle(worldCoords.x, worldCoords.y,
 				EntityConfig.ROADBLOCK_R);
-
-		if (!placedRoadblocks.contains(roadblockToBePlaced, false)) {
-
-			for (Circle alreadyPlacedRoadblock : placedRoadblocks) {
-				if (roadblockToBePlaced.overlaps(alreadyPlacedRoadblock)) {
-					return;
-				}
+		for (Circle alreadyPlacedRoadblock : placedRoadblocks) {
+			if (roadblockToBePlaced.overlaps(alreadyPlacedRoadblock)) {
+				return;
 			}
-			placedRoadblocks.add(roadblockToBePlaced);
-			getEngine().addEntity(
-					EntityBuilder.buildRoadBlock(worldCoords.x, worldCoords.y));
 		}
+		Gdx.app.log("TrackEditorSystem",
+				"Placing Roadblock @ " + worldCoords.toString());
+		placedRoadblocks.add(roadblockToBePlaced);
+		getEngine().addEntity(
+				EntityBuilder.buildRoadBlock(worldCoords.x, worldCoords.y));
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		worldCamera = engine.getSystem(CameraSystem.class).getWorldCamera();
+		cam = engine.getSystem(CameraSystem.class).getWorldCamera();
 	}
 
 }

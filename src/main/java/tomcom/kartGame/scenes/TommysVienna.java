@@ -53,7 +53,7 @@ public class TommysVienna implements Screen {
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMapVienna());
-		engine.addEntity(EntityBuilder.buildKart(2, 2).add(
+		engine.addEntity(EntityBuilder.buildLamborghini(2, 2).add(
 				new CameraTargetComponent()));
 	}
 

@@ -100,6 +100,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 				PivotComponent pivot = pm.get(entity);
 
 				bodyDef.position.set(pivot.getPos().x, pivot.getPos().y);
+				bodyDef.angle = pivot.getPos().z;
 
 				body.setBody(world.createBody(bodyDef));
 

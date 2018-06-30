@@ -1,5 +1,6 @@
 package tomcom.kartGame.scenes.menus;
 
+import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.ResourceManager;
 
@@ -23,6 +24,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  */
 public class JoinScreen implements Screen {
 
+	private static final float SMALL_BUTTON_SIZE = 100;
+
+	private static final int OFFSET = 30;
+
 	private Stage stage;
 
 	private String errorMsg = "";
@@ -39,12 +44,12 @@ public class JoinScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		TextField textField = new TextField("", mySkin);
-		textField.setBounds(200, 300, 400, 100);
+		textField.setBounds(200, 300, 400, SMALL_BUTTON_SIZE);
 
 		stage.addActor(textField);
 
 		TextButton button2 = new TextButton("JOIN", mySkin);
-		button2.setBounds(200, 160, 300, 100);
+		button2.setBounds(200, 160, 300, SMALL_BUTTON_SIZE);
 		button2.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -61,7 +66,8 @@ public class JoinScreen implements Screen {
 		stage.addActor(button2);
 
 		TextButton back = new TextButton("Back", mySkin);
-		back.setBounds(500, 60, 100, 100);
+		back.setBounds(GameConfig.SCREEN_WIDTH - SMALL_BUTTON_SIZE - OFFSET,
+				OFFSET, SMALL_BUTTON_SIZE, SMALL_BUTTON_SIZE);
 		back.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
