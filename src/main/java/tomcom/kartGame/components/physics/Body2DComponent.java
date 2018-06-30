@@ -52,7 +52,10 @@ public class Body2DComponent implements Body2D, Component {
 	public Vector2 getPosition() {
 		return body.getPosition();
 	}
-
+	
+	public void setPosition(Vector2 pos) {
+		//TODO
+	}
 	/**
 	 * USED in Box2DPhysicsSystem when body is destroyed
 	 * 

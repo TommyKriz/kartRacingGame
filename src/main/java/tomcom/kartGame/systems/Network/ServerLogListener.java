@@ -15,19 +15,36 @@ public class ServerLogListener extends LogNetworkListener {
 
 	private MessageDecoder decoder = new MessageDecoder();
 	private MessageEncoder encoder = new MessageEncoder();
-	
-	public ServerLogListener(LogLevel level) {
+	private Server server;
+	public ServerLogListener(LogLevel level, Server server) {
 		super(level);
+		this.server = server;
 	}
 
 	@Override
 	public void onMessage(Peer peer, ByteBuffer msg) {
 		decoder.reset(msg);
-		String msgTxt = decoder.readString();
-		Gdx.app.log("Server","Got message from \"" + peer.getAddr() + "\": '\" \r\n" +  msgTxt + "\"'\")");
-		encoder.reset();
-		encoder.writeString(msgTxt);
-		peer.send(encoder.getMessage(), MessageQuality.UNRELIABLE);
+		
+		int type = decoder.readInt();
+		Gdx.app.log("Server","Got message from " + peer.getAddr()+" type: " +type);
+		switch (type) {
+			case 0: break;
+			case 1: Gdx.app.log("Server","Received ApplyForce Command");
+			server.receivedApplyForceCommand(decoder.readInt(), decoder.readFloat(), decoder.readFloat());
+			break;
+		}
+//		decoder.reset(msg);
+//		String msgTxt = decoder.readString();
+//		Gdx.app.log("Server","Got message from \"" + peer.getAddr() + "\": '\" \r\n" +  msgTxt + "\"'\")");
+//		encoder.reset();
+//		encoder.writeString(msgTxt);
+//		peer.send(encoder.getMessage(), MessageQuality.UNRELIABLE);
+	}
+	@Override
+	public void onNewConnection(Peer peer) {
+		
+		Gdx.app.log("","Peer connected : " + peer.getAddr().toString());
+		server.newConnection(peer);
 	}
 
 }
