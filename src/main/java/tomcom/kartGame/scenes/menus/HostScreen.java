@@ -1,5 +1,8 @@
 package tomcom.kartGame.scenes.menus;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.ResourceManager;
@@ -8,7 +11,9 @@ import tomcom.kartGame.scenes.TestLevel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -36,6 +41,9 @@ public class HostScreen implements Screen {
 			GameConfig.SCREEN_WIDTH / 2 - MAP_PREVIEW_IMAGE_SIZE / 2,
 			GameConfig.SCREEN_HEIGHT / 2 - 2 * OFFSET);
 
+	// TODO: replace Font with single-instantiation font
+	private BitmapFont font;
+
 	private Stage stage;
 
 	private Sprite level1Preview = new Sprite(
@@ -47,8 +55,19 @@ public class HostScreen implements Screen {
 
 	private int selectedLevel = 1;
 
+	private String myIpAddress;
+
 	public HostScreen(GameMain game) {
 		stage = new Stage();
+
+		font = new BitmapFont();
+		font.setColor(Color.BLACK);
+
+		try {
+			myIpAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			myIpAddress = "Local Host IP Address could not be retrieved :( ";
+		}
 
 		Skin mySkin = ResourceManager.getSkin();
 
@@ -141,6 +160,10 @@ public class HostScreen implements Screen {
 		stage.getBatch().begin();
 
 		drawMapPreviewPictures();
+
+		font.setColor(0, 0, 0, 1);
+		font.draw(stage.getBatch(), "Your IP Address is: " + myIpAddress,
+				OFFSET, OFFSET);
 
 		stage.getBatch().end();
 

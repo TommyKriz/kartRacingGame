@@ -5,6 +5,7 @@ import tomcom.kartGame.game.resources.ResourceManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,8 +27,12 @@ public class JoinScreen implements Screen {
 
 	private String errorMsg = "";
 
+	private BitmapFont font;
+
 	public JoinScreen(GameMain game) {
 		stage = new Stage();
+
+		font = new BitmapFont();
 
 		Skin mySkin = ResourceManager.getSkin();
 
@@ -44,8 +49,10 @@ public class JoinScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
+				// TODO: new Screen in HOST Mode
 				// new XXXlevel(false);
 
+				// TODO: check for refused / not working connection
 				errorMsg = " Could not connect to " + textField.getText();
 
 			}
@@ -73,19 +80,18 @@ public class JoinScreen implements Screen {
 	public void render(float delta) {
 		stage.act(delta);
 
-		Gdx.gl.glClearColor(0, 0, 1, 1);
+		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.draw();
 
 		stage.getBatch().begin();
 
-		BitmapFont font = new BitmapFont();
-
+		font.setColor(Color.WHITE);
 		font.draw(stage.getBatch(),
 				" Enter Host's IP Address Here (f.ex.: 192.10.23.43)", 210, 550);
 
-		font.setColor(1, 0, 0, 1);
+		font.setColor(Color.RED);
 		font.draw(stage.getBatch(), errorMsg, 210, 440);
 
 		stage.getBatch().end();
