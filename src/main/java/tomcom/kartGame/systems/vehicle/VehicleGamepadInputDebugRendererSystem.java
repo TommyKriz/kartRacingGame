@@ -12,6 +12,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
@@ -100,6 +101,26 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			}
 
 		}
+		if(Controllers.getControllers().size==0) {
+			float xAxis = 0;
+			float yAxis = 0;
+			if(Gdx.input.isKeyPressed(Input.Keys.D)){
+				xAxis=-1;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.A)){
+				xAxis=1;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.W)){
+				yAxis=-1;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.S)){
+				yAxis=1;
+			}
+				turnWheels(vehicle, chassis, xAxis);
+				gasAndSideForce(vehicle, chassis, yAxis);
+				rollingResistance(vehicle, chassis);
+		}
+
 	}
 
 	private void brake(VehicleComponent vehicle, Body2DComponent chassis) {
