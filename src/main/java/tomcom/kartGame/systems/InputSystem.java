@@ -3,7 +3,7 @@ package tomcom.kartGame.systems;
 import tomcom.kartGame.components.IDComponent;
 import tomcom.kartGame.components.InputComponent;
 import tomcom.kartGame.components.physics.Body2DComponent;
-import tomcom.kartGame.systems.Network.DataContainer.ForceInputData;
+import tomcom.kartGame.systems.Network.DataContainer.InputData;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -19,7 +19,7 @@ public class InputSystem extends IteratingSystem {
 
 	private static final Family FAMILY = Family.all(InputComponent.class).get();
 	
-	public Signal<ForceInputData> onApplyForceInput = new Signal<ForceInputData>();
+	public Signal<InputData> onApplyForceInput = new Signal<InputData>();
 
 	private ComponentMapper<InputComponent> ic = ComponentMapper
 			.getFor(InputComponent.class);
@@ -37,16 +37,16 @@ public class InputSystem extends IteratingSystem {
 		int id = idcomp.get(entity).id;
 
 		if (Gdx.input.isKeyPressed(keys[0])) {
-			onApplyForceInput.dispatch(new ForceInputData(id, -1f,0f));
+			onApplyForceInput.dispatch(new InputData(id, -1f,0f));
 		}
 		if (Gdx.input.isKeyPressed(keys[1])) {
-			onApplyForceInput.dispatch(new ForceInputData(id,1f,0f));
+			onApplyForceInput.dispatch(new InputData(id,1f,0f));
 		}
 		if (Gdx.input.isKeyPressed(keys[2])) {
-			onApplyForceInput.dispatch(new ForceInputData(id,0f,1f));
+			onApplyForceInput.dispatch(new InputData(id,0f,1f));
 		}
 		if (Gdx.input.isKeyPressed(keys[3])) {
-			onApplyForceInput.dispatch(new ForceInputData(id,0f,-1f));
+			onApplyForceInput.dispatch(new InputData(id,0f,-1f));
 		}
 
 

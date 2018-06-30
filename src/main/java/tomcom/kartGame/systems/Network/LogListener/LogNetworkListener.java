@@ -1,4 +1,4 @@
-package tomcom.kartGame.systems.Network;
+package tomcom.kartGame.systems.Network.LogListener;
 
 import java.nio.ByteBuffer;
 

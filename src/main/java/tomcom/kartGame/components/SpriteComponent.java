@@ -8,8 +8,11 @@ public class SpriteComponent implements Component {
 
 	private Sprite sprite;
 
-	public SpriteComponent(String textureName) {
-		sprite = new Sprite(new Texture(textureName));
+	public SpriteComponent(Texture texture, float widthInWorldUnits,
+			float heightInWorldUnits) {
+		sprite = new Sprite(texture);
+		sprite.setSize(widthInWorldUnits, heightInWorldUnits);
+		sprite.setOriginCenter();
 	}
 
 	public Sprite getSprite() {

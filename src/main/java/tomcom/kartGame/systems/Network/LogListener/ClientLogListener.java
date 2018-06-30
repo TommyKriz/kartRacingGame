@@ -1,4 +1,4 @@
-package tomcom.kartGame.systems.Network;
+package tomcom.kartGame.systems.Network.LogListener;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -8,15 +8,20 @@ import com.quantumreboot.ganet.LogLevel;
 import com.quantumreboot.ganet.MessageDecoder;
 import com.quantumreboot.ganet.Peer;
 
-class ClientLogListener extends LogNetworkListener {
+import tomcom.kartGame.systems.Network.Client;
+import tomcom.kartGame.systems.Network.ClientSystem;
+import tomcom.kartGame.systems.Network.DataContainer.CarData;
+import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
+
+public class ClientLogListener extends LogNetworkListener {
 
 	private AtomicBoolean running;
 	private MessageDecoder decoder = new MessageDecoder();
-	private Client client;
-	public ClientLogListener(LogLevel level, AtomicBoolean running, Client client) {
+	private ClientSystem clientSystem;
+	public ClientLogListener(LogLevel level, AtomicBoolean running, ClientSystem clientSystem) {
 		super(level);
 		this.running = running;
-		this.client = client;
+		this.clientSystem = clientSystem;
 	}
 
 	private void terminate() {
@@ -53,13 +58,12 @@ class ClientLogListener extends LogNetworkListener {
 		Gdx.app.log("Client","Got message from " + peer.getAddr());
 		int type = decoder.readByte();
 		switch (type) {
-			case 0: client.receiveSpawnCommand(decoder.readInt(),decoder.readFloat(), decoder.readFloat(), decoder.readInt() == 1? true : false); break;
-			case 2: 
-			client.receiveVehicleDataUpdate(decoder.readInt(),decoder.readFloat(), decoder.readFloat(),decoder.readFloat(), decoder.readFloat(),decoder.readInt(), decoder.readInt());
-			break;
+			case 0: clientSystem.receiveLevelData(decoder.readInt()); break;
+			case 1: clientSystem.receiveSpawnData(new SpawnData(decoder.readInt(),decoder.readFloat(),decoder.readFloat())); break;
+			case 3: clientSystem.receiveCarData(new CarData(decoder.readInt(),decoder.readFloat(),decoder.readFloat(),decoder.readFloat()));break;
+			case 4: clientSystem.receiveStartRace();break;
+			case 5: clientSystem.receiveEndRace(decoder.readInt());break;
 		}
-		
-
 	}
 	
 }

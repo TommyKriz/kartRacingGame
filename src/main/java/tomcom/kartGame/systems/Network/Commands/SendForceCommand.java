@@ -5,17 +5,17 @@ import com.quantumreboot.ganet.MessageEncoder;
 import com.quantumreboot.ganet.MessageQuality;
 import com.quantumreboot.ganet.Peer;
 
-import tomcom.kartGame.systems.Network.DataContainer.ForceInputData;
+import tomcom.kartGame.systems.Network.DataContainer.InputData;
 
 public class SendForceCommand extends Command {
 
 
-	private ForceInputData inputData;
+	private InputData inputData;
 	private Peer peer;
 	private MessageEncoder encoder = new MessageEncoder();
 	private MessageQuality quality;
 
-	public SendForceCommand(double time, Peer peer, ForceInputData inputData, MessageQuality quality) {
+	public SendForceCommand(double time, Peer peer, InputData inputData, MessageQuality quality) {
 		super(time);
 		this.inputData = inputData;
 		this.peer = peer;
