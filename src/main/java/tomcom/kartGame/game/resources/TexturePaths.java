@@ -8,7 +8,8 @@ public class TexturePaths {
 	public static final String VIENNA_MAP = "vienna-central-map.jpg";
 	public static final String LAMBO = "Lamborghini_Aventador_small.png";
 	public static final String HAGENBERG_MAP = "hagenbergMap.jpg";
-	public static final String LEVEL1_PREVIEW = "level1.png";
 	public static final String LEVEL2_PREVIEW = "level2.png";
 	public static final String LEVEL3_PREVIEW = "level3.png";
+	public static final String MAIN_MENU_BG = "game-menu-mainpage.png";
+
 }

@@ -26,6 +26,7 @@ public class AssetManagerHolder {
 	}
 
 	private void loadTextures() {
+		loadTexture(TexturePaths.MAIN_MENU_BG);
 		loadTexture(TexturePaths.KART);
 		loadTexture(TexturePaths.WHEEL);
 		loadTexture(TexturePaths.ROADBLOCK);
@@ -33,7 +34,6 @@ public class AssetManagerHolder {
 		loadTexture(TexturePaths.VIENNA_MAP);
 		loadTexture(TexturePaths.LAMBO);
 		loadTexture(TexturePaths.HAGENBERG_MAP);
-		loadTexture(TexturePaths.LEVEL1_PREVIEW);
 		loadTexture(TexturePaths.LEVEL2_PREVIEW);
 		loadTexture(TexturePaths.LEVEL3_PREVIEW);
 	}
