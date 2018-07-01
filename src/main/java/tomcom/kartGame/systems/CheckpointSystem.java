@@ -1,14 +1,17 @@
 package tomcom.kartGame.systems;
 
 import tomcom.kartGame.components.CheckpointCounterComponent;
+import tomcom.kartGame.components.collision.CollisionListeningSystem;
 import tomcom.kartGame.entities.EntityBuilder;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.physics.box2d.Contact;
 
-public class CheckpointSystem extends IteratingSystem {
+public class CheckpointSystem extends IteratingSystem implements
+		CollisionListeningSystem {
 
 	private static final Family FAMILY = Family.all(
 			CheckpointCounterComponent.class).get();
@@ -40,6 +43,14 @@ public class CheckpointSystem extends IteratingSystem {
 		engine.addEntity(EntityBuilder.buildCheckpoint(56.4f, 30.9f, 90, 7));
 		engine.addEntity(EntityBuilder.buildCheckpoint(29.7f, 58.2f, 0, 8));
 		engine.addEntity(EntityBuilder.buildCheckpoint(-19.5f, 38, 0, 9));
+	}
+
+	@Override
+	public void onBeginContact(Contact contact) {
+
+		System.out.println("Contact " + contact.getFixtureA().getUserData()
+				+ " - " + contact.getFixtureB().getUserData());
+
 	}
 
 }

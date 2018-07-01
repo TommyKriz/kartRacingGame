@@ -399,7 +399,9 @@ public class TestLevel implements Screen {
 		engine.addSystem(new CameraZoomSystem(19.499977f));
 		engine.addSystem(new CameraMoveSystem());
 
-		engine.addSystem(new Box2DPhysicsSystem());
+		CheckpointSystem checkpointSystem = new CheckpointSystem();
+
+		engine.addSystem(new Box2DPhysicsSystem(checkpointSystem));
 		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new RenderingSystem());
@@ -409,7 +411,7 @@ public class TestLevel implements Screen {
 				.getTexture(TexturePaths.WHEEL)));
 		engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
 
-		engine.addSystem(new CheckpointSystem());
+		engine.addSystem(checkpointSystem);
 
 		engine.addSystem(new TrackEditorSystem(game
 				.getTexture(TexturePaths.ROADBLOCK)));

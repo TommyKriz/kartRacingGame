@@ -1,7 +1,7 @@
 package tomcom.kartGame.entities;
 
 import tomcom.kartGame.components.CheckpointCounterComponent;
-import tomcom.kartGame.components.CheckpointIdComponent;
+import tomcom.kartGame.components.CheckpointComponent;
 import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
@@ -98,7 +98,7 @@ public class EntityBuilder {
 		checkpoint.add(new ColliderComponent(new RectangleCollider(1, 10, 0, 0,
 				0).setSensor(true)
 				.setUserData(EntityConfig.CHECKPOINT_COLLIDER)));
-		checkpoint.add(new CheckpointIdComponent(number));
+		checkpoint.add(new CheckpointComponent(number));
 		return checkpoint;
 	}
 

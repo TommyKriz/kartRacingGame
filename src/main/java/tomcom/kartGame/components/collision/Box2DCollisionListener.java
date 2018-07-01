@@ -1,20 +1,30 @@
 package tomcom.kartGame.components.collision;
 
-import com.badlogic.gdx.Gdx;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-public class Box2DPhysicsSystemCollisionListener implements ContactListener {
+public class Box2DCollisionListener implements ContactListener {
+
+	private final List<CollisionListeningSystem> collisionListeners;
+
+	public Box2DCollisionListener(CollisionListeningSystem... listeningSystem) {
+		collisionListeners = new ArrayList<>();
+		for (CollisionListeningSystem system : listeningSystem) {
+			collisionListeners.add(system);
+		}
+
+	}
 
 	@Override
 	public void beginContact(Contact contact) {
-
-		Gdx.app.log("Collision happened", ""
-				+ contact.getFixtureA().getUserData() + "---"
-				+ contact.getFixtureB().getUserData());
-
+		for (CollisionListeningSystem system : collisionListeners) {
+			system.onBeginContact(contact);
+		}
 	}
 
 	@Override

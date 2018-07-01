@@ -1,10 +1,11 @@
 package tomcom.kartGame.systems;
 
 import tomcom.kartGame.components.PivotComponent;
-import tomcom.kartGame.components.collision.Box2DPhysicsSystemCollisionListener;
+import tomcom.kartGame.components.collision.Box2DCollisionListener;
 import tomcom.kartGame.components.collision.CircleCollider;
 import tomcom.kartGame.components.collision.Collider;
 import tomcom.kartGame.components.collision.ColliderComponent;
+import tomcom.kartGame.components.collision.CollisionListeningSystem;
 import tomcom.kartGame.components.collision.RectangleCollider;
 import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.config.GameConfig;
@@ -47,11 +48,12 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 	private float timeAccumulator = 0f;
 
-	public Box2DPhysicsSystem() {
+	public Box2DPhysicsSystem(CollisionListeningSystem... collisionListenerSystems) {
 		world = new World(new Vector2(GameConfig.WORLD_GRAVITY_X,
 				GameConfig.WORLD_GRAVITY_Y), true);
 		world.setAutoClearForces(false);
-		world.setContactListener(new Box2DPhysicsSystemCollisionListener());
+		world.setContactListener(new Box2DCollisionListener(
+				collisionListenerSystems));
 	}
 
 	public World getWorld() {
