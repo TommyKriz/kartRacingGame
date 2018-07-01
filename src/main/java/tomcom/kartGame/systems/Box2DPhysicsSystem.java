@@ -16,6 +16,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -100,7 +101,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 				PivotComponent pivot = pm.get(entity);
 
 				bodyDef.position.set(pivot.getPos().x, pivot.getPos().y);
-				bodyDef.angle = pivot.getPos().z;
+				bodyDef.angle = pivot.getPos().z * MathUtils.degreesToRadians;
 
 				body.setBody(world.createBody(bodyDef));
 

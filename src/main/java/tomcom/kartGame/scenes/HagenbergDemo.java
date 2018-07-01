@@ -4,8 +4,7 @@ import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
-import tomcom.kartGame.game.resources.ResourceManager;
-import tomcom.kartGame.game.resources.TextureKeys;
+import tomcom.kartGame.game.resources.TexturePaths;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
 import tomcom.kartGame.systems.CameraFollowSystem;
@@ -52,8 +51,10 @@ public class HagenbergDemo implements Screen {
 	}
 
 	private void initEntities() {
-		engine.addEntity(EntityBuilder.buildMapHagenberg());
-		engine.addEntity(EntityBuilder.buildLamborghini(177.3f,-249.6f).add(
+		engine.addEntity(EntityBuilder.buildMap(
+				game.getTexture(TexturePaths.HAGENBERG_MAP), 700, 700));
+		engine.addEntity(EntityBuilder.buildLamborghini(177.3f, -249.6f,
+				game.getTexture(TexturePaths.LAMBO)).add(
 				new CameraTargetComponent()));
 	}
 
@@ -71,11 +72,12 @@ public class HagenbergDemo implements Screen {
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
 
-		engine.addSystem(new WheelRenderingSystem(ResourceManager
-				.getTexture(TextureKeys.WHEEL)));
+		engine.addSystem(new WheelRenderingSystem(game
+				.getTexture(TexturePaths.WHEEL)));
 		engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
 
-		engine.addSystem(new TrackEditorSystem());
+		engine.addSystem(new TrackEditorSystem(game
+				.getTexture(TexturePaths.ROADBLOCK)));
 	}
 
 	@Override

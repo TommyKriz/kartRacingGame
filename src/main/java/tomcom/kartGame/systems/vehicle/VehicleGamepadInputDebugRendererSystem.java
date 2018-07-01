@@ -101,24 +101,24 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 			}
 
 		}
-		if(Controllers.getControllers().size==0) {
+		if (Controllers.getControllers().size == 0) {
 			float xAxis = 0;
 			float yAxis = 0;
-			if(Gdx.input.isKeyPressed(Input.Keys.D)){
-				xAxis=-1;
+			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+				xAxis = -1;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.A)){
-				xAxis=1;
+			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+				xAxis = 1;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.W)){
-				yAxis=-1;
+			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+				yAxis = -1;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.S)){
-				yAxis=1;
+			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+				yAxis = 1;
 			}
-				turnWheels(vehicle, chassis, xAxis);
-				gasAndSideForce(vehicle, chassis, yAxis);
-				rollingResistance(vehicle, chassis);
+			turnWheels(vehicle, chassis, xAxis);
+			gasAndSideForce(vehicle, chassis, yAxis);
+			rollingResistance(vehicle, chassis);
 		}
 
 	}
@@ -160,8 +160,7 @@ public class VehicleGamepadInputDebugRendererSystem extends IteratingSystem {
 				gasForce = new Vector2(0, 0);
 			}
 
-			 drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE,
-			 Color.PINK);
+			drawVector(wheelPivot, gasForce, FORCE_DRAWING_SCALE, Color.PINK);
 
 			Vector2 sideForce = sideForce(w, chassis);
 

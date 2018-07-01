@@ -28,7 +28,7 @@ public class SplashScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (TimeUtils.timeSinceMillis(showTime) > 10) {
-			game.setScreen(new MenuScreen(game));
+			game.switchScreen(new MenuScreen(game));
 		}
 	}
 

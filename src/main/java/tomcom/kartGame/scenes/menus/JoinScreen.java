@@ -2,7 +2,6 @@ package tomcom.kartGame.scenes.menus;
 
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
-import tomcom.kartGame.game.resources.ResourceManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -39,7 +38,7 @@ public class JoinScreen implements Screen {
 
 		font = new BitmapFont();
 
-		Skin mySkin = ResourceManager.getSkin();
+		Skin mySkin = game.getSkin();
 
 		Gdx.input.setInputProcessor(stage);
 
@@ -71,7 +70,7 @@ public class JoinScreen implements Screen {
 		back.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new MenuScreen(game));
+				game.switchScreen(new MenuScreen(game));
 			}
 		});
 		stage.addActor(back);
@@ -106,6 +105,7 @@ public class JoinScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		stage.getViewport().update(width, height);
 	}
 
 	@Override

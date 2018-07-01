@@ -5,8 +5,7 @@ import java.net.UnknownHostException;
 
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
-import tomcom.kartGame.game.resources.ResourceManager;
-import tomcom.kartGame.game.resources.TextureKeys;
+import tomcom.kartGame.game.resources.TexturePaths;
 import tomcom.kartGame.scenes.TestLevel;
 
 import com.badlogic.gdx.Gdx;
@@ -46,12 +45,9 @@ public class HostScreen implements Screen {
 
 	private Stage stage;
 
-	private Sprite level1Preview = new Sprite(
-			ResourceManager.getTexture(TextureKeys.MAP));
-	private Sprite level2Preview = new Sprite(
-			ResourceManager.getTexture(TextureKeys.LEVEL2_PREVIEW));
-	private Sprite level3Preview = new Sprite(
-			ResourceManager.getTexture(TextureKeys.LEVEL3_PREVIEW));
+	private Sprite level1Preview;
+	private Sprite level2Preview;
+	private Sprite level3Preview;
 
 	private int selectedLevel = 1;
 
@@ -69,10 +65,44 @@ public class HostScreen implements Screen {
 			myIpAddress = "Local Host IP Address could not be retrieved :( ";
 		}
 
-		Skin mySkin = ResourceManager.getSkin();
+		level1Preview = new Sprite(game.getTexture(TexturePaths.LEVEL1_PREVIEW));
+		level2Preview = new Sprite(game.getTexture(TexturePaths.LEVEL2_PREVIEW));
+		level3Preview = new Sprite(game.getTexture(TexturePaths.LEVEL3_PREVIEW));
+
+		positionSprites();
+
+		Skin mySkin = game.getSkin();
 
 		Gdx.input.setInputProcessor(stage);
 
+		initButtons(game, mySkin);
+
+	}
+
+	private void positionSprites() {
+		level1Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
+				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
+		level2Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
+				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
+		level3Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
+				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
+	}
+
+	private void drawMapPreviewPictures() {
+		switch (selectedLevel) {
+		case 1:
+			level1Preview.draw(stage.getBatch());
+			break;
+		case 2:
+			level2Preview.draw(stage.getBatch());
+			break;
+		case 3:
+			level3Preview.draw(stage.getBatch());
+			break;
+		}
+	}
+
+	private void initButtons(GameMain game, Skin mySkin) {
 		TextButton lastLevel = new TextButton("<", mySkin);
 		lastLevel.setBounds(LEVEL_IMAGE_POS.x - SMALL_BUTTON_SIZE - OFFSET,
 				LEVEL_IMAGE_POS.y, SMALL_BUTTON_SIZE, SMALL_BUTTON_SIZE);
@@ -109,13 +139,13 @@ public class HostScreen implements Screen {
 				switch (selectedLevel) {
 				case 1:
 					// TODO: LOAD IN HOST MODE
-					game.setScreen(new TestLevel(game));
+					game.switchScreen(new TestLevel(game));
 					break;
 				case 2:
-					// game.setScreen(new MenuScreen(game));
+					// game.switchScreen(new MenuScreen(game));
 					break;
 				case 3:
-					// game.setScreen(new MenuScreen(game));
+					// game.switchScreen(new MenuScreen(game));
 					break;
 				}
 			}
@@ -128,22 +158,10 @@ public class HostScreen implements Screen {
 		back.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new MenuScreen(game));
+				game.switchScreen(new MenuScreen(game));
 			}
 		});
 		stage.addActor(back);
-
-		initSprites();
-
-	}
-
-	private void initSprites() {
-		level1Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
-				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
-		level2Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
-				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
-		level3Preview.setBounds(LEVEL_IMAGE_POS.x, LEVEL_IMAGE_POS.y,
-				MAP_PREVIEW_IMAGE_SIZE, MAP_PREVIEW_IMAGE_SIZE);
 	}
 
 	@Override
@@ -170,20 +188,6 @@ public class HostScreen implements Screen {
 		stage.draw();
 	}
 
-	private void drawMapPreviewPictures() {
-		switch (selectedLevel) {
-		case 1:
-			level1Preview.draw(stage.getBatch());
-			break;
-		case 2:
-			level2Preview.draw(stage.getBatch());
-			break;
-		case 3:
-			level3Preview.draw(stage.getBatch());
-			break;
-		}
-	}
-
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height);
@@ -203,6 +207,7 @@ public class HostScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		System.out.println(" Host Screen disposed()");
 		stage.dispose();
 	}
 

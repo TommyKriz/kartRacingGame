@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -18,6 +19,12 @@ public class TrackEditorSystem extends EntitySystem {
 	OrthographicCamera cam;
 
 	Array<Circle> placedRoadblocks = new Array<>();
+
+	private Texture roadblockTexture;
+
+	public TrackEditorSystem(Texture roadblockTexture) {
+		this.roadblockTexture = roadblockTexture;
+	}
 
 	@Override
 	public void update(float deltaTime) {
@@ -51,7 +58,8 @@ public class TrackEditorSystem extends EntitySystem {
 				"Placing Roadblock @ " + worldCoords.toString());
 		placedRoadblocks.add(roadblockToBePlaced);
 		getEngine().addEntity(
-				EntityBuilder.buildRoadBlock(worldCoords.x, worldCoords.y));
+				EntityBuilder.buildRoadBlock(worldCoords.x, worldCoords.y,
+						roadblockTexture));
 	}
 
 	@Override

@@ -13,9 +13,7 @@ public class EntityConfig {
 	public static final float WHEEL_WIDTH = 0.3f;
 
 	public static final float WHEEL_HEIGHT = 1;
-
-	public static final String FINISH_LINE_COLLIDER = "FINISH_LINE";
-
+	
 	// see
 	// https://www.lamborghini.com/de-en/modelle/aventador/aventador-s-roadster
 	// datenblatt
@@ -24,5 +22,9 @@ public class EntityConfig {
 	public static final float LAMBO_HEIGHT = 4.8f;
 
 	public static final float LAMBO_MASS = 1625f;
+
+	public static final String CHECKPOINT_COLLIDER = "CHECKPOINT";
+
+	public static final String PLAYER_COLLIDER = "PLAYER_KART";
 
 }

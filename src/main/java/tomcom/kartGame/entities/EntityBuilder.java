@@ -1,5 +1,7 @@
 package tomcom.kartGame.entities;
 
+import tomcom.kartGame.components.CheckpointCounterComponent;
+import tomcom.kartGame.components.CheckpointIdComponent;
 import tomcom.kartGame.components.GamepadInputComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
@@ -10,25 +12,24 @@ import tomcom.kartGame.components.physics.Body2DComponent;
 import tomcom.kartGame.components.vehicle.VehicleComponent;
 import tomcom.kartGame.components.vehicle.Wheel;
 import tomcom.kartGame.config.EntityConfig;
-import tomcom.kartGame.game.resources.ResourceManager;
-import tomcom.kartGame.game.resources.TextureKeys;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
 
-	public static Entity buildKart(float x, float y) {
+	public static Entity buildKart(float x, float y, float angle,
+			Texture kartTexture) {
 
 		Entity kart = new Entity();
 
 		kart.add(new GamepadInputComponent());
 
 		Vector2 pos = new Vector2(x, y);
-		kart.add(new PivotComponent(pos));
+		kart.add(new PivotComponent(pos, angle));
 
-		SpriteComponent spriteComponent = new SpriteComponent(
-				ResourceManager.getTexture(TextureKeys.KART),
+		SpriteComponent spriteComponent = new SpriteComponent(kartTexture,
 				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT);
 		kart.add(spriteComponent);
 
@@ -38,7 +39,7 @@ public class EntityBuilder {
 				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT,
 				EntityConfig.KART_MASS
 						/ (EntityConfig.KART_WIDTH * EntityConfig.KART_HEIGHT),
-				0, 0)));
+				0, 0).setUserData(EntityConfig.PLAYER_COLLIDER)));
 
 		float xWheelOffset = EntityConfig.KART_WIDTH / 2
 				+ EntityConfig.WHEEL_WIDTH / 2;
@@ -50,12 +51,14 @@ public class EntityBuilder {
 				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, false, true))
 				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, false, true)));
 
+		kart.add(new CheckpointCounterComponent());
+
 		return kart;
 	}
 
-	public static Entity buildRoadBlock(float x, float y) {
-		SpriteComponent spriteComponent = new SpriteComponent(
-				ResourceManager.getTexture(TextureKeys.ROADBLOCK),
+	public static Entity buildRoadBlock(float x, float y,
+			Texture roadblockTexture) {
+		SpriteComponent spriteComponent = new SpriteComponent(roadblockTexture,
 				EntityConfig.ROADBLOCK_R * 2, EntityConfig.ROADBLOCK_R * 2);
 		Entity roadBlock = new Entity();
 		roadBlock.add(new PivotComponent(new Vector2(x, y)));
@@ -75,41 +78,31 @@ public class EntityBuilder {
 		return roadBlock;
 	}
 
-	public static Entity buildMap() {
+	/**
+	 * 
+	 * for map1: 190,160 for hagenberg: 700,700 for vienna: 2580,1868
+	 * 
+	 */
+	public static Entity buildMap(Texture mapTexture, int w, int h) {
 		Entity bg = new Entity();
 		bg.add(new PivotComponent(new Vector2(0, 0)));
-		bg.add(new SpriteComponent(ResourceManager.getTexture(TextureKeys.MAP),
-				190, 160));
+		bg.add(new SpriteComponent(mapTexture, w, h));
 		return bg;
 	}
 
-	public static Entity buildFinishLine(float f, float y) {
-		Entity roadBlock = new Entity();
-		roadBlock.add(new PivotComponent(new Vector2(f, y)));
-		roadBlock.add(new Body2DComponent().setDynamic(false));
-		roadBlock.add(new ColliderComponent(new RectangleCollider(1, 10, 0, 0,
-				0).setSensor(true).setUserData(
-				EntityConfig.FINISH_LINE_COLLIDER)));
-		return roadBlock;
+	public static Entity buildCheckpoint(float x, float y, float angle,
+			int number) {
+		Entity checkpoint = new Entity();
+		checkpoint.add(new PivotComponent(new Vector2(x, y), angle));
+		checkpoint.add(new Body2DComponent().setDynamic(false));
+		checkpoint.add(new ColliderComponent(new RectangleCollider(1, 10, 0, 0,
+				0).setSensor(true)
+				.setUserData(EntityConfig.CHECKPOINT_COLLIDER)));
+		checkpoint.add(new CheckpointIdComponent(number));
+		return checkpoint;
 	}
 
-	public static Entity buildMapVienna() {
-		Entity bg = new Entity();
-		bg.add(new PivotComponent(new Vector2(0, 0)));
-		bg.add(new SpriteComponent(ResourceManager
-				.getTexture(TextureKeys.VIENNA_MAP), 2580, 1868));
-		return bg;
-	}
-
-	public static Entity buildMapHagenberg() {
-		Entity bg = new Entity();
-		bg.add(new PivotComponent(new Vector2(0, 0)));
-		bg.add(new SpriteComponent(ResourceManager
-				.getTexture(TextureKeys.HAGENBERG_MAP), 700, 700));
-		return bg;
-	}
-
-	public static Entity buildLamborghini(float x, float y) {
+	public static Entity buildLamborghini(float x, float y, Texture lamboTexture) {
 		Entity kart = new Entity();
 
 		kart.add(new GamepadInputComponent());
@@ -117,8 +110,7 @@ public class EntityBuilder {
 		Vector2 pos = new Vector2(x, y);
 		kart.add(new PivotComponent(pos));
 
-		SpriteComponent spriteComponent = new SpriteComponent(
-				ResourceManager.getTexture(TextureKeys.LAMBO),
+		SpriteComponent spriteComponent = new SpriteComponent(lamboTexture,
 				EntityConfig.LAMBO_WIDTH, EntityConfig.LAMBO_HEIGHT);
 		kart.add(spriteComponent);
 
