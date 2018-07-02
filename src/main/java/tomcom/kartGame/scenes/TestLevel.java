@@ -1,5 +1,19 @@
 package tomcom.kartGame.scenes;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
 import tomcom.kartGame.components.CameraTargetComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.config.GameConfig;
@@ -24,22 +38,8 @@ import tomcom.kartGame.systems.Network.ServerSystem;
 import tomcom.kartGame.systems.Network.DataContainer.CarData;
 import tomcom.kartGame.systems.Network.DataContainer.InputData;
 import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
-import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
+import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
-
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.signals.Listener;
-import com.badlogic.ashley.signals.Signal;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class TestLevel implements Screen {
 
@@ -435,7 +435,7 @@ public class TestLevel implements Screen {
 
 				@Override
 				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
-					VehicleGamepadInputDebugRendererSystem.onInputReceived
+					VehicleDebugRendererSystem.onInputReceived
 							.dispatch(new InputData(0, arg1.x, arg1.y));
 				}
 			});
@@ -513,7 +513,7 @@ public class TestLevel implements Screen {
 		engine.addSystem(new WheelRenderingSystem(game
 				.getTexture(TexturePaths.WHEEL)));
 		if (engine.getSystem(ServerSystem.class) != null)
-			engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
+			engine.addSystem(new VehicleDebugRendererSystem());
 
 		engine.addSystem(checkpointSystem);
 
