@@ -1,6 +1,5 @@
 package tomcom.kartGame.systems;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import tomcom.kartGame.components.CheckpointComponent;
