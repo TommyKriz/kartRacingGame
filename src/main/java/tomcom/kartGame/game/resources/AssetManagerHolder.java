@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class AssetManagerHolder {
 
-	private static final String SKIN_FILEPATH = "skin/glassy-ui.json";
+	private static final String SKIN_FILEPATH = "skin/uiskin.json";
 
 	private AssetManager manager;
 
