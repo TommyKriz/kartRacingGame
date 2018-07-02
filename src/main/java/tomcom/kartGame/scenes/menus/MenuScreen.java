@@ -31,10 +31,6 @@ public class MenuScreen implements Screen {
 		stage = new Stage();
 
 		bg = new Sprite(game.getTexture(TexturePaths.MAIN_MENU_BG));
-		// bg.setBounds(0, 0, GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA,
-		// GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA
-		// * (GameConfig.SCREEN_WIDTH / GameConfig.SCREEN_HEIGHT));
-		// bg.setSize(GameConfig.WORLD_WIDTH_SEEN_THROUGH_CAMERA, 2);
 		bg.setSize(stage.getViewport().getWorldWidth(), stage.getViewport()
 				.getWorldHeight());
 
@@ -43,8 +39,8 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		TextButton button1 = new TextButton("HOST", mySkin);
-		button1.setBounds(GameConfig.SCREEN_WIDTH / 2 - 150,
-				GameConfig.SCREEN_HEIGHT / 2 + 10, 300, 100);
+		button1.setBounds(stage.getViewport().getWorldWidth() / 2 - 150, stage
+				.getViewport().getWorldHeight() / 2 + 10, 300, 100);
 		button1.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

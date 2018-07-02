@@ -85,14 +85,14 @@ public class JoinScreen implements Screen {
 	public void render(float delta) {
 		stage.act(delta);
 
-		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
+		Gdx.gl.glClearColor(0.914f, 0.933f, 0.957f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.draw();
 
 		stage.getBatch().begin();
 
-		font.setColor(Color.WHITE);
+		font.setColor(Color.BLACK);
 		font.draw(stage.getBatch(),
 				" Enter Host's IP Address Here (f.ex.: 192.10.23.43)", 210, 550);
 

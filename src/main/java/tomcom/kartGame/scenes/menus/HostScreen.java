@@ -172,14 +172,16 @@ public class HostScreen implements Screen {
 	public void render(float delta) {
 		stage.act(delta);
 
-		Gdx.gl.glClearColor(0, 1, 0, 1);
+		Gdx.gl.glClearColor(0.914f, 0.933f, 0.957f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.getBatch().begin();
 
+		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+
 		drawMapPreviewPictures();
 
-		font.setColor(0, 0, 0, 1);
+		font.setColor(Color.BLACK);
 		font.draw(stage.getBatch(), "Your IP Address is: " + myIpAddress,
 				OFFSET, OFFSET);
 
@@ -191,6 +193,7 @@ public class HostScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height);
+		stage.getCamera().update();
 	}
 
 	@Override
