@@ -2,7 +2,13 @@ package tomcom.kartGame.scenes.menus;
 
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
+import tomcom.kartGame.scenes.TestLevel;
+import tomcom.kartGame.systems.Network.ClientCommands;
+import tomcom.kartGame.systems.Network.ClientSystem;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -32,12 +39,13 @@ public class JoinScreen implements Screen {
 	private String errorMsg = "";
 
 	private BitmapFont font;
+	private Engine engine;
 
 	public JoinScreen(GameMain game) {
 		stage = new Stage();
 
 		font = new BitmapFont();
-
+		engine = new Engine();
 		Skin mySkin = game.getSkin();
 
 		Gdx.input.setInputProcessor(stage);
@@ -46,24 +54,6 @@ public class JoinScreen implements Screen {
 		textField.setBounds(200, 300, 400, SMALL_BUTTON_SIZE);
 
 		stage.addActor(textField);
-
-		TextButton button2 = new TextButton("JOIN", mySkin);
-		button2.setBounds(200, 160, 300, SMALL_BUTTON_SIZE);
-		button2.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-
-				// TODO: new Screen in HOST Mode
-				// new XXXlevel(false);
-
-				// TODO: check for refused / not working connection
-				errorMsg = " Could not connect to " + textField.getText();
-
-			}
-		});
-
-		stage.addActor(button2);
-
 		TextButton back = new TextButton("Back", mySkin);
 		back.setBounds(GameConfig.SCREEN_WIDTH - SMALL_BUTTON_SIZE - OFFSET,
 				OFFSET, SMALL_BUTTON_SIZE, SMALL_BUTTON_SIZE);
@@ -74,6 +64,38 @@ public class JoinScreen implements Screen {
 			}
 		});
 		stage.addActor(back);
+		TextButton button2 = new TextButton("JOIN", mySkin);
+		button2.setBounds(200, 160, 300, SMALL_BUTTON_SIZE);
+		button2.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				engine.addSystem(new ClientSystem(textField.getText(),54321));
+				back.remove();
+				textField.remove();
+				Label connected =  new Label("Connected! Please wait for the host to start the game!", mySkin);
+				connected.setBounds(200, 160, 300, 100);
+				stage.addActor(connected);
+				button2.remove();
+				ClientCommands.loadLevelReceived.add(new Listener<Integer>() {
+
+					@Override
+					public void receive(Signal<Integer> arg0, Integer arg1) {
+						game.setScreen(new TestLevel(game, engine));
+						
+					}
+					
+				});
+				errorMsg = " Could not connect to " + textField.getText();
+
+			}
+		});
+
+
+
+		stage.addActor(button2);
+
+		
 
 	}
 

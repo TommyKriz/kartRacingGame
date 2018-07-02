@@ -1,6 +1,7 @@
 package tomcom.kartGame.scenes;
 
 import tomcom.kartGame.components.CameraTargetComponent;
+import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
@@ -11,17 +12,31 @@ import tomcom.kartGame.systems.CameraMoveSystem;
 import tomcom.kartGame.systems.CameraSystem;
 import tomcom.kartGame.systems.CameraZoomSystem;
 import tomcom.kartGame.systems.CheckpointSystem;
+import tomcom.kartGame.systems.EntityManagerSystem;
+import tomcom.kartGame.systems.InputSystem;
 import tomcom.kartGame.systems.PivotUpdateSystem;
 import tomcom.kartGame.systems.RenderingSystem;
 import tomcom.kartGame.systems.TrackEditorSystem;
+import tomcom.kartGame.systems.Network.ClientCommands;
+import tomcom.kartGame.systems.Network.ServerCommands;
+import tomcom.kartGame.systems.Network.ServerSystem;
+import tomcom.kartGame.systems.Network.DataContainer.CarData;
+import tomcom.kartGame.systems.Network.DataContainer.InputData;
+import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
 import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -33,11 +48,11 @@ public class TestLevel implements Screen {
 
 	private Viewport viewport;
 
-	public TestLevel(GameMain game) {
+	public TestLevel(GameMain game, Engine engine) {
 
 		this.game = game;
 
-		engine = new Engine();
+		this.engine = engine;
 
 		initSystems();
 
@@ -51,14 +66,15 @@ public class TestLevel implements Screen {
 						* (GameConfig.SCREEN_WIDTH / GameConfig.SCREEN_HEIGHT));
 
 		initEntities();
+		initEvents();
 	}
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMap(
 				game.getTexture(TexturePaths.MAP1), 190, 160));
-		engine.addEntity(EntityBuilder.buildKart(-19.5f, 36, -180,
-				game.getTexture(TexturePaths.KART)).add(
-				new CameraTargetComponent()));
+//		engine.addEntity(EntityBuilder.buildKart(-19.5f, 36, -180,
+//				game.getTexture(TexturePaths.KART)).add(
+//				new CameraTargetComponent()));
 		initRoadblocks();
 	}
 
@@ -393,15 +409,90 @@ public class TestLevel implements Screen {
 		roadblockTexture = null;
 	}
 
+	private void initEvents() {
+		if(engine.getSystem(ServerSystem.class) != null) { // Host use Input directly
+			SpawnData spawnData = new SpawnData(0,2,2);
+			spawnData.localControl = true;
+			
+			spawnCart(spawnData);
+			ServerCommands.onSpawn.add(new Listener<SpawnData>() {
+
+				@Override
+				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
+					
+					spawnCart(arg1);
+					
+				}
+				
+			});
+			engine.getSystem(ServerSystem.class).sendSpawnServerOnly();
+			InputSystem.onInputReceived.add(new Listener<Vector2>() {
+
+				@Override
+				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
+					VehicleGamepadInputDebugRendererSystem.onInputReceived.dispatch(new InputData(0,arg1.x,arg1.y));
+				}		
+			});
+			Timer.schedule(new Task() {
+
+				@Override
+				public void run() {
+					ServerCommands.onStartRace.dispatch(null);
+					
+				}
+				
+			}, 2);//3 Seconds to Start
+			
+			
+		}
+		else {// Client send Input over Network
+			InputSystem.onInputReceived.add(new Listener<Vector2>() {
+
+				@Override
+				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
+//					Gdx.app.log("VehicleDebugRendererSystem", "receiveing Input");
+					ClientCommands.onInputReceived.dispatch(arg1);
+				}		
+			});
+			ClientCommands.onSpawn.add(new Listener<SpawnData>() {
+
+				@Override
+				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
+					
+//					Gdx.app.log("TestLevel", "Received Spawn: " +arg1.entityID+" "+arg1.localControl);
+					spawnCart(arg1);
+					
+				}
+				
+			});
+			ClientCommands.onCarDataReceived.add(new Listener<CarData>() {
+
+				@Override
+				public void receive(Signal<CarData> signal, CarData object) {
+					Entity entity = engine.getSystem(EntityManagerSystem.class).GetEntity(object.entityID);
+//					Gdx.app.log("TESTLEVEL", "Receiving Car Data " + object.entityID + " "+object.xPos+" " + object.yPos+" "+object.rot);
+					if(entity!=null) {
+						PivotComponent pivot = entity.getComponent(PivotComponent.class);
+						pivot.setPos(new Vector2(object.xPos, object.yPos), object.rot);
+					}
+					
+				}
+				
+			});
+		}
+	}
+	
 	private void initSystems() {
 
+		engine.addSystem(new EntityManagerSystem());
 		engine.addSystem(new CameraSystem(-8.199994f, -0.8999984f));
 		engine.addSystem(new CameraZoomSystem(19.499977f));
 		engine.addSystem(new CameraMoveSystem());
-
+		engine.addSystem(new InputSystem());
 		CheckpointSystem checkpointSystem = new CheckpointSystem();
 
 		engine.addSystem(new Box2DPhysicsSystem(checkpointSystem));
+		if(engine.getSystem(ServerSystem.class) != null)//only on server
 		engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new RenderingSystem());
@@ -417,6 +508,11 @@ public class TestLevel implements Screen {
 				.getTexture(TexturePaths.ROADBLOCK)));
 	}
 
+	private void spawnCart(SpawnData spawnData) {
+		Gdx.app.log("TestLevel", "spawning cart: " +spawnData.entityID);
+		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,spawnData.x,spawnData.y, -180, game.getTexture(TexturePaths.KART), spawnData.localControl).add(
+				new CameraTargetComponent()));
+	}
 	@Override
 	public void show() {
 		// init

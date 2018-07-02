@@ -2,6 +2,8 @@ package tomcom.kartGame.game;
 
 import tomcom.kartGame.game.resources.AssetManagerHolder;
 import tomcom.kartGame.scenes.menus.HostScreen;
+import tomcom.kartGame.systems.Network.ClientSystem;
+import tomcom.kartGame.systems.Network.ServerSystem;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
@@ -27,6 +29,8 @@ public class GameMain extends Game {
 	@Override
 	public void dispose() {
 		assetManagerHolder.dispose();
+		ServerSystem.onDispose.dispatch(null);
+		ClientSystem.onDispose.dispatch(null);
 	}
 
 	public Texture getTexture(String filePath) {

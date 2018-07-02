@@ -78,7 +78,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 			@Override
 			public void entityRemoved(Entity entity) {
-				Gdx.app.log("Box2DPhysicsSystem", "Entity removed from System");
+//				Gdx.app.log("Box2DPhysicsSystem", "Entity removed from System");
 				Body2DComponent body = bm.get(entity);
 				world.destroyBody(body.getBody());
 				body = null;
@@ -86,7 +86,7 @@ public class Box2DPhysicsSystem extends EntitySystem {
 
 			@Override
 			public void entityAdded(Entity entity) {
-				Gdx.app.log("Box2DPhysicsSystem", "Entity added to System");
+//				Gdx.app.log("Box2DPhysicsSystem", "Entity added to System");
 
 				Body2DComponent body = bm.get(entity);
 
@@ -127,14 +127,14 @@ public class Box2DPhysicsSystem extends EntitySystem {
 				Shape shape = null;
 
 				if (collider instanceof RectangleCollider) {
-					Gdx.app.log("Box2DPhysicsSystem", "Rectangle Collider");
+//					Gdx.app.log("Box2DPhysicsSystem", "Rectangle Collider");
 					RectangleCollider rect = (RectangleCollider) collider;
 					PolygonShape rectangle = new PolygonShape();
 					rectangle.setAsBox(rect.getWidth() / 2,
 							rect.getHeight() / 2);
 					shape = rectangle;
 				} else if (collider instanceof CircleCollider) {
-					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");
+//					Gdx.app.log("Box2DPhysicsSystem", "Circle Collider");
 					CircleCollider circ = (CircleCollider) collider;
 					CircleShape circle = new CircleShape();
 					circle.setRadius(circ.getRadius());

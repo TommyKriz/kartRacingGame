@@ -3,6 +3,8 @@ package tomcom.kartGame.entities;
 import tomcom.kartGame.components.CheckpointCounterComponent;
 import tomcom.kartGame.components.CheckpointComponent;
 import tomcom.kartGame.components.GamepadInputComponent;
+import tomcom.kartGame.components.IDComponent;
+import tomcom.kartGame.components.NetworkIdentityComponent;
 import tomcom.kartGame.components.PivotComponent;
 import tomcom.kartGame.components.SpriteComponent;
 import tomcom.kartGame.components.collision.CircleCollider;
@@ -19,12 +21,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EntityBuilder {
 
-	public static Entity buildKart(float x, float y, float angle,
-			Texture kartTexture) {
+	public static Entity buildKart(int entityID, float x, float y, float angle,
+			Texture kartTexture, boolean control) {
 
 		Entity kart = new Entity();
-
-		kart.add(new GamepadInputComponent());
+		if(control)
+			kart.add(new GamepadInputComponent());
 
 		Vector2 pos = new Vector2(x, y);
 		kart.add(new PivotComponent(pos, angle));
@@ -32,7 +34,8 @@ public class EntityBuilder {
 		SpriteComponent spriteComponent = new SpriteComponent(kartTexture,
 				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT);
 		kart.add(spriteComponent);
-
+		kart.add(new IDComponent(entityID));
+		kart.add(new NetworkIdentityComponent());
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(0f));
 
 		kart.add(new ColliderComponent(new RectangleCollider(

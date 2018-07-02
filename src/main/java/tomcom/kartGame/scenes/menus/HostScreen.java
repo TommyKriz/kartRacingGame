@@ -7,7 +7,9 @@ import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.TexturePaths;
 import tomcom.kartGame.scenes.TestLevel;
+import tomcom.kartGame.systems.Network.ServerSystem;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -45,6 +47,7 @@ public class HostScreen implements Screen {
 
 	private Stage stage;
 
+	private Engine engine;
 	private Sprite level1Preview;
 	private Sprite level2Preview;
 	private Sprite level3Preview;
@@ -55,7 +58,8 @@ public class HostScreen implements Screen {
 
 	public HostScreen(GameMain game) {
 		stage = new Stage();
-
+		engine = new Engine();
+		engine.addSystem(new ServerSystem());
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
 
@@ -139,7 +143,7 @@ public class HostScreen implements Screen {
 				switch (selectedLevel) {
 				case 1:
 					// TODO: LOAD IN HOST MODE
-					game.switchScreen(new TestLevel(game));
+					game.switchScreen(new TestLevel(game, engine));
 					break;
 				case 2:
 					// game.switchScreen(new MenuScreen(game));
