@@ -2,7 +2,7 @@ package tomcom.kartGame.scenes.menus;
 
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
-import tomcom.kartGame.scenes.TestLevel;
+import tomcom.kartGame.scenes.Map1;
 import tomcom.kartGame.systems.Network.ClientCommands;
 import tomcom.kartGame.systems.Network.ClientSystem;
 
@@ -81,7 +81,7 @@ public class JoinScreen implements Screen {
 
 					@Override
 					public void receive(Signal<Integer> arg0, Integer arg1) {
-						game.setScreen(new TestLevel(game, engine));
+						game.setScreen(new Map1(game, engine));
 						
 					}
 					

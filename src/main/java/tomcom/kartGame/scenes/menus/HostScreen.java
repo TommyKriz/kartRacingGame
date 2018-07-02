@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.TexturePaths;
-import tomcom.kartGame.scenes.TestLevel;
+import tomcom.kartGame.scenes.Map1;
 import tomcom.kartGame.systems.Network.ServerCommands;
 import tomcom.kartGame.systems.Network.ServerSystem;
 
@@ -148,7 +148,7 @@ public class HostScreen implements Screen {
 				case 1:
 					// TODO: LOAD IN HOST MODE
 					ServerCommands.onLoadLevel.dispatch(selectedLevel);
-					game.switchScreen(new TestLevel(game, engine));
+					game.switchScreen(new Map1(game, engine));
 					break;
 				case 2:
 					// game.switchScreen(new MenuScreen(game));

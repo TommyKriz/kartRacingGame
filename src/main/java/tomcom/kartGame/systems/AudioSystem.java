@@ -20,4 +20,10 @@ public class AudioSystem extends EntitySystem {
 		backgroundMusic.play();
 	}
 
+	@Override
+	public void removedFromEngine(Engine engine) {
+		backgroundMusic.stop();
+		super.removedFromEngine(engine);
+	}
+
 }

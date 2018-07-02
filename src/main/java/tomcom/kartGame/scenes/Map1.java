@@ -41,7 +41,7 @@ import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
 import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
-public class TestLevel implements Screen {
+public class Map1 implements Screen {
 
 	private GameMain game;
 
@@ -52,7 +52,7 @@ public class TestLevel implements Screen {
 	public static float kartStartPositionX = 10;
 	public static float kartStartPositionY = 20;
 
-	public TestLevel(GameMain game, Engine engine) {
+	public Map1(GameMain game, Engine engine) {
 
 		this.game = game;
 
@@ -414,9 +414,11 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEvents() {
-		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input directly
-			
-			SpawnData spawnData = new SpawnData(0, kartStartPositionX, kartStartPositionY, kartStartRotation);
+		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input
+															// directly
+
+			SpawnData spawnData = new SpawnData(0, kartStartPositionX,
+					kartStartPositionY, kartStartRotation);
 			spawnData.localControl = true;
 			engine.getSystem(ServerSystem.class).spawnTransform = spawnData;
 			spawnCart(spawnData);
@@ -464,8 +466,9 @@ public class TestLevel implements Screen {
 				@Override
 				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
 
-					 Gdx.app.log("TestLevel", "Received Spawn: "
-					 +arg1.entityID+" x "+arg1.x+" y "+arg1.y+" rot "+arg1.rot);
+					Gdx.app.log("TestLevel", "Received Spawn: " + arg1.entityID
+							+ " x " + arg1.x + " y " + arg1.y + " rot "
+							+ arg1.rot);
 					spawnCart(arg1);
 
 				}
@@ -525,20 +528,21 @@ public class TestLevel implements Screen {
 	}
 
 	private void spawnCart(SpawnData spawnData) {
-		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID +" at: " +spawnData.x+" " +spawnData.y+" "+ spawnData.rot);
+		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID
+				+ " at: " + spawnData.x + " " + spawnData.y + " "
+				+ spawnData.rot);
 		Texture cartTexture = null;
-		if(spawnData.entityID == 0)
+		if (spawnData.entityID == 0)
 			cartTexture = game.getTexture(TexturePaths.KART_RED);
-		if(spawnData.entityID == 1)
+		if (spawnData.entityID == 1)
 			cartTexture = game.getTexture(TexturePaths.KART_GRAY);
-		if(spawnData.entityID == 2)
+		if (spawnData.entityID == 2)
 			cartTexture = game.getTexture(TexturePaths.KART_SILVER);
-		if(spawnData.entityID == 3)
+		if (spawnData.entityID == 3)
 			cartTexture = game.getTexture(TexturePaths.KART_BLUE);
 		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,
-				spawnData.x, spawnData.y, spawnData.rot,
-				cartTexture, spawnData.localControl)
-				.add(new CameraTargetComponent()));
+				spawnData.x, spawnData.y, spawnData.rot, cartTexture,
+				spawnData.localControl).add(new CameraTargetComponent()));
 	}
 
 	@Override
