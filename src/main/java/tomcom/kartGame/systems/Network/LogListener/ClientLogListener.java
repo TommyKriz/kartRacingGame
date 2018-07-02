@@ -57,7 +57,7 @@ public class ClientLogListener extends LogNetworkListener {
 	public void onMessage(Peer peer, ByteBuffer msg) {
 		decoder.reset(msg);
 		int type = decoder.readByte();
-		Gdx.app.log("Client","Got message from " + peer.getAddr()+" Type: "+type);
+//		Gdx.app.log("Client","Got message from " + peer.getAddr()+" Type: "+type);
 		
 		switch (type) {
 			case 0: Gdx.app.log("Client","Got LevelData: " );clientSystem.receiveLevelData(decoder.readInt()); break;

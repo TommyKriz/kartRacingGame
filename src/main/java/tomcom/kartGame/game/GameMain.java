@@ -1,15 +1,15 @@
 package tomcom.kartGame.game;
 
-import tomcom.kartGame.game.resources.AssetManagerHolder;
-import tomcom.kartGame.scenes.menus.HostScreen;
-import tomcom.kartGame.systems.Network.ClientSystem;
-import tomcom.kartGame.systems.Network.ServerSystem;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import tomcom.kartGame.game.resources.AssetManagerHolder;
+import tomcom.kartGame.scenes.menus.MenuScreen;
+import tomcom.kartGame.systems.Network.ClientSystem;
+import tomcom.kartGame.systems.Network.ServerSystem;
 
 public class GameMain extends Game {
 
@@ -18,7 +18,7 @@ public class GameMain extends Game {
 	@Override
 	public void create() {
 		assetManagerHolder = new AssetManagerHolder();
-		setScreen(new HostScreen(this));
+		setScreen(new MenuScreen(this));
 	}
 
 	public void switchScreen(Screen screen) {

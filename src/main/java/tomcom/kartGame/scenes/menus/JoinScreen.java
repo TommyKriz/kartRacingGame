@@ -105,6 +105,7 @@ public class JoinScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		engine.update(delta);
 		stage.act(delta);
 
 		Gdx.gl.glClearColor(0.914f, 0.933f, 0.957f, 1);

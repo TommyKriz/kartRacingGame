@@ -7,9 +7,12 @@ import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.TexturePaths;
 import tomcom.kartGame.scenes.TestLevel;
+import tomcom.kartGame.systems.Network.ServerCommands;
 import tomcom.kartGame.systems.Network.ServerSystem;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -19,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -143,6 +147,7 @@ public class HostScreen implements Screen {
 				switch (selectedLevel) {
 				case 1:
 					// TODO: LOAD IN HOST MODE
+					ServerCommands.onLoadLevel.dispatch(selectedLevel);
 					game.switchScreen(new TestLevel(game, engine));
 					break;
 				case 2:
@@ -156,6 +161,31 @@ public class HostScreen implements Screen {
 		});
 		stage.addActor(play);
 
+		int offset=35;
+		Label players = new Label("Players: ", mySkin);
+		players.setFontScale(2);
+		players.setColor(Color.BLACK);
+		players.setBounds(30, GameConfig.SCREEN_HEIGHT - offset-20, 100, 80);
+		Label player1 = new Label("Player 1", mySkin);
+		player1.setColor(Color.BLACK);
+		player1.setBounds(40, GameConfig.SCREEN_HEIGHT - 2*offset-20, 100, 80);
+		
+		ServerCommands.onNewConnection.add(new Listener<Integer>() {
+
+			@Override
+			public void receive(Signal<Integer> arg0, Integer arg1) {
+				Label player = new Label("Player "+(arg1+1), mySkin);
+				player.setBounds(40, GameConfig.SCREEN_HEIGHT - (arg1+2)*offset-20, 100, 80);
+				player.setColor(Color.BLACK);
+				stage.addActor(player);
+				
+			}
+			
+		});
+
+		
+		stage.addActor(players);
+		stage.addActor(player1);
 		TextButton back = new TextButton("Back", mySkin);
 		back.setBounds(GameConfig.SCREEN_WIDTH - SMALL_BUTTON_SIZE - OFFSET,
 				OFFSET, SMALL_BUTTON_SIZE, SMALL_BUTTON_SIZE);
@@ -174,6 +204,7 @@ public class HostScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		engine.update(delta);
 		stage.act(delta);
 
 		Gdx.gl.glClearColor(0.914f, 0.933f, 0.957f, 1);
