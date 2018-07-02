@@ -35,6 +35,7 @@ public class ServerSystem extends NetworkingSystem implements ServerCommands{
 	private Server server;
 	private List<Peer> receivedLevel=new ArrayList<Peer>();
 	private HashMap<Integer,Peer> peers = new HashMap<Integer,Peer>();
+	public SpawnData spawnTransform;
 	
 	public ServerSystem() {
 		super();
@@ -166,16 +167,16 @@ public class ServerSystem extends NetworkingSystem implements ServerCommands{
 		
 		for(int playerId : peers.keySet()) {
 //			Gdx.app.log("ServerSystem", "PlayerId: "+playerId);
-			SpawnData spawnData = new SpawnData(playerId,2+4*playerId,2);
+			SpawnData spawnData = new SpawnData(playerId,spawnTransform.x+4*playerId,spawnTransform.y, spawnTransform.rot);
 			onSpawn.dispatch(spawnData);
 			
 		}
 	}
-	public void sendSpawns() {
-		sendSpawnCommand(null, new SpawnData(0,2,2));//Server Cart
+	public void sendSpawns(float xPos, float yPos,float rot) {
+		sendSpawnCommand(null, new SpawnData(0,xPos,yPos, rot));//Server Cart
 		for(Integer playerId : peers.keySet()) {
 //			Gdx.app.log("ServerSystem", "PlayerId: "+playerId);
-			SpawnData spawnData = new SpawnData(playerId,2+4*playerId,2);
+			SpawnData spawnData = new SpawnData(playerId,xPos+5*playerId,yPos, rot);
 //			Gdx.app.log("ServerSystem", "PlayerId: "+playerId);
 //			Gdx.app.log("ServerSystem", "Peer: "+ peers.get(playerId));
 			sendSpawnCommand(peers.get(playerId), spawnData);
@@ -187,7 +188,7 @@ public class ServerSystem extends NetworkingSystem implements ServerCommands{
 	public void sendSpawnCommand(Peer owner, SpawnData spawnData) {
 		
 		for(Peer p : peers.values()) {
-			SpawnData newData= new SpawnData(spawnData.entityID, spawnData.x, spawnData.y);
+			SpawnData newData= new SpawnData(spawnData.entityID, spawnData.x, spawnData.y, spawnData.rot);
 //			Gdx.app.log("Server","Sending SpawnInfo to Client: " + p);
 //			Gdx.app.log("ServerSystem", "Send SpawnData to peer: "+p.toString());
 			if(owner!=null && p == owner) {
@@ -215,7 +216,7 @@ public class ServerSystem extends NetworkingSystem implements ServerCommands{
 	public void receivedLevelDataReceived(Peer sender) {
 		receivedLevel.add(sender);
 		if(receivedLevel.size()==peers.values().size())
-			sendSpawns();
+			sendSpawns(spawnTransform.x, spawnTransform.y, spawnTransform.rot);
 		
 	}
 

@@ -32,6 +32,7 @@ public class SendSpawnCommand extends Command {
 		encoder.writeInt(spawnData.entityID);
 		encoder.writeFloat(spawnData.x);
 		encoder.writeFloat(spawnData.y);
+		encoder.writeFloat(spawnData.rot);
 		encoder.writeInt(spawnData.localControl? 1:0);
 		peer.send(encoder.getMessage(), this.quality);
 		

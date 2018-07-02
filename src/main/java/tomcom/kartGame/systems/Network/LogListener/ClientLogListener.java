@@ -61,7 +61,7 @@ public class ClientLogListener extends LogNetworkListener {
 		
 		switch (type) {
 			case 0: Gdx.app.log("Client","Got LevelData: " );clientSystem.receiveLevelData(decoder.readInt()); break;
-			case 1: SpawnData spawnData = new SpawnData(decoder.readInt(),decoder.readFloat(),decoder.readFloat());
+			case 1: SpawnData spawnData = new SpawnData(decoder.readInt(),decoder.readFloat(),decoder.readFloat(), decoder.readFloat());
 			spawnData.localControl = decoder.readInt() == 0 ? false : true;
 			Gdx.app.log("Client","Got SpawnData for kart: " + spawnData.entityID);
 			clientSystem.receiveSpawnData(spawnData); break;

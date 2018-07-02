@@ -48,6 +48,9 @@ public class TestLevel implements Screen {
 	private Engine engine;
 
 	private Viewport viewport;
+	public static float kartStartRotation = 0;
+	public static float kartStartPositionX = 10;
+	public static float kartStartPositionY = 20;
 
 	public TestLevel(GameMain game, Engine engine) {
 
@@ -411,11 +414,11 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEvents() {
-		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input
-															// directly
-			SpawnData spawnData = new SpawnData(0, 2, 2);
+		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input directly
+			
+			SpawnData spawnData = new SpawnData(0, kartStartPositionX, kartStartPositionY, kartStartRotation);
 			spawnData.localControl = true;
-
+			engine.getSystem(ServerSystem.class).spawnTransform = spawnData;
 			spawnCart(spawnData);
 			ServerCommands.onSpawn.add(new Listener<SpawnData>() {
 
@@ -461,8 +464,8 @@ public class TestLevel implements Screen {
 				@Override
 				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
 
-					// Gdx.app.log("TestLevel", "Received Spawn: "
-					// +arg1.entityID+" "+arg1.localControl);
+					 Gdx.app.log("TestLevel", "Received Spawn: "
+					 +arg1.entityID+" x "+arg1.x+" y "+arg1.y+" rot "+arg1.rot);
 					spawnCart(arg1);
 
 				}
@@ -504,24 +507,27 @@ public class TestLevel implements Screen {
 			engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new RenderingSystem());
-		engine.addSystem(new Box2DRenderingSystem());
+		if (engine.getSystem(ServerSystem.class) != null)
+			engine.addSystem(new Box2DRenderingSystem());
 
 		engine.addSystem(new WheelRenderingSystem(game
 				.getTexture(TexturePaths.WHEEL)));
-		engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
+		if (engine.getSystem(ServerSystem.class) != null)
+			engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
 
 		engine.addSystem(checkpointSystem);
 
-		engine.addSystem(new TrackEditorSystem(game
-				.getTexture(TexturePaths.ROADBLOCK)));
+		if (engine.getSystem(ServerSystem.class) != null)
+			engine.addSystem(new TrackEditorSystem(game
+					.getTexture(TexturePaths.ROADBLOCK)));
 
 		engine.addSystem(new AudioSystem(game.getBackgroundMusic()));
 	}
 
 	private void spawnCart(SpawnData spawnData) {
-		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID);
+		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID +" at: " +spawnData.x+" " +spawnData.y+" "+ spawnData.rot);
 		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,
-				spawnData.x, spawnData.y, -180,
+				spawnData.x, spawnData.y, spawnData.rot,
 				game.getTexture(TexturePaths.KART), spawnData.localControl)
 				.add(new CameraTargetComponent()));
 	}
