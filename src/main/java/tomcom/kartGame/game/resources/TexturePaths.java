@@ -1,7 +1,10 @@
 package tomcom.kartGame.game.resources;
 
 public class TexturePaths {
-	public static final String KART = "retro-red-car.png";
+	public static final String KART_RED = "car1.png";
+	public static final String KART_GRAY = "car2.png";
+	public static final String KART_SILVER = "car3.png";
+	public static final String KART_BLUE = "car4.png";
 	public static final String WHEEL = "wheel.png";
 	public static final String ROADBLOCK = "roadblock.png";
 	public static final String LAMBO = "Lamborghini_Aventador_small.png";

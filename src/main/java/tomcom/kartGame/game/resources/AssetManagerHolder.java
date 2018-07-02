@@ -39,7 +39,10 @@ public class AssetManagerHolder {
 
 	private void loadTextures() {
 		loadTexture(TexturePaths.MAIN_MENU_BG);
-		loadTexture(TexturePaths.KART);
+		loadTexture(TexturePaths.KART_RED);
+		loadTexture(TexturePaths.KART_GRAY);
+		loadTexture(TexturePaths.KART_SILVER);
+		loadTexture(TexturePaths.KART_BLUE);
 		loadTexture(TexturePaths.WHEEL);
 		loadTexture(TexturePaths.ROADBLOCK);
 		loadTexture(TexturePaths.MAP1);

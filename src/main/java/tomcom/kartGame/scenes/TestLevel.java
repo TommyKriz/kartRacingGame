@@ -526,9 +526,18 @@ public class TestLevel implements Screen {
 
 	private void spawnCart(SpawnData spawnData) {
 		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID +" at: " +spawnData.x+" " +spawnData.y+" "+ spawnData.rot);
+		Texture cartTexture = null;
+		if(spawnData.entityID == 0)
+			cartTexture = game.getTexture(TexturePaths.KART_RED);
+		if(spawnData.entityID == 1)
+			cartTexture = game.getTexture(TexturePaths.KART_GRAY);
+		if(spawnData.entityID == 2)
+			cartTexture = game.getTexture(TexturePaths.KART_SILVER);
+		if(spawnData.entityID == 3)
+			cartTexture = game.getTexture(TexturePaths.KART_BLUE);
 		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,
 				spawnData.x, spawnData.y, spawnData.rot,
-				game.getTexture(TexturePaths.KART), spawnData.localControl)
+				cartTexture, spawnData.localControl)
 				.add(new CameraTargetComponent()));
 	}
 

@@ -2,9 +2,9 @@ package tomcom.kartGame.config;
 
 public class EntityConfig {
 
-	public static final float KART_WIDTH = 2f;
+	public static final float KART_WIDTH = 2f;//2
 
-	public static final float KART_HEIGHT = 4.5f;
+	public static final float KART_HEIGHT = 4.5f;//4.5f
 
 	public static final float KART_MASS = 1000f;
 
