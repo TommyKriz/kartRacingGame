@@ -24,7 +24,7 @@ import tomcom.kartGame.systems.Network.ServerSystem;
 import tomcom.kartGame.systems.Network.DataContainer.CarData;
 import tomcom.kartGame.systems.Network.DataContainer.InputData;
 import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
-import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
+import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 import tomcom.kartGame.systems.vehicle.WheelRenderingSystem;
 
 import com.badlogic.ashley.core.Engine;
@@ -414,9 +414,11 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEvents() {
-		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input directly
-			
-			SpawnData spawnData = new SpawnData(0, kartStartPositionX, kartStartPositionY, kartStartRotation);
+		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input
+															// directly
+
+			SpawnData spawnData = new SpawnData(0, kartStartPositionX,
+					kartStartPositionY, kartStartRotation);
 			spawnData.localControl = true;
 			engine.getSystem(ServerSystem.class).spawnTransform = spawnData;
 			spawnCart(spawnData);
@@ -435,7 +437,7 @@ public class TestLevel implements Screen {
 
 				@Override
 				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
-					VehicleGamepadInputDebugRendererSystem.onInputReceived
+					VehicleDebugRendererSystem.onInputReceived
 							.dispatch(new InputData(0, arg1.x, arg1.y));
 				}
 			});
@@ -464,8 +466,9 @@ public class TestLevel implements Screen {
 				@Override
 				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
 
-					 Gdx.app.log("TestLevel", "Received Spawn: "
-					 +arg1.entityID+" x "+arg1.x+" y "+arg1.y+" rot "+arg1.rot);
+					Gdx.app.log("TestLevel", "Received Spawn: " + arg1.entityID
+							+ " x " + arg1.x + " y " + arg1.y + " rot "
+							+ arg1.rot);
 					spawnCart(arg1);
 
 				}
@@ -513,7 +516,7 @@ public class TestLevel implements Screen {
 		engine.addSystem(new WheelRenderingSystem(game
 				.getTexture(TexturePaths.WHEEL)));
 		if (engine.getSystem(ServerSystem.class) != null)
-			engine.addSystem(new VehicleGamepadInputDebugRendererSystem());
+			engine.addSystem(new VehicleDebugRendererSystem());
 
 		engine.addSystem(checkpointSystem);
 
@@ -525,7 +528,9 @@ public class TestLevel implements Screen {
 	}
 
 	private void spawnCart(SpawnData spawnData) {
-		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID +" at: " +spawnData.x+" " +spawnData.y+" "+ spawnData.rot);
+		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID
+				+ " at: " + spawnData.x + " " + spawnData.y + " "
+				+ spawnData.rot);
 		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,
 				spawnData.x, spawnData.y, spawnData.rot,
 				game.getTexture(TexturePaths.KART), spawnData.localControl)

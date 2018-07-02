@@ -22,7 +22,7 @@ import tomcom.kartGame.systems.Network.Commands.SendSpawnCommand;
 import tomcom.kartGame.systems.Network.DataContainer.CarData;
 import tomcom.kartGame.systems.Network.DataContainer.InputData;
 import tomcom.kartGame.systems.Network.DataContainer.SpawnData;
-import tomcom.kartGame.systems.vehicle.VehicleGamepadInputDebugRendererSystem;
+import tomcom.kartGame.systems.vehicle.VehicleDebugRendererSystem;
 
 public class ServerSystem extends NetworkingSystem implements ServerCommands{
 
@@ -127,7 +127,7 @@ public class ServerSystem extends NetworkingSystem implements ServerCommands{
 	@Override
 	public void receivedInputData(int entityId, float xAxis, float yAxis) {
 //		Gdx.app.log("ServerSystem", "Received Input Data: " +entityId);
-		VehicleGamepadInputDebugRendererSystem.onInputReceived.dispatch(new InputData(entityId, xAxis, yAxis));
+		VehicleDebugRendererSystem.onInputReceived.dispatch(new InputData(entityId, xAxis, yAxis));
 		
 	}
 
