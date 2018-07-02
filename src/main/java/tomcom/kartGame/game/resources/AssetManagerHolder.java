@@ -1,6 +1,7 @@
 package tomcom.kartGame.game.resources;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -8,13 +9,24 @@ public class AssetManagerHolder {
 
 	private static final String SKIN_FILEPATH = "skin/uiskin.json";
 
+	private static final String BACKGROUND_MUSIC_FILEPATH = "audio/M43.ogg";
+
 	private AssetManager manager;
 
 	public AssetManagerHolder() {
 		manager = new AssetManager();
 		loadSkin();
+		loadBackgroundMusic();
 		loadTextures();
 		manager.finishLoading();
+	}
+
+	private void loadBackgroundMusic() {
+		manager.load(BACKGROUND_MUSIC_FILEPATH, Music.class);
+	}
+
+	public Music getBackgroundMusic() {
+		return manager.get(BACKGROUND_MUSIC_FILEPATH, Music.class);
 	}
 
 	private void loadSkin() {

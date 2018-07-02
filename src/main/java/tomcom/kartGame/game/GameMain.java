@@ -7,6 +7,7 @@ import tomcom.kartGame.systems.Network.ServerSystem;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -39,6 +40,10 @@ public class GameMain extends Game {
 
 	public Skin getSkin() {
 		return assetManagerHolder.getSkin();
+	}
+
+	public Music getBackgroundMusic() {
+		return assetManagerHolder.getBackgroundMusic();
 	}
 
 }

@@ -6,6 +6,7 @@ import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.entities.EntityBuilder;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.TexturePaths;
+import tomcom.kartGame.systems.AudioSystem;
 import tomcom.kartGame.systems.Box2DPhysicsSystem;
 import tomcom.kartGame.systems.Box2DRenderingSystem;
 import tomcom.kartGame.systems.CameraMoveSystem;
@@ -72,9 +73,9 @@ public class TestLevel implements Screen {
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMap(
 				game.getTexture(TexturePaths.MAP1), 190, 160));
-//		engine.addEntity(EntityBuilder.buildKart(-19.5f, 36, -180,
-//				game.getTexture(TexturePaths.KART)).add(
-//				new CameraTargetComponent()));
+		// engine.addEntity(EntityBuilder.buildKart(-19.5f, 36, -180,
+		// game.getTexture(TexturePaths.KART)).add(
+		// new CameraTargetComponent()));
 		initRoadblocks();
 	}
 
@@ -410,78 +411,85 @@ public class TestLevel implements Screen {
 	}
 
 	private void initEvents() {
-		if(engine.getSystem(ServerSystem.class) != null) { // Host use Input directly
-			SpawnData spawnData = new SpawnData(0,2,2);
+		if (engine.getSystem(ServerSystem.class) != null) { // Host use Input
+															// directly
+			SpawnData spawnData = new SpawnData(0, 2, 2);
 			spawnData.localControl = true;
-			
+
 			spawnCart(spawnData);
 			ServerCommands.onSpawn.add(new Listener<SpawnData>() {
 
 				@Override
 				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
-					
+
 					spawnCart(arg1);
-					
+
 				}
-				
+
 			});
 			engine.getSystem(ServerSystem.class).sendSpawnServerOnly();
 			InputSystem.onInputReceived.add(new Listener<Vector2>() {
 
 				@Override
 				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
-					VehicleGamepadInputDebugRendererSystem.onInputReceived.dispatch(new InputData(0,arg1.x,arg1.y));
-				}		
+					VehicleGamepadInputDebugRendererSystem.onInputReceived
+							.dispatch(new InputData(0, arg1.x, arg1.y));
+				}
 			});
 			Timer.schedule(new Task() {
 
 				@Override
 				public void run() {
 					ServerCommands.onStartRace.dispatch(null);
-					
+
 				}
-				
-			}, 2);//3 Seconds to Start
-			
-			
-		}
-		else {// Client send Input over Network
+
+			}, 2);// 3 Seconds to Start
+
+		} else {// Client send Input over Network
 			InputSystem.onInputReceived.add(new Listener<Vector2>() {
 
 				@Override
 				public void receive(Signal<Vector2> arg0, Vector2 arg1) {
-//					Gdx.app.log("VehicleDebugRendererSystem", "receiveing Input");
+					// Gdx.app.log("VehicleDebugRendererSystem",
+					// "receiveing Input");
 					ClientCommands.onInputReceived.dispatch(arg1);
-				}		
+				}
 			});
 			ClientCommands.onSpawn.add(new Listener<SpawnData>() {
 
 				@Override
 				public void receive(Signal<SpawnData> arg0, SpawnData arg1) {
-					
-//					Gdx.app.log("TestLevel", "Received Spawn: " +arg1.entityID+" "+arg1.localControl);
+
+					// Gdx.app.log("TestLevel", "Received Spawn: "
+					// +arg1.entityID+" "+arg1.localControl);
 					spawnCart(arg1);
-					
+
 				}
-				
+
 			});
 			ClientCommands.onCarDataReceived.add(new Listener<CarData>() {
 
 				@Override
 				public void receive(Signal<CarData> signal, CarData object) {
-					Entity entity = engine.getSystem(EntityManagerSystem.class).GetEntity(object.entityID);
-//					Gdx.app.log("TESTLEVEL", "Receiving Car Data " + object.entityID + " "+object.xPos+" " + object.yPos+" "+object.rot);
-					if(entity!=null) {
-						PivotComponent pivot = entity.getComponent(PivotComponent.class);
-						pivot.setPos(new Vector2(object.xPos, object.yPos), object.rot);
+					Entity entity = engine.getSystem(EntityManagerSystem.class)
+							.GetEntity(object.entityID);
+					// Gdx.app.log("TESTLEVEL", "Receiving Car Data " +
+					// object.entityID + " "+object.xPos+" " +
+					// object.yPos+" "+object.rot);
+					if (entity != null) {
+						PivotComponent pivot = entity
+								.getComponent(PivotComponent.class);
+						pivot.setPos(new Vector2(object.xPos, object.yPos),
+								object.rot);
 					}
-					
+
 				}
-				
+
 			});
 		}
 	}
-	
+
 	private void initSystems() {
 
 		engine.addSystem(new EntityManagerSystem());
@@ -492,8 +500,8 @@ public class TestLevel implements Screen {
 		CheckpointSystem checkpointSystem = new CheckpointSystem();
 
 		engine.addSystem(new Box2DPhysicsSystem(checkpointSystem));
-		if(engine.getSystem(ServerSystem.class) != null)//only on server
-		engine.addSystem(new PivotUpdateSystem());
+		if (engine.getSystem(ServerSystem.class) != null)// only on server
+			engine.addSystem(new PivotUpdateSystem());
 
 		engine.addSystem(new RenderingSystem());
 		engine.addSystem(new Box2DRenderingSystem());
@@ -506,13 +514,18 @@ public class TestLevel implements Screen {
 
 		engine.addSystem(new TrackEditorSystem(game
 				.getTexture(TexturePaths.ROADBLOCK)));
+
+		engine.addSystem(new AudioSystem(game.getBackgroundMusic()));
 	}
 
 	private void spawnCart(SpawnData spawnData) {
-		Gdx.app.log("TestLevel", "spawning cart: " +spawnData.entityID);
-		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,spawnData.x,spawnData.y, -180, game.getTexture(TexturePaths.KART), spawnData.localControl).add(
-				new CameraTargetComponent()));
+		Gdx.app.log("TestLevel", "spawning cart: " + spawnData.entityID);
+		engine.addEntity(EntityBuilder.buildKart(spawnData.entityID,
+				spawnData.x, spawnData.y, -180,
+				game.getTexture(TexturePaths.KART), spawnData.localControl)
+				.add(new CameraTargetComponent()));
 	}
+
 	@Override
 	public void show() {
 		// init
