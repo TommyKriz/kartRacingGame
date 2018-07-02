@@ -65,9 +65,9 @@ public class HostScreen implements Screen {
 			myIpAddress = "Local Host IP Address could not be retrieved :( ";
 		}
 
-		level1Preview = new Sprite(game.getTexture(TexturePaths.MAP));
-		level2Preview = new Sprite(game.getTexture(TexturePaths.LEVEL2_PREVIEW));
-		level3Preview = new Sprite(game.getTexture(TexturePaths.LEVEL3_PREVIEW));
+		level1Preview = new Sprite(game.getTexture(TexturePaths.MAP1));
+		level2Preview = new Sprite(game.getTexture(TexturePaths.MAP2));
+		level3Preview = new Sprite(game.getTexture(TexturePaths.MAP3));
 
 		positionSprites();
 

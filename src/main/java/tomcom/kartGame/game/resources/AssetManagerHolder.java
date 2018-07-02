@@ -30,12 +30,10 @@ public class AssetManagerHolder {
 		loadTexture(TexturePaths.KART);
 		loadTexture(TexturePaths.WHEEL);
 		loadTexture(TexturePaths.ROADBLOCK);
-		loadTexture(TexturePaths.MAP);
-		loadTexture(TexturePaths.VIENNA_MAP);
+		loadTexture(TexturePaths.MAP1);
+		loadTexture(TexturePaths.MAP2);
+		loadTexture(TexturePaths.MAP3);
 		loadTexture(TexturePaths.LAMBO);
-		loadTexture(TexturePaths.HAGENBERG_MAP);
-		loadTexture(TexturePaths.LEVEL2_PREVIEW);
-		loadTexture(TexturePaths.LEVEL3_PREVIEW);
 	}
 
 	public Texture getTexture(String filePath) {

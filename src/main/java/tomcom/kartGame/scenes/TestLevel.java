@@ -55,7 +55,7 @@ public class TestLevel implements Screen {
 
 	private void initEntities() {
 		engine.addEntity(EntityBuilder.buildMap(
-				game.getTexture(TexturePaths.MAP), 190, 160));
+				game.getTexture(TexturePaths.MAP1), 190, 160));
 		engine.addEntity(EntityBuilder.buildKart(-19.5f, 36, -180,
 				game.getTexture(TexturePaths.KART)).add(
 				new CameraTargetComponent()));
