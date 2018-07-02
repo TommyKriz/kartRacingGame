@@ -13,6 +13,10 @@ public class CheckpointComponent implements Component {
 		active = true;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	public boolean equals(int id) {
 		return this.id == id;
 	}

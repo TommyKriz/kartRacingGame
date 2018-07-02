@@ -1,5 +1,8 @@
 package tomcom.kartGame.scenes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.signals.Listener;
@@ -503,7 +506,9 @@ public class Map1 implements Screen {
 		engine.addSystem(new CameraZoomSystem(19.499977f));
 		engine.addSystem(new CameraMoveSystem());
 		engine.addSystem(new InputSystem());
-		CheckpointSystem checkpointSystem = new CheckpointSystem();
+
+		CheckpointSystem checkpointSystem = new CheckpointSystem(
+				buildCheckpoints());
 
 		engine.addSystem(new Box2DPhysicsSystem(checkpointSystem));
 		if (engine.getSystem(ServerSystem.class) != null)// only on server
@@ -525,6 +530,19 @@ public class Map1 implements Screen {
 					.getTexture(TexturePaths.ROADBLOCK)));
 
 		engine.addSystem(new AudioSystem(game.getBackgroundMusic()));
+	}
+
+	private List<Vector2> buildCheckpoints() {
+		List<Vector2> checkpoints = new ArrayList<>();
+		checkpoints.add(new Vector2(-50.6f, 14.5f));
+		checkpoints.add(new Vector2(-63.9f, -20.6f));
+		checkpoints.add(new Vector2(-39.7f, -58.5f));
+		checkpoints.add(new Vector2(-12.2f, -22.1f));
+		checkpoints.add(new Vector2(25, -1.3f));
+		checkpoints.add(new Vector2(56.4f, 30.9f));
+		checkpoints.add(new Vector2(29.7f, 58.2f));
+		checkpoints.add(new Vector2(-19.5f, 38));
+		return checkpoints;
 	}
 
 	private void spawnCart(SpawnData spawnData) {

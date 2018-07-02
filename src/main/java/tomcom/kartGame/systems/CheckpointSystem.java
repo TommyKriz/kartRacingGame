@@ -1,56 +1,81 @@
 package tomcom.kartGame.systems;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import tomcom.kartGame.components.CheckpointComponent;
 import tomcom.kartGame.components.CheckpointCounterComponent;
 import tomcom.kartGame.components.collision.CollisionListeningSystem;
 import tomcom.kartGame.entities.EntityBuilder;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 
-public class CheckpointSystem extends IteratingSystem implements
+public class CheckpointSystem extends EntitySystem implements
 		CollisionListeningSystem {
-
-	private static final Family FAMILY = Family.all(
-			CheckpointCounterComponent.class).get();
 
 	// private ComponentMapper<CheckpointCounterComponent> cc = ComponentMapper
 	// .getFor(CheckpointCounterComponent.class);
 
-	public CheckpointSystem() {
-		super(FAMILY);
-	}
+	private int NUM_OF_CHECKPOINTS;
 
-	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
+	private List<Vector2> initialCheckpointCoords;
 
+	public CheckpointSystem(List<Vector2> checkpointCoords) {
+		NUM_OF_CHECKPOINTS = checkpointCoords.size();
+		initialCheckpointCoords = checkpointCoords;
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		// TODO: make different for each map
-		// TODO: maybe make a list for automatic counter increment or move to
-		// EntityBuilder
-		engine.addEntity(EntityBuilder.buildCheckpoint(-30.5f, 38, 0, 1));
-		engine.addEntity(EntityBuilder.buildCheckpoint(-50.6f, 14.5f, 90, 2));
-		engine.addEntity(EntityBuilder.buildCheckpoint(-63.9f, -20.6f, 0, 3));
-		engine.addEntity(EntityBuilder.buildCheckpoint(-39.7f, -58.5f, 0, 4));
-		engine.addEntity(EntityBuilder.buildCheckpoint(-12.2f, -22.1f, 90, 5));
-		engine.addEntity(EntityBuilder.buildCheckpoint(25, -1.3f, 0, 6));
-		engine.addEntity(EntityBuilder.buildCheckpoint(56.4f, 30.9f, 90, 7));
-		engine.addEntity(EntityBuilder.buildCheckpoint(29.7f, 58.2f, 0, 8));
-		engine.addEntity(EntityBuilder.buildCheckpoint(-19.5f, 38, 0, 9));
+		int i = 0;
+		for (Vector2 p : initialCheckpointCoords) {
+			i++;
+			engine.addEntity(EntityBuilder.buildCheckpoint(p.x, p.y, 0, i));
+		}
 	}
 
 	@Override
 	public void onBeginContact(Contact contact) {
 
-		System.out.println("Contact " + contact.getFixtureA().getUserData()
-				+ " - " + contact.getFixtureB().getUserData());
+		Object collisionData1 = contact.getFixtureA().getUserData();
+		Object collisionData2 = contact.getFixtureB().getUserData();
+
+		CheckpointCounterComponent checkpointCounter = null;
+		CheckpointComponent checkpoint = null;
+
+		boolean kartCollidesWithCheckpoint = false;
+
+		if (collisionData1 instanceof CheckpointCounterComponent
+				&& collisionData2 instanceof CheckpointComponent) {
+			checkpointCounter = (CheckpointCounterComponent) collisionData1;
+			checkpoint = (CheckpointComponent) collisionData2;
+			kartCollidesWithCheckpoint = true;
+		} else if (collisionData2 instanceof CheckpointCounterComponent
+				&& collisionData1 instanceof CheckpointComponent) {
+			checkpointCounter = (CheckpointCounterComponent) collisionData2;
+			checkpoint = (CheckpointComponent) collisionData1;
+			kartCollidesWithCheckpoint = true;
+		}
+
+		if (kartCollidesWithCheckpoint) {
+			System.out.println(" kart collides with checkpoint");
+			if (checkpointCounter.passedCheckpoints + 1 == checkpoint.getId()) {
+				checkpointCounter.increment();
+			}
+
+			System.out.println(" asöodkfadklsfhjadsll    _> "
+					+ checkpointCounter.passedCheckpoints);
+
+			if (checkpointCounter.passedCheckpoints == NUM_OF_CHECKPOINTS) {
+				Gdx.app.log("CheckpointSystem", "PLAYER WON");
+			}
+
+		}
 
 	}
-
 }

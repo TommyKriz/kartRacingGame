@@ -25,7 +25,7 @@ public class EntityBuilder {
 			Texture kartTexture, boolean control) {
 
 		Entity kart = new Entity();
-		if(control)
+		if (control)
 			kart.add(new GamepadInputComponent());
 
 		Vector2 pos = new Vector2(x, y);
@@ -38,11 +38,15 @@ public class EntityBuilder {
 		kart.add(new NetworkIdentityComponent());
 		kart.add(new Body2DComponent().setDynamic(true).setDamping(0f));
 
+		CheckpointCounterComponent checkpointCounter = new CheckpointCounterComponent();
+
+		kart.add(checkpointCounter);
+
 		kart.add(new ColliderComponent(new RectangleCollider(
 				EntityConfig.KART_WIDTH, EntityConfig.KART_HEIGHT,
 				EntityConfig.KART_MASS
 						/ (EntityConfig.KART_WIDTH * EntityConfig.KART_HEIGHT),
-				0, 0).setUserData(EntityConfig.PLAYER_COLLIDER)));
+				0, 0).setUserData(checkpointCounter)));
 
 		float xWheelOffset = EntityConfig.KART_WIDTH / 2
 				+ EntityConfig.WHEEL_WIDTH / 2;
@@ -53,8 +57,6 @@ public class EntityBuilder {
 				.addWheel(new Wheel(-xWheelOffset, yWheelOffset, true, false))
 				.addWheel(new Wheel(xWheelOffset, -yWheelOffset, false, true))
 				.addWheel(new Wheel(-xWheelOffset, -yWheelOffset, false, true)));
-
-		kart.add(new CheckpointCounterComponent());
 
 		return kart;
 	}
@@ -98,10 +100,14 @@ public class EntityBuilder {
 		Entity checkpoint = new Entity();
 		checkpoint.add(new PivotComponent(new Vector2(x, y), angle));
 		checkpoint.add(new Body2DComponent().setDynamic(false));
+
+		CheckpointComponent checkpointNr = new CheckpointComponent(number);
+
+		checkpoint.add(checkpointNr);
+
 		checkpoint.add(new ColliderComponent(new RectangleCollider(1, 10, 0, 0,
-				0).setSensor(true)
-				.setUserData(EntityConfig.CHECKPOINT_COLLIDER)));
-		checkpoint.add(new CheckpointComponent(number));
+				0).setSensor(true).setUserData(checkpointNr)));
+
 		return checkpoint;
 	}
 
