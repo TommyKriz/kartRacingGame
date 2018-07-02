@@ -7,6 +7,8 @@ import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.game.resources.TexturePaths;
 import tomcom.kartGame.scenes.Map1;
+import tomcom.kartGame.scenes.Map2;
+import tomcom.kartGame.scenes.Map3;
 import tomcom.kartGame.systems.Network.ServerCommands;
 import tomcom.kartGame.systems.Network.ServerSystem;
 
@@ -151,39 +153,42 @@ public class HostScreen implements Screen {
 					game.switchScreen(new Map1(game, engine));
 					break;
 				case 2:
-					// game.switchScreen(new MenuScreen(game));
+					ServerCommands.onLoadLevel.dispatch(selectedLevel);
+					game.switchScreen(new Map2(game, engine));
 					break;
 				case 3:
-					// game.switchScreen(new MenuScreen(game));
+					ServerCommands.onLoadLevel.dispatch(selectedLevel);
+					game.switchScreen(new Map3(game, engine));
 					break;
 				}
 			}
 		});
 		stage.addActor(play);
 
-		int offset=35;
+		int offset = 35;
 		Label players = new Label("Players: ", mySkin);
 		players.setFontScale(2);
 		players.setColor(Color.BLACK);
-		players.setBounds(30, GameConfig.SCREEN_HEIGHT - offset-20, 100, 80);
+		players.setBounds(30, GameConfig.SCREEN_HEIGHT - offset - 20, 100, 80);
 		Label player1 = new Label("Player 1", mySkin);
 		player1.setColor(Color.BLACK);
-		player1.setBounds(40, GameConfig.SCREEN_HEIGHT - 2*offset-20, 100, 80);
-		
+		player1.setBounds(40, GameConfig.SCREEN_HEIGHT - 2 * offset - 20, 100,
+				80);
+
 		ServerCommands.onNewConnection.add(new Listener<Integer>() {
 
 			@Override
 			public void receive(Signal<Integer> arg0, Integer arg1) {
-				Label player = new Label("Player "+(arg1+1), mySkin);
-				player.setBounds(40, GameConfig.SCREEN_HEIGHT - (arg1+2)*offset-20, 100, 80);
+				Label player = new Label("Player " + (arg1 + 1), mySkin);
+				player.setBounds(40, GameConfig.SCREEN_HEIGHT - (arg1 + 2)
+						* offset - 20, 100, 80);
 				player.setColor(Color.BLACK);
 				stage.addActor(player);
-				
+
 			}
-			
+
 		});
 
-		
 		stage.addActor(players);
 		stage.addActor(player1);
 		TextButton back = new TextButton("Back", mySkin);

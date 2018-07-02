@@ -3,6 +3,8 @@ package tomcom.kartGame.scenes.menus;
 import tomcom.kartGame.config.GameConfig;
 import tomcom.kartGame.game.GameMain;
 import tomcom.kartGame.scenes.Map1;
+import tomcom.kartGame.scenes.Map2;
+import tomcom.kartGame.scenes.Map3;
 import tomcom.kartGame.systems.Network.ClientCommands;
 import tomcom.kartGame.systems.Network.ClientSystem;
 
@@ -70,10 +72,12 @@ public class JoinScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				engine.addSystem(new ClientSystem(textField.getText(),54321));
+				engine.addSystem(new ClientSystem(textField.getText(), 54321));
 				back.remove();
 				textField.remove();
-				Label connected =  new Label("Connected! Please wait for the host to start the game!", mySkin);
+				Label connected = new Label(
+						"Connected! Please wait for the host to start the game!",
+						mySkin);
 				connected.setBounds(200, 160, 300, 100);
 				stage.addActor(connected);
 				button2.remove();
@@ -81,21 +85,27 @@ public class JoinScreen implements Screen {
 
 					@Override
 					public void receive(Signal<Integer> arg0, Integer arg1) {
-						game.setScreen(new Map1(game, engine));
-						
+						switch (arg1) {
+						case 1:
+							game.switchScreen(new Map1(game, engine));
+							break;
+						case 2:
+							game.switchScreen(new Map2(game, engine));
+							break;
+						case 3:
+							game.switchScreen(new Map3(game, engine));
+							break;
+						}
+
 					}
-					
+
 				});
 				errorMsg = " Could not connect to " + textField.getText();
 
 			}
 		});
 
-
-
 		stage.addActor(button2);
-
-		
 
 	}
 

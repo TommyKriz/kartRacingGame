@@ -37,7 +37,7 @@ public class TrackEditorSaver {
 			sb.append(c.x);
 			sb.append("f,");
 			sb.append(c.y);
-			sb.append("f));");
+			sb.append("f, roadblockTexture));");
 		}
 		return sb.toString();
 	}
