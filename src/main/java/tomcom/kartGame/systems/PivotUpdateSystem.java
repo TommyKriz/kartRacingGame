@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 
 public class PivotUpdateSystem extends IteratingSystem {
 
@@ -27,8 +26,7 @@ public class PivotUpdateSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		Body2DComponent body = bc.get(entity);
 		PivotComponent pivot = pc.get(entity);
-		pivot.setPos(body.getPosition());
-		Gdx.app.log("BodyUpdateSystem", "body " + body.getPosition());
+		pivot.setPos(body.getPosition(), body.getAngleInDegrees());
 	}
 
 }

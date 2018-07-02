@@ -62,9 +62,53 @@
 			<classifier>natives-desktop</classifier>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers-desktop -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers-desktop</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx-controllers-platform -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-controllers-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<classifier>natives-desktop</classifier>
+		</dependency>
 
 	</dependencies>
 
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>tomcom.kartGame.game.Main</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
